@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  STUDENT
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum CourseAccessType {
+  FREE_PREVIEW
+  PREMIUM
+  SUBSCRIPTION_ONLY
+}
+
+enum LessonAccessType {
+  PREVIEW
+  PREMIUM
+}
+
+enum PaymentType {
+  PAY_PER_COURSE
+  MONTHLY_SUBSCRIPTION
+  ANNUAL_SUBSCRIPTION
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String        @unique
+  role          UserRole      @default(STUDENT)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  enrollments   Enrollment[]
+  quizResults   QuizResult[]
+  certificates  Certificate[]
+  payments      Payment[]
+}
+
+model Course {
+  id               String            @id @default(cuid())
+  title            String
+  slug             String            @unique
+  description      String?
+  category         String?
+  imageUrl         String?
+  introVideoUrl    String?
+  learningOutcomes String?
+  numberOfLessons  Int               @default(0)
+  status           CourseStatus      @default(DRAFT)
+  accessType       CourseAccessType  @default(FREE_PREVIEW)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  lessons          Lesson[]
+  enrollments      Enrollment[]
+  quizResults      QuizResult[]
+  certificates     Certificate[]
+  payments         Payment[]
+}
+
+model Lesson {
+  id          String            @id @default(cuid())
+  courseId    String
+  title       String
+  slug        String
+  content     String?
+  videoUrl    String?
+  readingUrl  String?
+  notes       String?
+  order       Int
+  accessType  LessonAccessType  @default(PREVIEW)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  course      Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, slug])
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String
+  progress    Int       @default(0)
+  completed   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model QuizResult {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String
+  quizType    String
+  score       Int
+  passed      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Certificate {
+  id              String    @id @default(cuid())
+  userId          String
+  courseId        String
+  certificateCode String    @unique
+  issuedAt        DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  userId      String
+  courseId    String?
+  paymentType PaymentType
+  amount      Int
+  currency    String        @default("KES")
+  status      PaymentStatus @default(PENDING)
+  provider    String        @default("PAYSTACK")
+  providerRef String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+}

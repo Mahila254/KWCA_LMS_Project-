@@ -2,13 +2,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import AdminCourseDeleteButton from "@/components/AdminCourseDeleteButton";
 import {
   Plus,
   Pencil,
   BookOpen,
   Eye,
   Lock,
-  Trash2,
   GraduationCap,
 } from "lucide-react";
 
@@ -77,6 +77,7 @@ export default async function AdminCoursesPage() {
             <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
               <div className="border-b px-6 py-5">
                 <h2 className="text-2xl font-bold">All Courses</h2>
+
                 <p className="mt-1 text-gray-600">
                   Showing {courses.length} courses from the database.
                 </p>
@@ -122,6 +123,7 @@ export default async function AdminCoursesPage() {
                         <p className="text-sm font-bold text-gray-500">
                           Category
                         </p>
+
                         <p className="mt-1 font-bold">
                           {course.category || "General"}
                         </p>
@@ -129,6 +131,7 @@ export default async function AdminCoursesPage() {
                         <p className="mt-4 text-sm font-bold text-gray-500">
                           Lessons
                         </p>
+
                         <p className="mt-1 font-bold">
                           {course.numberOfLessons}
                         </p>
@@ -165,7 +168,7 @@ export default async function AdminCoursesPage() {
                         </span>
                       </div>
 
-                      <div className="flex items-start gap-3">
+                      <div className="flex flex-wrap items-start gap-3">
                         <Link
                           href={`/courses/${course.slug}`}
                           className="rounded-xl border px-4 py-3 font-bold hover:bg-gray-50"
@@ -181,13 +184,10 @@ export default async function AdminCoursesPage() {
                           Edit
                         </Link>
 
-                        <button
-                          type="button"
-                          className="inline-flex items-center gap-2 rounded-xl border border-red-200 px-4 py-3 font-bold text-red-600 hover:bg-red-50"
-                        >
-                          <Trash2 size={17} />
-                          Delete
-                        </button>
+                        <AdminCourseDeleteButton
+                          slug={course.slug}
+                          title={course.title}
+                        />
                       </div>
                     </div>
                   );

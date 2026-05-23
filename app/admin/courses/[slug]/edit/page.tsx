@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import CourseImageUpload from "@/components/CourseImageUpload";
 
-export default function CreateCoursePage() {
+export default function EditCoursePage() {
+  const params = useParams<{ slug: string }>();
+  const router = useRouter();
+
+  const slug = params.slug;
+
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Governance");
   const [description, setDescription] = useState("");
@@ -15,9 +21,56 @@ export default function CreateCoursePage() {
   const [status, setStatus] = useState("Draft");
   const [introVideoUrl, setIntroVideoUrl] = useState("");
   const [learningOutcomes, setLearningOutcomes] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  async function handleCreateCourse() {
+  useEffect(() => {
+    async function fetchCourse() {
+      try {
+        const response = await fetch(`/api/admin/courses/${slug}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error || "Course not found.");
+          router.push("/admin/courses");
+          return;
+        }
+
+        const course = data.course;
+
+        setTitle(course.title || "");
+        setCategory(course.category || "Governance");
+        setDescription(course.description || "");
+        setNumberOfLessons(String(course.numberOfLessons || ""));
+        setIntroVideoUrl(course.introVideoUrl || "");
+        setLearningOutcomes(course.learningOutcomes || "");
+        setImageUrl(course.imageUrl || "");
+
+        setStatus(course.status === "PUBLISHED" ? "Published" : "Draft");
+
+        if (course.accessType === "PREMIUM") {
+          setCourseType("Premium");
+        } else if (course.accessType === "SUBSCRIPTION_ONLY") {
+          setCourseType("Subscription Only");
+        } else {
+          setCourseType("Free Preview");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Something went wrong while loading the course.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (slug) {
+      fetchCourse();
+    }
+  }, [slug, router]);
+
+  async function handleUpdateCourse() {
     if (!title.trim()) {
       alert("Please enter a course title.");
       return;
@@ -26,8 +79,8 @@ export default function CreateCoursePage() {
     try {
       setSaving(true);
 
-      const response = await fetch("/api/admin/courses", {
-        method: "POST",
+      const response = await fetch(`/api/admin/courses/${slug}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -35,7 +88,7 @@ export default function CreateCoursePage() {
           title,
           category,
           description,
-          imageUrl: "",
+          imageUrl,
           introVideoUrl,
           learningOutcomes,
           numberOfLessons,
@@ -51,14 +104,57 @@ export default function CreateCoursePage() {
         return;
       }
 
-      alert("✅ Course created successfully!");
-      window.location.href = "/admin/courses";
+      alert("✅ Course updated successfully!");
+      router.push("/admin/courses");
+      router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while creating the course.");
+      alert("Something went wrong while updating the course.");
     } finally {
       setSaving(false);
     }
+  }
+
+  async function handleDeleteCourse() {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this course? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`/api/admin/courses/${slug}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Something went wrong.");
+        return;
+      }
+
+      alert("Course deleted successfully.");
+      router.push("/admin/courses");
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while deleting the course.");
+    }
+  }
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
+          <h1 className="text-3xl font-bold">Loading course...</h1>
+        </main>
+
+        <Footer />
+      </>
+    );
   }
 
   return (
@@ -72,10 +168,10 @@ export default function CreateCoursePage() {
               ← Back to Course Management
             </Link>
 
-            <h1 className="mt-6 text-5xl font-bold">Add New Course</h1>
+            <h1 className="mt-6 text-5xl font-bold">Edit Course</h1>
 
             <p className="mt-4 text-xl text-gray-600">
-              Create a new course for the KWCA Learning Hub.
+              Update the selected course details.
             </p>
           </div>
         </section>
@@ -89,7 +185,6 @@ export default function CreateCoursePage() {
                 type="text"
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Financial Management for Conservancies"
                 className="w-full rounded-xl border px-4 py-3"
               />
             </div>
@@ -112,20 +207,29 @@ export default function CreateCoursePage() {
             </div>
 
             <div>
-              <label className="mb-2 block font-bold">
-                Course Description
-              </label>
+              <label className="mb-2 block font-bold">Course Description</label>
 
               <textarea
                 rows={5}
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder="Briefly describe what this course teaches..."
                 className="w-full rounded-xl border px-4 py-3"
               />
             </div>
 
             <CourseImageUpload />
+
+            <div>
+              <label className="mb-2 block font-bold">Course Image URL</label>
+
+              <input
+                type="text"
+                value={imageUrl}
+                onChange={(event) => setImageUrl(event.target.value)}
+                placeholder="Image upload storage will be connected later"
+                className="w-full rounded-xl border px-4 py-3"
+              />
+            </div>
 
             <div>
               <label className="mb-2 block font-bold">Course Type</label>
@@ -143,15 +247,12 @@ export default function CreateCoursePage() {
 
             <div className="grid gap-6 md:grid-cols-2">
               <div>
-                <label className="mb-2 block font-bold">
-                  Number of Lessons
-                </label>
+                <label className="mb-2 block font-bold">Number of Lessons</label>
 
                 <input
                   type="number"
                   value={numberOfLessons}
                   onChange={(event) => setNumberOfLessons(event.target.value)}
-                  placeholder="4"
                   className="w-full rounded-xl border px-4 py-3"
                 />
               </div>
@@ -191,27 +292,36 @@ export default function CreateCoursePage() {
                 rows={5}
                 value={learningOutcomes}
                 onChange={(event) => setLearningOutcomes(event.target.value)}
-                placeholder="By the end of this course, learners should be able to..."
                 className="w-full rounded-xl border px-4 py-3"
               />
             </div>
 
-            <div className="flex flex-wrap gap-4 pt-4">
+            <div className="flex flex-wrap justify-between gap-4 pt-4">
+              <div className="flex flex-wrap gap-4">
+                <button
+                  type="button"
+                  onClick={handleUpdateCourse}
+                  disabled={saving}
+                  className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+
+                <Link
+                  href="/admin/courses"
+                  className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                >
+                  Cancel
+                </Link>
+              </div>
+
               <button
                 type="button"
-                onClick={handleCreateCourse}
-                disabled={saving}
-                className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+                onClick={handleDeleteCourse}
+                className="rounded-xl border border-red-200 px-6 py-3 font-bold text-red-600 hover:bg-red-50"
               >
-                {saving ? "Creating..." : "Create Course"}
+                Delete Course
               </button>
-
-              <Link
-                href="/admin/courses"
-                className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
-              >
-                Cancel
-              </Link>
             </div>
           </form>
         </section>

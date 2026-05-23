@@ -1,8 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import { lessons } from "@/data/lessons";
-import { modules } from "@/data/modules";
+import { prisma } from "@/lib/prisma";
 import {
   ArrowLeft,
   BookOpen,
@@ -26,20 +25,27 @@ type PageProps = {
 export default async function LessonPage({ params }: PageProps) {
   const { slug, lesson } = await params;
 
-  const course = modules.find((item) => item.slug === slug);
-  const courseLessons = lessons[slug as keyof typeof lessons] || [];
+  const course = await prisma.course.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      lessons: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
 
-  const lessonNumber = Number(lesson.replace("lesson-", ""));
-  const currentLesson = courseLessons[lessonNumber - 1];
-
-  if (!course || !currentLesson) {
+  if (!course) {
     return (
       <>
         <Navbar />
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
           <h1 className="text-4xl font-bold text-[#07122E]">
-            Lesson not found
+            Course not found
           </h1>
 
           <Link
@@ -55,10 +61,37 @@ export default async function LessonPage({ params }: PageProps) {
     );
   }
 
-  const isPreview = currentLesson.type === "preview";
-  const completedLessons = lessonNumber;
+  const currentLesson = course.lessons.find((item) => item.slug === lesson);
+
+  if (!currentLesson) {
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
+          <h1 className="text-4xl font-bold text-[#07122E]">
+            Lesson not found
+          </h1>
+
+          <Link
+            href={`/courses/${slug}`}
+            className="mt-6 inline-block font-bold text-[#007F73]"
+          >
+            Back to Course
+          </Link>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  const isPreview = currentLesson.accessType === "PREVIEW";
+  const lessonNumber =
+    course.lessons.findIndex((item) => item.id === currentLesson.id) + 1;
+
   const progressPercent = Math.round(
-    (completedLessons / courseLessons.length) * 100
+    (lessonNumber / course.lessons.length) * 100
   );
 
   if (!isPreview) {
@@ -120,7 +153,9 @@ export default async function LessonPage({ params }: PageProps) {
             </Link>
 
             <div className="flex flex-wrap items-center gap-3">
-              <p className="font-bold text-[#007F73]">{course.module}</p>
+              <p className="font-bold text-[#007F73]">
+                Lesson {lessonNumber} of {course.lessons.length}
+              </p>
 
               <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm font-bold text-green-700">
                 <Eye size={14} />
@@ -131,6 +166,10 @@ export default async function LessonPage({ params }: PageProps) {
             <h1 className="mt-4 max-w-5xl text-5xl font-extrabold">
               {currentLesson.title}
             </h1>
+
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
+              {course.title}
+            </p>
 
             <div className="mt-8 max-w-3xl">
               <div className="mb-2 flex justify-between text-sm font-bold text-gray-600">
@@ -149,8 +188,6 @@ export default async function LessonPage({ params }: PageProps) {
         </section>
 
         <section className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-4">
-          {/* LEFT SIDEBAR */}
-
           <aside className="h-fit rounded-3xl bg-white p-6 shadow-sm lg:col-span-1">
             <h2 className="text-xl font-bold">Course Outline</h2>
 
@@ -159,17 +196,17 @@ export default async function LessonPage({ params }: PageProps) {
             </p>
 
             <div className="mt-6 space-y-3">
-              {courseLessons.map((item, index) => {
-                const itemIsPreview = item.type === "preview";
-                const activeLesson = index + 1 === lessonNumber;
+              {course.lessons.map((item, index) => {
+                const itemIsPreview = item.accessType === "PREVIEW";
+                const activeLesson = item.id === currentLesson.id;
                 const itemCompleted = index + 1 < lessonNumber;
 
                 return (
                   <Link
-                    key={item.title}
+                    key={item.id}
                     href={
                       itemIsPreview
-                        ? `/courses/${slug}/lesson-${index + 1}`
+                        ? `/courses/${course.slug}/${item.slug}`
                         : "/pricing"
                     }
                     className={`block rounded-xl border p-4 transition-all duration-300 hover:shadow-sm ${
@@ -232,6 +269,7 @@ export default async function LessonPage({ params }: PageProps) {
 
             <div className="mt-6 rounded-2xl bg-gray-50 p-5">
               <p className="font-bold">Need full access?</p>
+
               <p className="mt-2 text-sm text-gray-600">
                 Unlock all premium lessons, quizzes, resources, and
                 certificates.
@@ -246,20 +284,27 @@ export default async function LessonPage({ params }: PageProps) {
             </div>
           </aside>
 
-          {/* MAIN LESSON CONTENT */}
-
           <section className="space-y-8 lg:col-span-3">
             <div className="rounded-3xl bg-white p-8 shadow-sm">
               <div className="flex aspect-video items-center justify-center rounded-3xl bg-[#07122E] text-white">
-                <div className="text-center">
-                  <PlayCircle className="mx-auto mb-4" size={72} />
+                {currentLesson.videoUrl ? (
+                  <iframe
+                    src={currentLesson.videoUrl}
+                    title={currentLesson.title}
+                    className="h-full w-full rounded-3xl"
+                    allowFullScreen
+                  />
+                ) : (
+                  <div className="text-center">
+                    <PlayCircle className="mx-auto mb-4" size={72} />
 
-                  <p className="text-3xl font-bold">Lesson Video</p>
+                    <p className="text-3xl font-bold">Lesson Video</p>
 
-                  <p className="mt-2 text-white/70">
-                    Video content will be embedded here.
-                  </p>
-                </div>
+                    <p className="mt-2 text-white/70">
+                      Video content will be embedded here.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="mt-8 flex flex-wrap gap-4">
@@ -288,22 +333,19 @@ export default async function LessonPage({ params }: PageProps) {
               </div>
 
               <p className="leading-8 text-gray-600">
-                This free preview lesson introduces the topic and gives learners
-                a sample of the course content before unlocking the full module.
-                Learners should understand the basic purpose of conservancies
-                and how they contribute to both biodiversity protection and
-                community livelihoods.
+                {currentLesson.content ||
+                  "Lesson content will appear here once added by the admin."}
               </p>
 
-              <div className="mt-8 rounded-2xl bg-gray-50 p-6">
-                <h3 className="text-xl font-bold">Key Takeaway</h3>
+              {currentLesson.notes && (
+                <div className="mt-8 rounded-2xl bg-gray-50 p-6">
+                  <h3 className="text-xl font-bold">Key Takeaway</h3>
 
-                <p className="mt-3 leading-8 text-gray-600">
-                  A conservancy is not just a land area for wildlife. It is also
-                  a governance and community institution that brings people,
-                  land, wildlife, and livelihoods together.
-                </p>
-              </div>
+                  <p className="mt-3 leading-8 text-gray-600">
+                    {currentLesson.notes}
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
@@ -319,13 +361,23 @@ export default async function LessonPage({ params }: PageProps) {
                   models support conservation and community governance.
                 </p>
 
-                <Link
-                  href="#"
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold hover:bg-gray-50"
-                >
-                  <Download size={18} />
-                  Download Reading
-                </Link>
+                {currentLesson.readingUrl ? (
+                  <Link
+                    href={currentLesson.readingUrl}
+                    className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold hover:bg-gray-50"
+                  >
+                    <Download size={18} />
+                    Download Reading
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold text-gray-400"
+                  >
+                    <Download size={18} />
+                    Reading Coming Soon
+                  </button>
+                )}
               </div>
 
               <div className="rounded-3xl bg-white p-8 shadow-sm">
@@ -336,8 +388,8 @@ export default async function LessonPage({ params }: PageProps) {
                 </div>
 
                 <p className="leading-8 text-gray-600">
-                  Reflect on one conservancy you know and identify how it
-                  supports both wildlife conservation and community livelihoods.
+                  Reflect on this lesson and check your understanding before
+                  moving to the final graded quiz.
                 </p>
 
                 <Link

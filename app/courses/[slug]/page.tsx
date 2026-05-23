@@ -1,9 +1,16 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import { modules } from "@/data/modules";
-import { lessons } from "@/data/lessons";
-import { ArrowRight, Lock, Eye, BookOpen } from "lucide-react";
+import { prisma } from "@/lib/prisma";
+import {
+  ArrowRight,
+  Lock,
+  Eye,
+  BookOpen,
+  FileText,
+  Download,
+  HelpCircle,
+} from "lucide-react";
 
 type PageProps = {
   params: Promise<{
@@ -14,8 +21,18 @@ type PageProps = {
 export default async function CourseDetailPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const course = modules.find((item) => item.slug === slug);
-  const courseLessons = lessons[slug as keyof typeof lessons] || [];
+  const course = await prisma.course.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      lessons: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
 
   if (!course) {
     return (
@@ -27,9 +44,13 @@ export default async function CourseDetailPage({ params }: PageProps) {
             Course not found
           </h1>
 
+          <p className="mt-4 text-gray-600">
+            This course may not exist or may have been removed.
+          </p>
+
           <Link
             href="/courses"
-            className="mt-6 inline-block font-bold text-[#007F73]"
+            className="mt-6 inline-block rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
           >
             Back to Courses
           </Link>
@@ -54,17 +75,31 @@ export default async function CourseDetailPage({ params }: PageProps) {
               ← Back to all courses
             </Link>
 
-            <p className="font-bold text-[#007F73]">
-              {course.module}
-            </p>
+            <div className="flex flex-wrap gap-3">
+              <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#007F73]">
+                {course.category || "General"}
+              </span>
 
-            <h1 className="mt-4 max-w-4xl text-5xl font-extrabold">
+              {course.accessType === "FREE_PREVIEW" ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
+                  <Eye size={15} />
+                  Free Preview
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+                  <Lock size={15} />
+                  Premium
+                </span>
+              )}
+            </div>
+
+            <h1 className="mt-6 max-w-4xl text-5xl font-extrabold">
               {course.title}
             </h1>
 
             <p className="mt-5 max-w-3xl text-lg leading-8 text-gray-600">
-              This module includes structured lessons, free preview content,
-              premium learning material, downloadable resources, and quizzes.
+              {course.description ||
+                "This course includes structured lessons, learning notes, downloadable resources, and assessments."}
             </p>
           </div>
         </section>
@@ -72,31 +107,29 @@ export default async function CourseDetailPage({ params }: PageProps) {
         <section className="px-6 py-16">
           <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-3">
             <div className="rounded-3xl bg-white p-8 shadow-sm lg:col-span-2">
-              <div className="mb-8 flex items-center justify-between gap-4">
+              <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-3xl font-bold">
-                    Course Lessons
-                  </h2>
+                  <h2 className="text-3xl font-bold">Course Lessons</h2>
 
                   <p className="mt-2 text-gray-600">
-                    Start with the free preview, then unlock the full course.
+                    Start with the free preview, then unlock premium lessons.
                   </p>
                 </div>
 
                 <span className="rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
-                  {courseLessons.length} Lessons
+                  {course.lessons.length} Lessons
                 </span>
               </div>
 
-              {courseLessons.length > 0 ? (
+              {course.lessons.length > 0 ? (
                 <div className="space-y-4">
-                  {courseLessons.map((lesson, index) => {
-                    const isPreview = lesson.type === "preview";
-                    const lessonUrl = `/courses/${slug}/lesson-${index + 1}`;
+                  {course.lessons.map((lesson, index) => {
+                    const isPreview = lesson.accessType === "PREVIEW";
+                    const lessonUrl = `/courses/${course.slug}/${lesson.slug}`;
 
                     return (
                       <Link
-                        key={lesson.title}
+                        key={lesson.id}
                         href={isPreview ? lessonUrl : "/pricing"}
                         className={`group flex items-center justify-between rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${
                           isPreview
@@ -126,12 +159,18 @@ export default async function CourseDetailPage({ params }: PageProps) {
                           <h3 className="text-lg font-bold text-[#07122E]">
                             {lesson.title}
                           </h3>
+
+                          {lesson.content && (
+                            <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
+                              {lesson.content}
+                            </p>
+                          )}
                         </div>
 
                         {isPreview ? (
-                          <ArrowRight className="text-[#007F73] transition group-hover:translate-x-1" />
+                          <ArrowRight className="shrink-0 text-[#007F73] transition group-hover:translate-x-1" />
                         ) : (
-                          <Lock className="text-[#D94A00]" />
+                          <Lock className="shrink-0 text-[#D94A00]" />
                         )}
                       </Link>
                     );
@@ -139,16 +178,22 @@ export default async function CourseDetailPage({ params }: PageProps) {
                 </div>
               ) : (
                 <div className="rounded-2xl border border-dashed border-gray-300 p-8 text-center">
-                  <p className="text-gray-600">
-                    Lessons for this course will be added soon.
+                  <BookOpen className="mx-auto mb-3 text-gray-400" size={34} />
+
+                  <p className="font-bold text-gray-700">
+                    No lessons added yet
+                  </p>
+
+                  <p className="mt-2 text-gray-600">
+                    Lessons added by the admin will appear here.
                   </p>
                 </div>
               )}
 
               <Link
                 href={
-                  courseLessons.length > 0
-                    ? `/courses/${slug}/lesson-1`
+                  course.lessons.length > 0
+                    ? `/courses/${course.slug}/${course.lessons[0].slug}`
                     : "/courses"
                 }
                 className="mt-8 inline-block rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
@@ -158,44 +203,51 @@ export default async function CourseDetailPage({ params }: PageProps) {
             </div>
 
             <aside className="h-fit rounded-3xl bg-white p-8 shadow-sm">
-              <h3 className="text-2xl font-bold">
-                Module Includes
-              </h3>
+              <h3 className="text-2xl font-bold">Module Includes</h3>
 
               <ul className="mt-6 space-y-4 text-gray-600">
                 <li className="flex gap-3">
-                  <BookOpen className="text-[#007F73]" size={20} />
+                  <BookOpen className="shrink-0 text-[#007F73]" size={20} />
                   Free preview lesson
                 </li>
 
                 <li className="flex gap-3">
-                  <Lock className="text-[#D94A00]" size={20} />
+                  <Lock className="shrink-0 text-[#D94A00]" size={20} />
                   Premium locked lessons
                 </li>
 
                 <li className="flex gap-3">
-                  <BookOpen className="text-[#007F73]" size={20} />
+                  <FileText className="shrink-0 text-[#007F73]" size={20} />
                   Reading notes
                 </li>
 
                 <li className="flex gap-3">
-                  <BookOpen className="text-[#007F73]" size={20} />
+                  <Download className="shrink-0 text-[#007F73]" size={20} />
                   Downloadable resources
                 </li>
 
                 <li className="flex gap-3">
-                  <BookOpen className="text-[#007F73]" size={20} />
+                  <HelpCircle className="shrink-0 text-[#007F73]" size={20} />
                   Practice and final quiz
                 </li>
               </ul>
 
-              <div className="mt-8 rounded-2xl bg-gray-50 p-5">
-                <p className="font-bold">
-                  Want full access?
-                </p>
+              {course.learningOutcomes && (
+                <div className="mt-8 rounded-2xl bg-gray-50 p-5">
+                  <p className="font-bold">Learning Outcomes</p>
+
+                  <p className="mt-2 text-sm leading-6 text-gray-600">
+                    {course.learningOutcomes}
+                  </p>
+                </div>
+              )}
+
+              <div className="mt-8 rounded-2xl bg-[#F2FBF8] p-5">
+                <p className="font-bold">Want full access?</p>
 
                 <p className="mt-2 text-sm text-gray-600">
-                  Unlock all lessons through course payment or subscription.
+                  Unlock all premium lessons through course payment or
+                  subscription.
                 </p>
 
                 <Link

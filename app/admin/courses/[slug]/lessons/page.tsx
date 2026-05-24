@@ -2,11 +2,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import AdminLessonDeleteButton from "@/components/AdminLessonDeleteButton";
 import {
   ArrowLeft,
   Plus,
   Pencil,
-  Trash2,
   Eye,
   Lock,
   PlayCircle,
@@ -240,13 +240,11 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
                           Edit
                         </Link>
 
-                        <button
-                          type="button"
-                          className="inline-flex items-center gap-2 rounded-xl border border-red-200 px-4 py-3 font-bold text-red-600 hover:bg-red-50"
-                        >
-                          <Trash2 size={17} />
-                          Delete
-                        </button>
+                        <AdminLessonDeleteButton
+                          courseSlug={course.slug}
+                          lessonSlug={lesson.slug}
+                          title={lesson.title}
+                        />
                       </div>
                     </div>
                   );

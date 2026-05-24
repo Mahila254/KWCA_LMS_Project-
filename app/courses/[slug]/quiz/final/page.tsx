@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -8,111 +8,350 @@ import { useParams } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
-  Award,
   CheckCircle,
-  RotateCcw,
   XCircle,
+  RotateCcw,
+  ClipboardList,
+  Award,
 } from "lucide-react";
 
-const questions = [
-  {
-    question: "What is the main purpose of a wildlife conservancy?",
-    options: [
-      "To protect wildlife only without community involvement",
-      "To support conservation, governance, land management, and community livelihoods",
-      "To replace all national parks",
-      "To operate only as a tourism business",
-    ],
-    answer:
-      "To support conservation, governance, land management, and community livelihoods",
-  },
-  {
-    question: "Which group should be included in strong conservancy governance?",
-    options: [
-      "Only external consultants",
-      "Only tourism investors",
-      "Community leaders, women, youth, managers, and stakeholders",
-      "Only government officials",
-    ],
-    answer: "Community leaders, women, youth, managers, and stakeholders",
-  },
-  {
-    question: "Why are conservancies important for communities?",
-    options: [
-      "They remove communities from land",
-      "They create opportunities for participation, livelihoods, and local conservation leadership",
-      "They only focus on animals",
-      "They stop all economic activities",
-    ],
-    answer:
-      "They create opportunities for participation, livelihoods, and local conservation leadership",
-  },
-  {
-    question: "What does effective conservancy management require?",
-    options: [
-      "Clear governance, planning, accountability, and community participation",
-      "No leadership structure",
-      "Only donor funding",
-      "Only tourism marketing",
-    ],
-    answer:
-      "Clear governance, planning, accountability, and community participation",
-  },
-];
+type QuizQuestion = {
+  id: string;
+  quizType: "PRACTICE" | "FINAL";
+  question: string;
+  optionA: string;
+  optionB: string;
+  optionC: string;
+  optionD: string;
+  correctAnswer: string;
+  explanation?: string;
+  order: number;
+};
+
+type Course = {
+  title: string;
+  slug: string;
+};
 
 export default function FinalQuizPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+  const params = useParams<{ slug: string }>();
+  const courseSlug = params.slug;
 
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [course, setCourse] = useState<Course | null>(null);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [answers, setAnswers] = useState<string[]>([]);
-  const [showResult, setShowResult] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
-  const question = questions[currentQuestion];
-  const isLastQuestion = currentQuestion === questions.length - 1;
+  useEffect(() => {
+    async function fetchFinalQuestions() {
+      try {
+        const response = await fetch(
+          `/api/admin/courses/${courseSlug}/quiz-questions`
+        );
 
-  const score = answers.filter(
-    (answer, index) => answer === questions[index].answer
-  ).length;
+        const data = await response.json();
 
-  const percentage = Math.round((score / questions.length) * 100);
-  const passed = percentage >= 70;
+        if (!response.ok) {
+          alert(data.error || "Something went wrong while loading final quiz.");
+          return;
+        }
 
-  function handleNext() {
+        setCourse(data.course);
+
+        const finalQuestions = (data.quizQuestions || []).filter(
+          (item: QuizQuestion) => item.quizType === "FINAL"
+        );
+
+        setQuestions(finalQuestions);
+      } catch (error) {
+        console.error(error);
+        alert("Something went wrong while loading the final quiz.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (courseSlug) {
+      fetchFinalQuestions();
+    }
+  }, [courseSlug]);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
+          <h1 className="text-3xl font-bold">Loading final quiz...</h1>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 text-[#07122E]">
+          <section className="bg-[#F2FBF8] px-6 py-16">
+            <div className="mx-auto max-w-4xl">
+              <Link
+                href={`/courses/${courseSlug}`}
+                className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              >
+                <ArrowLeft size={18} />
+                Back to Course
+              </Link>
+
+              <h1 className="mt-6 text-5xl font-extrabold">Final Quiz</h1>
+
+              <p className="mt-4 text-lg text-gray-600">
+                {course?.title || "Course"}
+              </p>
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-3xl px-6 py-16">
+            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-[#D94A00]">
+                <ClipboardList size={32} />
+              </div>
+
+              <h2 className="text-3xl font-bold">No final quiz questions yet</h2>
+
+              <p className="mt-3 text-gray-600">
+                Final quiz questions added by the admin will appear here.
+              </p>
+
+              <Link
+                href={`/courses/${courseSlug}`}
+                className="mt-6 inline-block rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+              >
+                Back to Course
+              </Link>
+            </div>
+          </section>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  const currentQuestion = questions[currentQuestionIndex];
+
+  const answerOptions = [
+    { label: "A", text: currentQuestion.optionA },
+    { label: "B", text: currentQuestion.optionB },
+    { label: "C", text: currentQuestion.optionC },
+    { label: "D", text: currentQuestion.optionD },
+  ];
+
+  const progressPercent = Math.round(
+    ((currentQuestionIndex + 1) / questions.length) * 100
+  );
+
+  function handleNextQuestion() {
     if (!selectedAnswer) {
       alert("Please select an answer before continuing.");
       return;
     }
 
     const updatedAnswers = [...answers];
-    updatedAnswers[currentQuestion] = selectedAnswer;
+    updatedAnswers[currentQuestionIndex] = selectedAnswer;
     setAnswers(updatedAnswers);
 
-    if (isLastQuestion) {
-      setShowResult(true);
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((previousIndex) => previousIndex + 1);
+      setSelectedAnswer(updatedAnswers[currentQuestionIndex + 1] || "");
     } else {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(updatedAnswers[currentQuestion + 1] || "");
+      setCompleted(true);
     }
   }
 
-  function handlePrevious() {
-    if (currentQuestion === 0) return;
+  function handlePreviousQuestion() {
+    if (currentQuestionIndex > 0) {
+      const updatedAnswers = [...answers];
+      updatedAnswers[currentQuestionIndex] = selectedAnswer;
+      setAnswers(updatedAnswers);
 
-    const updatedAnswers = [...answers];
-    updatedAnswers[currentQuestion] = selectedAnswer;
-    setAnswers(updatedAnswers);
-
-    setCurrentQuestion(currentQuestion - 1);
-    setSelectedAnswer(updatedAnswers[currentQuestion - 1] || "");
+      setCurrentQuestionIndex((previousIndex) => previousIndex - 1);
+      setSelectedAnswer(updatedAnswers[currentQuestionIndex - 1] || "");
+    }
   }
 
-  function restartQuiz() {
-    setCurrentQuestion(0);
+  function handleRetakeQuiz() {
+    setCurrentQuestionIndex(0);
     setSelectedAnswer("");
     setAnswers([]);
-    setShowResult(false);
+    setCompleted(false);
+  }
+
+  if (completed) {
+    const finalAnswers = [...answers];
+    finalAnswers[currentQuestionIndex] = selectedAnswer;
+
+    const score = questions.reduce((total, question, index) => {
+      return finalAnswers[index] === question.correctAnswer ? total + 1 : total;
+    }, 0);
+
+    const percentage = Math.round((score / questions.length) * 100);
+    const passed = percentage >= 70;
+
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 text-[#07122E]">
+          <section className="bg-[#F2FBF8] px-6 py-16">
+            <div className="mx-auto max-w-4xl">
+              <Link
+                href={`/courses/${courseSlug}`}
+                className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              >
+                <ArrowLeft size={18} />
+                Back to Course
+              </Link>
+
+              <h1 className="mt-6 text-5xl font-extrabold">
+                Final Quiz Results
+              </h1>
+
+              <p className="mt-4 text-lg text-gray-600">
+                {course?.title || "Course"}
+              </p>
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-4xl px-6 py-16">
+            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
+              <div
+                className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full ${
+                  passed
+                    ? "bg-[#F2FBF8] text-[#007F73]"
+                    : "bg-red-50 text-red-600"
+                }`}
+              >
+                {passed ? <Award size={42} /> : <XCircle size={42} />}
+              </div>
+
+              <h2 className="text-4xl font-bold">
+                {passed ? "Congratulations, you passed!" : "Not passed yet"}
+              </h2>
+
+              <p
+                className={`mt-6 text-6xl font-extrabold ${
+                  passed ? "text-[#007F73]" : "text-red-600"
+                }`}
+              >
+                {percentage}%
+              </p>
+
+              <p className="mt-4 text-lg text-gray-600">
+                You answered {score} out of {questions.length} questions
+                correctly. Passing score is 70%.
+              </p>
+
+              <div className="mt-10 rounded-2xl bg-gray-50 p-6 text-left">
+                <h3 className="text-2xl font-bold">Review Answers</h3>
+
+                <div className="mt-6 space-y-5">
+                  {questions.map((question, index) => {
+                    const userAnswer = finalAnswers[index];
+                    const correct = userAnswer === question.correctAnswer;
+
+                    return (
+                      <div
+                        key={question.id}
+                        className="rounded-2xl bg-white p-5"
+                      >
+                        <div className="flex items-start gap-3">
+                          {correct ? (
+                            <CheckCircle
+                              className="mt-1 shrink-0 text-green-600"
+                              size={22}
+                            />
+                          ) : (
+                            <XCircle
+                              className="mt-1 shrink-0 text-red-600"
+                              size={22}
+                            />
+                          )}
+
+                          <div>
+                            <p className="font-bold">
+                              {index + 1}. {question.question}
+                            </p>
+
+                            <p className="mt-2 text-sm text-gray-600">
+                              Your answer:{" "}
+                              <span className="font-bold">
+                                {userAnswer || "No answer"}
+                              </span>
+                            </p>
+
+                            <p className="mt-1 text-sm text-gray-600">
+                              Correct answer:{" "}
+                              <span className="font-bold">
+                                {question.correctAnswer}
+                              </span>
+                            </p>
+
+                            {question.explanation && (
+                              <p className="mt-3 text-sm leading-6 text-gray-600">
+                                {question.explanation}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-8 flex flex-wrap justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={handleRetakeQuiz}
+                  className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                >
+                  <RotateCcw size={18} />
+                  Retake Final Quiz
+                </button>
+
+                {passed ? (
+                  <Link
+                    href={`/courses/${courseSlug}/certificate`}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    Generate Certificate
+                    <Award size={18} />
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/courses/${courseSlug}/quiz/practice`}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    Review Practice Quiz
+                    <ArrowRight size={18} />
+                  </Link>
+                )}
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <Footer />
+      </>
+    );
   }
 
   return (
@@ -120,184 +359,94 @@ export default function FinalQuizPage() {
       <Navbar />
 
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#F2FBF8] px-6 py-12">
-          <div className="mx-auto max-w-5xl">
+        <section className="bg-[#F2FBF8] px-6 py-16">
+          <div className="mx-auto max-w-4xl">
             <Link
-              href={`/courses/${slug}/lesson-1`}
-              className="mb-6 inline-flex items-center gap-2 font-bold text-[#007F73]"
+              href={`/courses/${courseSlug}`}
+              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
             >
               <ArrowLeft size={18} />
-              Back to Lesson
+              Back to Course
             </Link>
 
-            <p className="font-bold text-[#007F73]">Final Graded Quiz</p>
+            <p className="mt-8 font-bold text-[#D94A00]">Final Graded Quiz</p>
 
             <h1 className="mt-3 text-5xl font-extrabold">
-              Complete the Course Assessment
+              {course?.title || "Course"}
             </h1>
 
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
-              This is the final quiz for the course. A score of 70% or above
-              unlocks the certificate.
+            <p className="mt-4 text-gray-600">
+              Answer all questions carefully. Passing score is 70%.
             </p>
+
+            <div className="mt-8">
+              <div className="mb-2 flex justify-between text-sm font-bold text-gray-600">
+                <span>
+                  Question {currentQuestionIndex + 1} of {questions.length}
+                </span>
+                <span>{progressPercent}%</span>
+              </div>
+
+              <div className="h-3 rounded-full bg-white">
+                <div
+                  className="h-3 rounded-full bg-[#D94A00]"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="px-6 py-14">
-          <div className="mx-auto max-w-4xl">
-            {!showResult ? (
-              <div className="rounded-3xl bg-white p-8 shadow-sm">
-                <div className="mb-8">
-                  <p className="font-bold text-[#007F73]">
-                    Question {currentQuestion + 1} of {questions.length}
-                  </p>
+        <section className="mx-auto max-w-4xl px-6 py-12">
+          <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <h2 className="text-3xl font-bold leading-snug">
+              {currentQuestion.question}
+            </h2>
 
-                  <h2 className="mt-3 text-3xl font-bold">
-                    {question.question}
-                  </h2>
-                </div>
+            <div className="mt-8 grid gap-4">
+              {answerOptions.map((option) => {
+                const selected = selectedAnswer === option.label;
 
-                <div className="space-y-4">
-                  {question.options.map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => setSelectedAnswer(option)}
-                      className={`w-full rounded-2xl border p-5 text-left font-semibold transition-all duration-300 hover:border-[#007F73] hover:bg-[#F2FBF8] ${
-                        selectedAnswer === option
-                          ? "border-[#007F73] bg-[#F2FBF8]"
-                          : "border-gray-200 bg-white"
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="mt-8 flex flex-wrap justify-between gap-4">
+                return (
                   <button
+                    key={option.label}
                     type="button"
-                    onClick={handlePrevious}
-                    disabled={currentQuestion === 0}
-                    className="rounded-xl border px-6 py-3 font-bold transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    onClick={() => setSelectedAnswer(option.label)}
+                    className={`rounded-2xl border p-5 text-left font-semibold transition ${
+                      selected
+                        ? "border-[#D94A00] bg-orange-50 text-[#D94A00]"
+                        : "border-gray-200 hover:border-[#D94A00] hover:bg-orange-50"
+                    }`}
                   >
-                    Previous
+                    <span className="mr-2 font-extrabold">{option.label}.</span>
+                    {option.text}
                   </button>
+                );
+              })}
+            </div>
 
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white transition hover:bg-[#00665d]"
-                  >
-                    {isLastQuestion ? "Submit Final Quiz" : "Next Question"}
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-                <div
-                  className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full ${
-                    passed
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
-                >
-                  {passed ? <Award size={42} /> : <XCircle size={42} />}
-                </div>
+            <div className="mt-8 flex flex-wrap justify-between gap-4">
+              <button
+                type="button"
+                onClick={handlePreviousQuestion}
+                disabled={currentQuestionIndex === 0}
+                className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <ArrowLeft size={18} />
+                Previous
+              </button>
 
-                <p
-                  className={`font-bold ${
-                    passed ? "text-green-700" : "text-red-700"
-                  }`}
-                >
-                  {passed ? "Final Quiz Passed" : "Final Quiz Not Passed"}
-                </p>
-
-                <h2 className="mt-3 text-5xl font-extrabold">
-                  Your Score: {percentage}%
-                </h2>
-
-                <p className="mt-4 text-lg text-gray-600">
-                  You answered {score} out of {questions.length} questions
-                  correctly.
-                </p>
-
-                <div className="mt-8 rounded-2xl bg-gray-50 p-6 text-left">
-                  <h3 className="text-xl font-bold">Review</h3>
-
-                  <div className="mt-5 space-y-4">
-                    {questions.map((item, index) => {
-                      const correct = answers[index] === item.answer;
-
-                      return (
-                        <div
-                          key={item.question}
-                          className="rounded-xl bg-white p-5"
-                        >
-                          <div className="flex items-start gap-3">
-                            {correct ? (
-                              <CheckCircle
-                                className="mt-1 shrink-0 text-green-600"
-                                size={20}
-                              />
-                            ) : (
-                              <XCircle
-                                className="mt-1 shrink-0 text-red-600"
-                                size={20}
-                              />
-                            )}
-
-                            <div>
-                              <p className="font-bold">
-                                {index + 1}. {item.question}
-                              </p>
-
-                              <p className="mt-2 text-sm text-gray-600">
-                                Your answer: {answers[index]}
-                              </p>
-
-                              {!correct && (
-                                <p className="mt-1 text-sm font-semibold text-green-700">
-                                  Correct answer: {item.answer}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="mt-8 flex flex-wrap justify-center gap-4">
-                  <button
-                    type="button"
-                    onClick={restartQuiz}
-                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold transition hover:bg-gray-50"
-                  >
-                    <RotateCcw size={18} />
-                    Retake Final Quiz
-                  </button>
-
-                  {passed ? (
-                    <Link
-                      href={`/courses/${slug}/certificate`}
-                      className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white transition hover:bg-[#00665d]"
-                    >
-                      Generate Certificate
-                    </Link>
-                  ) : (
-                    <Link
-                      href={`/courses/${slug}/quiz/practice`}
-                      className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white transition hover:bg-[#00665d]"
-                    >
-                      Review Practice Quiz
-                    </Link>
-                  )}
-                </div>
-              </div>
-            )}
+              <button
+                type="button"
+                onClick={handleNextQuestion}
+                className="inline-flex items-center gap-2 rounded-xl bg-[#D94A00] px-6 py-3 font-bold text-white hover:bg-[#b83f00]"
+              >
+                {currentQuestionIndex === questions.length - 1
+                  ? "Submit Quiz"
+                  : "Next Question"}
+                <ArrowRight size={18} />
+              </button>
+            </div>
           </div>
         </section>
       </main>

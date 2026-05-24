@@ -11,6 +11,10 @@ import {
   HelpCircle,
   CheckCircle,
   ClipboardList,
+  Pencil,
+  Trash2,
+  XCircle,
+  Save,
 } from "lucide-react";
 
 type QuizQuestion = {
@@ -50,6 +54,10 @@ export default function AdminQuizQuestionsPage() {
   const [explanation, setExplanation] = useState("");
   const [order, setOrder] = useState("");
 
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
+    null
+  );
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -83,13 +91,49 @@ export default function AdminQuizQuestionsPage() {
     }
   }, [courseSlug]);
 
-  async function handleCreateQuestion() {
+  function clearForm() {
+    setQuizType("PRACTICE");
+    setQuestion("");
+    setOptionA("");
+    setOptionB("");
+    setOptionC("");
+    setOptionD("");
+    setCorrectAnswer("A");
+    setExplanation("");
+    setOrder("");
+    setEditingQuestionId(null);
+  }
+
+  function handleEditQuestion(item: QuizQuestion) {
+    setEditingQuestionId(item.id);
+    setQuizType(item.quizType);
+    setQuestion(item.question);
+    setOptionA(item.optionA);
+    setOptionB(item.optionB);
+    setOptionC(item.optionC);
+    setOptionD(item.optionD);
+    setCorrectAnswer(item.correctAnswer);
+    setExplanation(item.explanation || "");
+    setOrder(String(item.order || ""));
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+
+  async function handleSaveQuestion() {
     if (!question.trim()) {
       alert("Please enter the quiz question.");
       return;
     }
 
-    if (!optionA.trim() || !optionB.trim() || !optionC.trim() || !optionD.trim()) {
+    if (
+      !optionA.trim() ||
+      !optionB.trim() ||
+      !optionC.trim() ||
+      !optionD.trim()
+    ) {
       alert("Please fill in all four answer options.");
       return;
     }
@@ -97,24 +141,65 @@ export default function AdminQuizQuestionsPage() {
     try {
       setSaving(true);
 
+      const url = editingQuestionId
+        ? `/api/admin/courses/${courseSlug}/quiz-questions/${editingQuestionId}`
+        : `/api/admin/courses/${courseSlug}/quiz-questions`;
+
+      const method = editingQuestionId ? "PATCH" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quizType,
+          question,
+          optionA,
+          optionB,
+          optionC,
+          optionD,
+          correctAnswer,
+          explanation,
+          order,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Something went wrong.");
+        return;
+      }
+
+      alert(
+        editingQuestionId
+          ? "✅ Quiz question updated successfully!"
+          : "✅ Quiz question created successfully!"
+      );
+
+      clearForm();
+      await fetchQuizQuestions();
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while saving the quiz question.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDeleteQuestion(item: QuizQuestion) {
+    const confirmDelete = confirm(
+      `Are you sure you want to delete this quiz question?\n\n"${item.question}"`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
       const response = await fetch(
-        `/api/admin/courses/${courseSlug}/quiz-questions`,
+        `/api/admin/courses/${courseSlug}/quiz-questions/${item.id}`,
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            quizType,
-            question,
-            optionA,
-            optionB,
-            optionC,
-            optionD,
-            correctAnswer,
-            explanation,
-            order,
-          }),
+          method: "DELETE",
         }
       );
 
@@ -125,23 +210,16 @@ export default function AdminQuizQuestionsPage() {
         return;
       }
 
-      alert("✅ Quiz question created successfully!");
+      alert("Quiz question deleted successfully.");
 
-      setQuestion("");
-      setOptionA("");
-      setOptionB("");
-      setOptionC("");
-      setOptionD("");
-      setCorrectAnswer("A");
-      setExplanation("");
-      setOrder("");
+      if (editingQuestionId === item.id) {
+        clearForm();
+      }
 
       await fetchQuizQuestions();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while creating the quiz question.");
-    } finally {
-      setSaving(false);
+      alert("Something went wrong while deleting the quiz question.");
     }
   }
 
@@ -190,7 +268,8 @@ export default function AdminQuizQuestionsPage() {
               </h1>
 
               <p className="mt-4 max-w-3xl text-xl text-gray-600">
-                Add practice and final quiz questions for this course.
+                Add, edit, and delete practice and final quiz questions for this
+                course.
               </p>
             </div>
           </div>
@@ -249,7 +328,10 @@ export default function AdminQuizQuestionsPage() {
               ) : (
                 <div className="divide-y">
                   {quizQuestions.map((item) => (
-                    <div key={item.id} className="grid gap-6 px-6 py-6 md:grid-cols-[70px_1fr]">
+                    <div
+                      key={item.id}
+                      className="grid gap-6 px-6 py-6 md:grid-cols-[70px_1fr]"
+                    >
                       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-xl font-bold text-[#007F73]">
                         {item.order}
                       </div>
@@ -296,6 +378,26 @@ export default function AdminQuizQuestionsPage() {
                             <strong>Explanation:</strong> {item.explanation}
                           </p>
                         )}
+
+                        <div className="mt-5 flex flex-wrap gap-3">
+                          <button
+                            type="button"
+                            onClick={() => handleEditQuestion(item)}
+                            className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-4 py-3 font-bold text-white hover:bg-[#00665d]"
+                          >
+                            <Pencil size={17} />
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteQuestion(item)}
+                            className="inline-flex items-center gap-2 rounded-xl border border-red-200 px-4 py-3 font-bold text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 size={17} />
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -305,12 +407,21 @@ export default function AdminQuizQuestionsPage() {
           </div>
 
           <aside className="h-fit rounded-3xl bg-white p-8 shadow-sm">
-            <h2 className="text-2xl font-bold">Add Quiz Question</h2>
+            <h2 className="text-2xl font-bold">
+              {editingQuestionId ? "Edit Quiz Question" : "Add Quiz Question"}
+            </h2>
 
             <p className="mt-2 text-gray-600">
-              Create a question for either the practice quiz or final graded
-              quiz.
+              {editingQuestionId
+                ? "Update the selected quiz question below."
+                : "Create a question for either the practice quiz or final graded quiz."}
             </p>
+
+            {editingQuestionId && (
+              <div className="mt-5 rounded-2xl bg-orange-50 p-4 text-sm font-semibold text-[#D94A00]">
+                You are currently editing a saved quiz question.
+              </div>
+            )}
 
             <div className="mt-6 space-y-5">
               <div>
@@ -421,13 +532,28 @@ export default function AdminQuizQuestionsPage() {
 
               <button
                 type="button"
-                onClick={handleCreateQuestion}
+                onClick={handleSaveQuestion}
                 disabled={saving}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <Plus size={18} />
-                {saving ? "Saving..." : "Add Question"}
+                {editingQuestionId ? <Save size={18} /> : <Plus size={18} />}
+                {saving
+                  ? "Saving..."
+                  : editingQuestionId
+                  ? "Save Changes"
+                  : "Add Question"}
               </button>
+
+              {editingQuestionId && (
+                <button
+                  type="button"
+                  onClick={clearForm}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                >
+                  <XCircle size={18} />
+                  Cancel Edit
+                </button>
+              )}
             </div>
           </aside>
         </section>

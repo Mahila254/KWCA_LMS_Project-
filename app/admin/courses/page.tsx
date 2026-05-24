@@ -11,6 +11,7 @@ import {
   Lock,
   GraduationCap,
   ListChecks,
+  HelpCircle,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -169,7 +170,7 @@ export default async function AdminCoursesPage() {
                         </span>
                       </div>
 
-                      <div className="flex flex-wrap items-start gap-3">
+                      <div className="flex max-w-md flex-wrap items-start gap-3">
                         <Link
                           href={`/courses/${course.slug}`}
                           className="rounded-xl border px-4 py-3 font-bold hover:bg-gray-50"
@@ -183,6 +184,14 @@ export default async function AdminCoursesPage() {
                         >
                           <ListChecks size={17} />
                           Lessons
+                        </Link>
+
+                        <Link
+                          href={`/admin/courses/${course.slug}/quiz-questions`}
+                          className="inline-flex items-center gap-2 rounded-xl border border-[#D94A00] px-4 py-3 font-bold text-[#D94A00] hover:bg-orange-50"
+                        >
+                          <HelpCircle size={17} />
+                          Quiz
                         </Link>
 
                         <Link

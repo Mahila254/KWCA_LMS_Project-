@@ -1,148 +1,436 @@
-"use client";
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import {
+  ArrowLeft,
+  User,
+  Mail,
+  BookOpen,
+  ClipboardList,
+  Award,
+  CheckCircle,
+  XCircle,
+  CalendarDays,
+} from "lucide-react";
 
-export default function LearnersAdminPage() {
-  const learners = [
-    {
-      name: "Mary Njeri",
-      email: "mary@kwca.org",
-      course: "What is a Conservancy?",
-      progress: "100%",
-      status: "Active",
+export const dynamic = "force-dynamic";
+
+export default async function AdminLearnersPage() {
+  const learners = await prisma.user.findMany({
+    orderBy: {
+      createdAt: "desc",
     },
-    {
-      name: "John Otieno",
-      email: "john@conservancy.org",
-      course: "How to establish a strong Conservancy",
-      progress: "45%",
-      status: "Active",
+    include: {
+      enrollments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          course: true,
+        },
+      },
+      quizResults: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          course: true,
+        },
+      },
+      certificates: {
+        orderBy: {
+          issuedAt: "desc",
+        },
+        include: {
+          course: true,
+        },
+      },
     },
-    {
-      name: "Amina Hassan",
-      email: "amina@community.org",
-      course: "Managing a Conservancy effectively",
-      progress: "20%",
-      status: "Pending",
-    },
-  ];
+  });
 
-  function viewLearner() {
-    alert("👤 Learner profile opened.");
-  }
+  const totalEnrollments = learners.reduce(
+    (total, learner) => total + learner.enrollments.length,
+    0
+  );
 
-  function removeLearner() {
-    const confirmRemove = window.confirm(
-      "Are you sure you want to remove this learner?"
-    );
+  const totalQuizResults = learners.reduce(
+    (total, learner) => total + learner.quizResults.length,
+    0
+  );
 
-    if (confirmRemove) {
-      alert("🗑️ Learner removed successfully!");
-    }
-  }
+  const totalCertificates = learners.reduce(
+    (total, learner) => total + learner.certificates.length,
+    0
+  );
 
   return (
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50">
+      <main className="min-h-screen bg-gray-50 text-[#07122E]">
         <section className="bg-[#EDF5F3] py-16">
-          <div className="mx-auto max-w-6xl px-6">
-            <h1 className="text-6xl font-bold text-[#07122E]">
-              Learner Management
-            </h1>
+          <div className="mx-auto max-w-7xl px-6">
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+            >
+              <ArrowLeft size={18} />
+              Back to Admin Dashboard
+            </Link>
 
-            <p className="mt-4 text-xl text-gray-600">
-              View learners, enrollments, course progress, and account status.
-            </p>
+            <div className="mt-8">
+              <p className="font-bold text-[#007F73]">Learner Management</p>
+
+              <h1 className="mt-3 text-5xl font-bold">Registered Learners</h1>
+
+              <p className="mt-4 max-w-3xl text-xl text-gray-600">
+                View learner accounts, enrollments, course progress, quiz
+                results, and issued certificates.
+              </p>
+            </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 py-16">
-          <div className="mb-10 rounded-3xl bg-white p-8 shadow-sm">
-            <h2 className="text-3xl font-bold">Search Learners</h2>
+        <section className="mx-auto max-w-7xl px-6 py-12">
+          <div className="mb-8 grid gap-6 md:grid-cols-4">
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <User className="text-[#007F73]" size={28} />
+                <p className="text-sm font-bold text-gray-500">
+                  Total Learners
+                </p>
+              </div>
 
-            <div className="mt-6 grid gap-6 md:grid-cols-3">
-              <input
-                type="text"
-                placeholder="Search by name or email"
-                className="rounded-xl border px-4 py-3"
-              />
+              <p className="text-4xl font-bold">{learners.length}</p>
+            </div>
 
-              <select className="rounded-xl border px-4 py-3">
-                <option>All Courses</option>
-                <option>What is a Conservancy?</option>
-                <option>How to establish a strong Conservancy</option>
-                <option>Managing a Conservancy effectively</option>
-              </select>
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <BookOpen className="text-[#007F73]" size={28} />
+                <p className="text-sm font-bold text-gray-500">
+                  Total Enrollments
+                </p>
+              </div>
 
-              <select className="rounded-xl border px-4 py-3">
-                <option>All Statuses</option>
-                <option>Active</option>
-                <option>Pending</option>
-                <option>Completed</option>
-              </select>
+              <p className="text-4xl font-bold">{totalEnrollments}</p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <ClipboardList className="text-[#D94A00]" size={28} />
+                <p className="text-sm font-bold text-gray-500">
+                  Quiz Results
+                </p>
+              </div>
+
+              <p className="text-4xl font-bold">{totalQuizResults}</p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <Award className="text-[#007F73]" size={28} />
+                <p className="text-sm font-bold text-gray-500">
+                  Certificates
+                </p>
+              </div>
+
+              <p className="text-4xl font-bold">{totalCertificates}</p>
             </div>
           </div>
 
-          <h2 className="mb-8 text-4xl font-bold">Learners</h2>
-
-          <div className="space-y-6">
-            {learners.map((learner, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between rounded-3xl border bg-white p-8 shadow-sm"
-              >
-                <div>
-                  <h3 className="text-2xl font-bold">{learner.name}</h3>
-
-                  <p className="mt-2 text-gray-500">
-                    {learner.email} • {learner.course}
-                  </p>
-
-                  <div className="mt-4 h-3 w-80 rounded-full bg-gray-200">
-                    <div
-                      className="h-3 rounded-full bg-[#007F73]"
-                      style={{ width: learner.progress }}
-                    />
-                  </div>
-
-                  <p className="mt-2 text-sm text-gray-500">
-                    {learner.progress} complete
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <span
-                    className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                      learner.status === "Active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {learner.status}
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={viewLearner}
-                    className="rounded-xl border px-5 py-2 font-bold hover:bg-gray-100"
-                  >
-                    View
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={removeLearner}
-                    className="rounded-xl bg-red-600 px-5 py-2 font-bold text-white"
-                  >
-                    Remove
-                  </button>
-                </div>
+          {learners.length === 0 ? (
+            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                <User size={32} />
               </div>
-            ))}
-          </div>
+
+              <h2 className="text-3xl font-bold">No learners yet</h2>
+
+              <p className="mt-3 text-gray-600">
+                Learners will appear here after they register and sync with the
+                LMS database.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {learners.map((learner) => {
+                const createdDate = new Date(
+                  learner.createdAt
+                ).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                });
+
+                const passedQuizzes = learner.quizResults.filter(
+                  (result) => result.passed
+                ).length;
+
+                return (
+                  <div
+                    key={learner.id}
+                    className="overflow-hidden rounded-3xl bg-white shadow-sm"
+                  >
+                    <div className="border-b px-6 py-6">
+                      <div className="flex flex-wrap items-start justify-between gap-6">
+                        <div className="flex gap-4">
+                          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                            <User size={34} />
+                          </div>
+
+                          <div>
+                            <h2 className="text-2xl font-bold">
+                              {learner.name || "Unnamed Learner"}
+                            </h2>
+
+                            <p className="mt-2 flex items-center gap-2 text-gray-600">
+                              <Mail size={16} />
+                              {learner.email}
+                            </p>
+
+                            <p className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+                              <CalendarDays size={15} />
+                              Joined {createdDate}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="grid gap-4 sm:grid-cols-4">
+                          <div className="rounded-2xl bg-gray-50 p-4 text-center">
+                            <p className="text-sm font-bold text-gray-500">
+                              Enrolled
+                            </p>
+                            <p className="mt-1 text-2xl font-bold">
+                              {learner.enrollments.length}
+                            </p>
+                          </div>
+
+                          <div className="rounded-2xl bg-gray-50 p-4 text-center">
+                            <p className="text-sm font-bold text-gray-500">
+                              Quizzes
+                            </p>
+                            <p className="mt-1 text-2xl font-bold">
+                              {learner.quizResults.length}
+                            </p>
+                          </div>
+
+                          <div className="rounded-2xl bg-gray-50 p-4 text-center">
+                            <p className="text-sm font-bold text-gray-500">
+                              Passed
+                            </p>
+                            <p className="mt-1 text-2xl font-bold">
+                              {passedQuizzes}
+                            </p>
+                          </div>
+
+                          <div className="rounded-2xl bg-gray-50 p-4 text-center">
+                            <p className="text-sm font-bold text-gray-500">
+                              Certificates
+                            </p>
+                            <p className="mt-1 text-2xl font-bold">
+                              {learner.certificates.length}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-8 p-6 lg:grid-cols-3">
+                      <div>
+                        <div className="mb-4 flex items-center gap-2">
+                          <BookOpen className="text-[#007F73]" size={22} />
+                          <h3 className="text-xl font-bold">Enrollments</h3>
+                        </div>
+
+                        {learner.enrollments.length === 0 ? (
+                          <p className="rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">
+                            No course enrollments yet.
+                          </p>
+                        ) : (
+                          <div className="space-y-3">
+                            {learner.enrollments.map((enrollment) => (
+                              <Link
+                                key={enrollment.id}
+                                href={`/courses/${enrollment.course.slug}`}
+                                className="block rounded-2xl border p-4 hover:bg-gray-50"
+                              >
+                                <p className="font-bold">
+                                  {enrollment.course.title}
+                                </p>
+
+                                <p className="mt-1 text-sm text-gray-600">
+                                  {enrollment.course.category || "General"}
+                                </p>
+
+                                <div className="mt-3">
+                                  <div className="mb-1 flex justify-between text-xs font-bold text-gray-500">
+                                    <span>Progress</span>
+                                    <span>{enrollment.progress}%</span>
+                                  </div>
+
+                                  <div className="h-2 rounded-full bg-gray-100">
+                                    <div
+                                      className="h-2 rounded-full bg-[#007F73]"
+                                      style={{
+                                        width: `${enrollment.progress}%`,
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+
+                                <p
+                                  className={`mt-2 text-sm font-bold ${
+                                    enrollment.completed
+                                      ? "text-green-700"
+                                      : "text-[#D94A00]"
+                                  }`}
+                                >
+                                  {enrollment.completed
+                                    ? "Completed"
+                                    : "In Progress"}
+                                </p>
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <div className="mb-4 flex items-center gap-2">
+                          <ClipboardList
+                            className="text-[#D94A00]"
+                            size={22}
+                          />
+                          <h3 className="text-xl font-bold">Quiz Results</h3>
+                        </div>
+
+                        {learner.quizResults.length === 0 ? (
+                          <p className="rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">
+                            No quiz results yet.
+                          </p>
+                        ) : (
+                          <div className="space-y-3">
+                            {learner.quizResults.map((result) => {
+                              const resultDate = new Date(
+                                result.createdAt
+                              ).toLocaleDateString("en-GB", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              });
+
+                              return (
+                                <div
+                                  key={result.id}
+                                  className="rounded-2xl border p-4"
+                                >
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div>
+                                      <p className="font-bold">
+                                        {result.course.title}
+                                      </p>
+
+                                      <p className="mt-1 text-sm text-gray-600">
+                                        {result.quizType} Quiz • {resultDate}
+                                      </p>
+                                    </div>
+
+                                    {result.passed ? (
+                                      <CheckCircle
+                                        className="shrink-0 text-green-600"
+                                        size={22}
+                                      />
+                                    ) : (
+                                      <XCircle
+                                        className="shrink-0 text-red-600"
+                                        size={22}
+                                      />
+                                    )}
+                                  </div>
+
+                                  <p
+                                    className={`mt-3 text-2xl font-extrabold ${
+                                      result.passed
+                                        ? "text-[#007F73]"
+                                        : "text-red-600"
+                                    }`}
+                                  >
+                                    {result.score}%
+                                  </p>
+
+                                  <p
+                                    className={`mt-1 text-sm font-bold ${
+                                      result.passed
+                                        ? "text-green-700"
+                                        : "text-red-600"
+                                    }`}
+                                  >
+                                    {result.passed ? "Passed" : "Not Passed"}
+                                  </p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <div className="mb-4 flex items-center gap-2">
+                          <Award className="text-[#007F73]" size={22} />
+                          <h3 className="text-xl font-bold">Certificates</h3>
+                        </div>
+
+                        {learner.certificates.length === 0 ? (
+                          <p className="rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">
+                            No certificates issued yet.
+                          </p>
+                        ) : (
+                          <div className="space-y-3">
+                            {learner.certificates.map((certificate) => {
+                              const issuedDate = new Date(
+                                certificate.issuedAt
+                              ).toLocaleDateString("en-GB", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              });
+
+                              return (
+                                <div
+                                  key={certificate.id}
+                                  className="rounded-2xl border p-4"
+                                >
+                                  <p className="font-bold">
+                                    {certificate.course.title}
+                                  </p>
+
+                                  <p className="mt-2 text-sm font-bold text-[#007F73]">
+                                    {certificate.certificateCode}
+                                  </p>
+
+                                  <p className="mt-1 text-sm text-gray-600">
+                                    Issued {issuedDate}
+                                  </p>
+
+                                  <Link
+                                    href={`/courses/${certificate.course.slug}/certificate`}
+                                    className="mt-4 inline-flex rounded-xl bg-[#007F73] px-4 py-2 text-sm font-bold text-white hover:bg-[#00665d]"
+                                  >
+                                    View Certificate
+                                  </Link>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </section>
       </main>
 

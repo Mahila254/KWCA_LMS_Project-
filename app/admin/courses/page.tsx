@@ -10,6 +10,7 @@ import {
   Eye,
   Lock,
   GraduationCap,
+  ListChecks,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -174,6 +175,14 @@ export default async function AdminCoursesPage() {
                           className="rounded-xl border px-4 py-3 font-bold hover:bg-gray-50"
                         >
                           View
+                        </Link>
+
+                        <Link
+                          href={`/admin/courses/${course.slug}/lessons`}
+                          className="inline-flex items-center gap-2 rounded-xl border border-[#007F73] px-4 py-3 font-bold text-[#007F73] hover:bg-[#F2FBF8]"
+                        >
+                          <ListChecks size={17} />
+                          Lessons
                         </Link>
 
                         <Link

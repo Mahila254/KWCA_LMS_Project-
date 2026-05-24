@@ -14,9 +14,19 @@ function generateCertificateCode(courseSlug: string) {
   return `KWCA-${courseCode}-${new Date().getFullYear()}-${randomCode}`;
 }
 
-export async function GET(_request: Request, { params }: RouteProps) {
+export async function GET(request: Request, { params }: RouteProps) {
   try {
     const { slug } = await params;
+
+    const { searchParams } = new URL(request.url);
+    const email = searchParams.get("email");
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Learner email is required." },
+        { status: 400 }
+      );
+    }
 
     const course = await prisma.course.findUnique({
       where: {
@@ -31,17 +41,18 @@ export async function GET(_request: Request, { params }: RouteProps) {
       );
     }
 
-    const user = await prisma.user.upsert({
+    const user = await prisma.user.findUnique({
       where: {
-        email: "learner@kwca.local",
-      },
-      update: {},
-      create: {
-        name: "Learner Name",
-        email: "learner@kwca.local",
-        role: "STUDENT",
+        email,
       },
     });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Learner not found in database." },
+        { status: 404 }
+      );
+    }
 
     const certificate = await prisma.certificate.findUnique({
       where: {
@@ -67,9 +78,26 @@ export async function GET(_request: Request, { params }: RouteProps) {
   }
 }
 
-export async function POST(_request: Request, { params }: RouteProps) {
+export async function POST(request: Request, { params }: RouteProps) {
   try {
     const { slug } = await params;
+    const body = await request.json();
+
+    const { id, email, name } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Learner ID is required." },
+        { status: 400 }
+      );
+    }
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Learner email is required." },
+        { status: 400 }
+      );
+    }
 
     const course = await prisma.course.findUnique({
       where: {
@@ -86,12 +114,15 @@ export async function POST(_request: Request, { params }: RouteProps) {
 
     const user = await prisma.user.upsert({
       where: {
-        email: "learner@kwca.local",
+        email,
       },
-      update: {},
+      update: {
+        name: name || null,
+      },
       create: {
-        name: "Learner Name",
-        email: "learner@kwca.local",
+        id,
+        name: name || null,
+        email,
         role: "STUDENT",
       },
     });

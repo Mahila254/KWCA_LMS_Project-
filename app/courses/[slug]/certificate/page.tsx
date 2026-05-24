@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import {
   Award,
   Download,
@@ -19,6 +20,7 @@ type Course = {
 };
 
 type User = {
+  id: string;
   name: string | null;
   email: string;
 };
@@ -28,8 +30,18 @@ type Certificate = {
   issuedAt: string;
 };
 
+type SupabaseLearner = {
+  id: string;
+  email?: string;
+  user_metadata?: {
+    full_name?: string;
+  };
+};
+
 export default function CertificatePage() {
   const params = useParams<{ slug: string }>();
+  const router = useRouter();
+
   const courseSlug = params.slug;
 
   const [course, setCourse] = useState<Course | null>(null);
@@ -42,15 +54,37 @@ export default function CertificatePage() {
     try {
       setLoading(true);
 
-      const checkResponse = await fetch(`/api/courses/${courseSlug}/certificate`);
-      const checkData = await checkResponse.json();
+      const {
+        data: { user: supabaseUser },
+        error,
+      } = await supabase.auth.getUser();
 
-      if (!checkResponse.ok) {
-        alert(checkData.error || "Something went wrong while loading certificate.");
+      if (error || !supabaseUser) {
+        alert("Please login before generating your certificate.");
+        router.push("/login");
         return;
       }
 
-      if (checkData.certificate) {
+      const learner = supabaseUser as SupabaseLearner;
+
+      const learnerName =
+        learner.user_metadata?.full_name || learner.email || "Learner";
+
+      if (!learner.email) {
+        alert("Your account email could not be found. Please login again.");
+        router.push("/login");
+        return;
+      }
+
+      const checkResponse = await fetch(
+        `/api/courses/${courseSlug}/certificate?email=${encodeURIComponent(
+          learner.email
+        )}`
+      );
+
+      const checkData = await checkResponse.json();
+
+      if (checkResponse.ok && checkData.certificate) {
         setCourse(checkData.course);
         setUser(checkData.user);
         setCertificate(checkData.certificate);
@@ -59,9 +93,20 @@ export default function CertificatePage() {
 
       setIssuing(true);
 
-      const issueResponse = await fetch(`/api/courses/${courseSlug}/certificate`, {
-        method: "POST",
-      });
+      const issueResponse = await fetch(
+        `/api/courses/${courseSlug}/certificate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: learner.id,
+            email: learner.email,
+            name: learnerName,
+          }),
+        }
+      );
 
       const issueData = await issueResponse.json();
 
@@ -92,7 +137,7 @@ export default function CertificatePage() {
     window.print();
   }
 
-  const learnerName = user?.name || "Learner Name";
+  const learnerName = user?.name || user?.email || "Learner Name";
 
   const completionDate = certificate?.issuedAt
     ? new Date(certificate.issuedAt).toLocaleDateString("en-GB", {

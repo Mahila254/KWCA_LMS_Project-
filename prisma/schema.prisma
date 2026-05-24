@@ -39,6 +39,11 @@ enum PaymentStatus {
   FAILED
 }
 
+enum QuizType {
+  PRACTICE
+  FINAL
+}
+
 model User {
   id            String        @id @default(cuid())
   name          String?
@@ -73,6 +78,7 @@ model Course {
   quizResults      QuizResult[]
   certificates     Certificate[]
   payments         Payment[]
+  quizQuestions    QuizQuestion[]
 }
 
 model Lesson {
@@ -92,6 +98,24 @@ model Lesson {
   course      Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([courseId, slug])
+}
+
+model QuizQuestion {
+  id            String    @id @default(cuid())
+  courseId      String
+  quizType      QuizType
+  question      String
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctAnswer String
+  explanation   String?
+  order         Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
 
 model Enrollment {

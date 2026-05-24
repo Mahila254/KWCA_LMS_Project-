@@ -18,51 +18,73 @@ type Course = {
   slug: string;
 };
 
+type User = {
+  name: string | null;
+  email: string;
+};
+
+type Certificate = {
+  certificateCode: string;
+  issuedAt: string;
+};
+
 export default function CertificatePage() {
   const params = useParams<{ slug: string }>();
   const courseSlug = params.slug;
 
   const [course, setCourse] = useState<Course | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [certificate, setCertificate] = useState<Certificate | null>(null);
   const [loading, setLoading] = useState(true);
+  const [issuing, setIssuing] = useState(false);
 
-  const learnerName = "Learner Name";
+  async function loadOrIssueCertificate() {
+    try {
+      setLoading(true);
 
-  const completionDate = new Date().toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
+      const checkResponse = await fetch(`/api/courses/${courseSlug}/certificate`);
+      const checkData = await checkResponse.json();
 
-  const certificateCode = `KWCA-${courseSlug
-    ?.toUpperCase()
-    .replace(/-/g, "")
-    .slice(0, 10)}-${new Date().getFullYear()}`;
+      if (!checkResponse.ok) {
+        alert(checkData.error || "Something went wrong while loading certificate.");
+        return;
+      }
+
+      if (checkData.certificate) {
+        setCourse(checkData.course);
+        setUser(checkData.user);
+        setCertificate(checkData.certificate);
+        return;
+      }
+
+      setIssuing(true);
+
+      const issueResponse = await fetch(`/api/courses/${courseSlug}/certificate`, {
+        method: "POST",
+      });
+
+      const issueData = await issueResponse.json();
+
+      if (!issueResponse.ok) {
+        alert(issueData.error || "Something went wrong while issuing certificate.");
+        return;
+      }
+
+      setCourse(issueData.course);
+      setUser(issueData.user);
+      setCertificate(issueData.certificate);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while loading the certificate.");
+    } finally {
+      setLoading(false);
+      setIssuing(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchCourse() {
-      try {
-        const response = await fetch(
-          `/api/admin/courses/${courseSlug}/quiz-questions`
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          alert(data.error || "Something went wrong while loading certificate.");
-          return;
-        }
-
-        setCourse(data.course);
-      } catch (error) {
-        console.error(error);
-        alert("Something went wrong while loading the certificate.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
     if (courseSlug) {
-      fetchCourse();
+      loadOrIssueCertificate();
     }
   }, [courseSlug]);
 
@@ -70,13 +92,31 @@ export default function CertificatePage() {
     window.print();
   }
 
+  const learnerName = user?.name || "Learner Name";
+
+  const completionDate = certificate?.issuedAt
+    ? new Date(certificate.issuedAt).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : new Date().toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+
+  const certificateCode = certificate?.certificateCode || "KWCA-CERTIFICATE";
+
   if (loading) {
     return (
       <>
         <Navbar />
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
-          <h1 className="text-3xl font-bold">Loading certificate...</h1>
+          <h1 className="text-3xl font-bold">
+            {issuing ? "Issuing certificate..." : "Loading certificate..."}
+          </h1>
         </main>
 
         <Footer />

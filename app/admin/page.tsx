@@ -34,7 +34,10 @@ export default function AdminDashboardPage() {
 
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-10 grid gap-6 md:grid-cols-4">
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <Link
+              href="/admin/courses"
+              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
                 <BookOpen size={26} />
               </div>
@@ -44,9 +47,12 @@ export default function AdminDashboardPage() {
               </p>
 
               <h2 className="mt-2 text-3xl font-bold">Courses</h2>
-            </div>
+            </Link>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <Link
+              href="/admin/certificates"
+              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
                 <Award size={26} />
               </div>
@@ -56,9 +62,12 @@ export default function AdminDashboardPage() {
               </p>
 
               <h2 className="mt-2 text-3xl font-bold">Certificates</h2>
-            </div>
+            </Link>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <Link
+              href="/admin/learners"
+              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
                 <Users size={26} />
               </div>
@@ -68,9 +77,12 @@ export default function AdminDashboardPage() {
               </p>
 
               <h2 className="mt-2 text-3xl font-bold">Learners</h2>
-            </div>
+            </Link>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <Link
+              href="/admin"
+              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
                 <BarChart3 size={26} />
               </div>
@@ -80,7 +92,7 @@ export default function AdminDashboardPage() {
               </p>
 
               <h2 className="mt-2 text-3xl font-bold">Reports</h2>
-            </div>
+            </Link>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -129,6 +141,28 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link
+              href="/admin/learners"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Users size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#07122E]">
+                Learners
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                View registered learners, course enrollments, quiz results,
+                progress, and issued certificates.
+              </p>
+
+              <p className="mt-5 font-bold text-[#007F73]">
+                View Learners →
+              </p>
+            </Link>
+
+            <Link
               href="/admin/certificates"
               className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
@@ -155,28 +189,6 @@ export default function AdminDashboardPage() {
               className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
-                <Users size={30} />
-              </div>
-
-              <h2 className="text-2xl font-bold text-[#07122E]">
-                Learners
-              </h2>
-
-              <p className="mt-3 leading-7 text-gray-600">
-                View registered learners, course progress, quiz activity, and
-                completion status once authentication is connected.
-              </p>
-
-              <p className="mt-5 font-bold text-gray-400">
-                Coming Soon →
-              </p>
-            </Link>
-
-            <Link
-              href="/admin"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
                 <BarChart3 size={30} />
               </div>
 
@@ -186,7 +198,7 @@ export default function AdminDashboardPage() {
 
               <p className="mt-3 leading-7 text-gray-600">
                 Track course completion, quiz performance, certificates issued,
-                and learner engagement.
+                learner engagement, and platform activity.
               </p>
 
               <p className="mt-5 font-bold text-gray-400">
@@ -230,16 +242,26 @@ export default function AdminDashboardPage() {
 
                 <p className="mt-3 max-w-3xl leading-7 text-white/70">
                   This dashboard brings together the core management tools for
-                  courses, lessons, quizzes, learners, and certificates.
+                  courses, lessons, quizzes, learners, certificates, and platform
+                  reporting.
                 </p>
               </div>
 
-              <Link
-                href="/admin/courses"
-                className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-              >
-                Manage Courses
-              </Link>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/admin/courses"
+                  className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                >
+                  Manage Courses
+                </Link>
+
+                <Link
+                  href="/admin/learners"
+                  className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
+                >
+                  View Learners
+                </Link>
+              </div>
             </div>
           </div>
         </section>

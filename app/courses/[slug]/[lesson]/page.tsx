@@ -15,6 +15,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
   params: Promise<{
     slug: string;
@@ -86,9 +88,18 @@ export default async function LessonPage({ params }: PageProps) {
     );
   }
 
+  const lessonIndex = course.lessons.findIndex(
+    (item) => item.id === currentLesson.id
+  );
+
+  const lessonNumber = lessonIndex + 1;
+  const previousLesson = lessonIndex > 0 ? course.lessons[lessonIndex - 1] : null;
+  const nextLesson =
+    lessonIndex < course.lessons.length - 1
+      ? course.lessons[lessonIndex + 1]
+      : null;
+
   const isPreview = currentLesson.accessType === "PREVIEW";
-  const lessonNumber =
-    course.lessons.findIndex((item) => item.id === currentLesson.id) + 1;
 
   const progressPercent = Math.round(
     (lessonNumber / course.lessons.length) * 100
@@ -357,8 +368,8 @@ export default async function LessonPage({ params }: PageProps) {
                 </div>
 
                 <p className="leading-8 text-gray-600">
-                  Read the introductory material and reflect on how conservancy
-                  models support conservation and community governance.
+                  Read the introductory material and reflect on how this lesson
+                  connects to conservancy governance and management.
                 </p>
 
                 {currentLesson.readingUrl ? (
@@ -402,28 +413,53 @@ export default async function LessonPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-white p-8 shadow-sm">
-              <Link
-                href={`/courses/${slug}`}
-                className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
-              >
-                Back to Course
-              </Link>
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                {previousLesson ? (
+                  <Link
+                    href={`/courses/${slug}/${previousLesson.slug}`}
+                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                  >
+                    <ArrowLeft size={18} />
+                    Previous Lesson
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/courses/${slug}`}
+                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                  >
+                    <ArrowLeft size={18} />
+                    Back to Course
+                  </Link>
+                )}
 
-              <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/pricing"
-                  className="rounded-xl border border-[#007F73] px-6 py-3 font-bold text-[#007F73] hover:bg-[#007F73] hover:text-white"
-                >
-                  Unlock Full Course
-                </Link>
-
-                <Link
-                  href={`/courses/${slug}/quiz/practice`}
-                  className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-                >
-                  Continue to Quiz
-                </Link>
+                {nextLesson ? (
+                  nextLesson.accessType === "PREVIEW" ? (
+                    <Link
+                      href={`/courses/${slug}/${nextLesson.slug}`}
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                    >
+                      Next Lesson
+                      <ArrowRight size={18} />
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/pricing"
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                    >
+                      Unlock Next Lesson
+                      <Lock size={18} />
+                    </Link>
+                  )
+                ) : (
+                  <Link
+                    href={`/courses/${slug}/quiz/practice`}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    Continue to Quiz
+                    <ArrowRight size={18} />
+                  </Link>
+                )}
               </div>
             </div>
           </section>

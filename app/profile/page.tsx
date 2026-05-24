@@ -15,6 +15,9 @@ import {
   CheckCircle,
   ShieldCheck,
   Database,
+  ClipboardList,
+  CalendarDays,
+  BarChart3,
 } from "lucide-react";
 
 type Learner = {
@@ -25,16 +28,57 @@ type Learner = {
   };
 };
 
+type Course = {
+  title: string;
+  slug: string;
+  category?: string | null;
+};
+
+type QuizResult = {
+  id: string;
+  quizType: string;
+  score: number;
+  passed: boolean;
+  createdAt: string;
+  course: Course;
+};
+
+type Certificate = {
+  id: string;
+  certificateCode: string;
+  issuedAt: string;
+  course: Course;
+};
+
+type Enrollment = {
+  id: string;
+  progress: number;
+  completed: boolean;
+  course: Course;
+};
+
+type ProfileSummary = {
+  enrolledCourses: number;
+  quizResults: number;
+  certificates: number;
+  passedFinalQuizzes: number;
+};
+
 export default function ProfilePage() {
   const router = useRouter();
 
   const [learner, setLearner] = useState<Learner | null>(null);
+  const [summary, setSummary] = useState<ProfileSummary | null>(null);
+  const [quizResults, setQuizResults] = useState<QuizResult[]>([]);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
   const [synced, setSynced] = useState(false);
 
   useEffect(() => {
-    async function loadUser() {
+    async function loadUserAndProfile() {
       try {
         const {
           data: { user },
@@ -49,7 +93,12 @@ export default function ProfilePage() {
         const learnerUser = user as Learner;
         setLearner(learnerUser);
 
-        const response = await fetch("/api/auth/sync-user", {
+        const learnerName =
+          learnerUser.user_metadata?.full_name ||
+          learnerUser.email ||
+          "Learner";
+
+        const syncResponse = await fetch("/api/auth/sync-user", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -57,20 +106,31 @@ export default function ProfilePage() {
           body: JSON.stringify({
             id: learnerUser.id,
             email: learnerUser.email,
-            name:
-              learnerUser.user_metadata?.full_name ||
-              learnerUser.email ||
-              "Learner",
+            name: learnerName,
           }),
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          console.error(data.error || "User sync failed.");
-          setSynced(false);
-        } else {
+        if (syncResponse.ok) {
           setSynced(true);
+        } else {
+          setSynced(false);
+        }
+
+        if (learnerUser.email) {
+          const profileResponse = await fetch(
+            `/api/profile?email=${encodeURIComponent(learnerUser.email)}`
+          );
+
+          const profileData = await profileResponse.json();
+
+          if (profileResponse.ok) {
+            setSummary(profileData.summary);
+            setQuizResults(profileData.quizResults || []);
+            setCertificates(profileData.certificates || []);
+            setEnrollments(profileData.enrollments || []);
+          } else {
+            console.error(profileData.error || "Failed to load profile data.");
+          }
         }
       } catch (error) {
         console.error(error);
@@ -81,7 +141,7 @@ export default function ProfilePage() {
       }
     }
 
-    loadUser();
+    loadUserAndProfile();
   }, [router]);
 
   async function handleLogout() {
@@ -137,8 +197,8 @@ export default function ProfilePage() {
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
-              Manage your learner account, continue your courses, access your
-              certificates, and track your learning journey.
+              Manage your learner account, continue your courses, view quiz
+              results, and access your issued certificates.
             </p>
           </div>
         </section>
@@ -211,7 +271,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="space-y-8 lg:col-span-2">
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-4">
               <div className="rounded-3xl bg-white p-6 shadow-sm">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
                   <BookOpen size={26} />
@@ -221,7 +281,23 @@ export default function ProfilePage() {
                   Enrolled Courses
                 </p>
 
-                <h3 className="mt-2 text-3xl font-bold">0</h3>
+                <h3 className="mt-2 text-3xl font-bold">
+                  {summary?.enrolledCourses || 0}
+                </h3>
+              </div>
+
+              <div className="rounded-3xl bg-white p-6 shadow-sm">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                  <ClipboardList size={26} />
+                </div>
+
+                <p className="text-sm font-bold text-gray-500">
+                  Quiz Results
+                </p>
+
+                <h3 className="mt-2 text-3xl font-bold">
+                  {summary?.quizResults || 0}
+                </h3>
               </div>
 
               <div className="rounded-3xl bg-white p-6 shadow-sm">
@@ -230,10 +306,12 @@ export default function ProfilePage() {
                 </div>
 
                 <p className="text-sm font-bold text-gray-500">
-                  Completed Lessons
+                  Passed Finals
                 </p>
 
-                <h3 className="mt-2 text-3xl font-bold">0</h3>
+                <h3 className="mt-2 text-3xl font-bold">
+                  {summary?.passedFinalQuizzes || 0}
+                </h3>
               </div>
 
               <div className="rounded-3xl bg-white p-6 shadow-sm">
@@ -245,19 +323,23 @@ export default function ProfilePage() {
                   Certificates
                 </p>
 
-                <h3 className="mt-2 text-3xl font-bold">0</h3>
+                <h3 className="mt-2 text-3xl font-bold">
+                  {summary?.certificates || 0}
+                </h3>
               </div>
             </div>
 
             <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <h2 className="text-3xl font-bold">Continue Learning</h2>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-3xl font-bold">Continue Learning</h2>
 
-              <p className="mt-3 leading-7 text-gray-600">
-                Your enrolled courses and progress will appear here once we
-                connect enrollments and course progress tracking.
-              </p>
+                  <p className="mt-3 leading-7 text-gray-600">
+                    Browse available KWCA courses and continue your learning
+                    journey.
+                  </p>
+                </div>
 
-              <div className="mt-6 flex flex-wrap gap-4">
                 <Link
                   href="/courses"
                   className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
@@ -265,25 +347,182 @@ export default function ProfilePage() {
                   <BookOpen size={18} />
                   Browse Courses
                 </Link>
-
-                <Link
-                  href="/admin/certificates"
-                  className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
-                >
-                  <Award size={18} />
-                  View Certificate Records
-                </Link>
               </div>
+
+              {enrollments.length > 0 ? (
+                <div className="mt-8 space-y-4">
+                  {enrollments.map((enrollment) => (
+                    <Link
+                      key={enrollment.id}
+                      href={`/courses/${enrollment.course.slug}`}
+                      className="block rounded-2xl border p-5 hover:bg-gray-50"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                          <h3 className="text-xl font-bold">
+                            {enrollment.course.title}
+                          </h3>
+
+                          <p className="mt-1 text-sm text-gray-600">
+                            {enrollment.course.category || "General"}
+                          </p>
+                        </div>
+
+                        <div className="text-right">
+                          <p className="font-bold text-[#007F73]">
+                            {enrollment.progress}% Progress
+                          </p>
+
+                          <p className="text-sm text-gray-500">
+                            {enrollment.completed
+                              ? "Completed"
+                              : "In Progress"}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-6 rounded-2xl bg-gray-50 p-5 text-gray-600">
+                  No enrollments yet. Once course enrollment is connected, your
+                  active courses will appear here.
+                </p>
+              )}
             </div>
 
-            <div className="rounded-3xl bg-[#07122E] p-8 text-white">
-              <h2 className="text-3xl font-bold">User Sync Active</h2>
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="mb-6 flex items-center gap-3">
+                <BarChart3 className="text-[#007F73]" size={28} />
+                <h2 className="text-3xl font-bold">Quiz Results</h2>
+              </div>
 
-              <p className="mt-3 leading-7 text-white/70">
-                This learner profile is now connected to Supabase Auth and the
-                Prisma User table. The next step is linking certificates and
-                quiz results to this real learner account.
-              </p>
+              {quizResults.length === 0 ? (
+                <p className="rounded-2xl bg-gray-50 p-5 text-gray-600">
+                  No quiz results yet. Final quiz results will appear here after
+                  you submit a graded quiz.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {quizResults.map((result) => {
+                    const resultDate = new Date(
+                      result.createdAt
+                    ).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    });
+
+                    return (
+                      <div
+                        key={result.id}
+                        className="rounded-2xl border p-5"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div>
+                            <p className="text-sm font-bold text-gray-500">
+                              {result.quizType} Quiz
+                            </p>
+
+                            <h3 className="mt-1 text-xl font-bold">
+                              {result.course.title}
+                            </h3>
+
+                            <p className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+                              <CalendarDays size={15} />
+                              {resultDate}
+                            </p>
+                          </div>
+
+                          <div className="text-right">
+                            <p
+                              className={`text-3xl font-extrabold ${
+                                result.passed
+                                  ? "text-[#007F73]"
+                                  : "text-red-600"
+                              }`}
+                            >
+                              {result.score}%
+                            </p>
+
+                            <p
+                              className={`mt-1 font-bold ${
+                                result.passed
+                                  ? "text-green-700"
+                                  : "text-red-600"
+                              }`}
+                            >
+                              {result.passed ? "Passed" : "Not Passed"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="mb-6 flex items-center gap-3">
+                <Award className="text-[#007F73]" size={28} />
+                <h2 className="text-3xl font-bold">My Certificates</h2>
+              </div>
+
+              {certificates.length === 0 ? (
+                <p className="rounded-2xl bg-gray-50 p-5 text-gray-600">
+                  No certificates yet. Certificates will appear here after you
+                  pass a final quiz and generate a certificate.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {certificates.map((certificate) => {
+                    const issuedDate = new Date(
+                      certificate.issuedAt
+                    ).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    });
+
+                    return (
+                      <div
+                        key={certificate.id}
+                        className="rounded-2xl border p-5"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div>
+                            <p className="text-sm font-bold text-gray-500">
+                              Certificate ID
+                            </p>
+
+                            <h3 className="mt-1 text-xl font-bold text-[#007F73]">
+                              {certificate.certificateCode}
+                            </h3>
+
+                            <p className="mt-2 font-bold">
+                              {certificate.course.title}
+                            </p>
+
+                            <p className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+                              <CalendarDays size={15} />
+                              {issuedDate}
+                            </p>
+                          </div>
+
+                          <Link
+                            href={`/courses/${certificate.course.slug}/certificate`}
+                            className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+                          >
+                            <Award size={17} />
+                            View Certificate
+                          </Link>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </section>

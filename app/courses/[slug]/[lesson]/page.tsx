@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import MarkLessonCompleteButton from "@/components/MarkLessonCompleteButton";
 import {
   ArrowLeft,
   BookOpen,
@@ -93,7 +94,10 @@ export default async function LessonPage({ params }: PageProps) {
   );
 
   const lessonNumber = lessonIndex + 1;
-  const previousLesson = lessonIndex > 0 ? course.lessons[lessonIndex - 1] : null;
+
+  const previousLesson =
+    lessonIndex > 0 ? course.lessons[lessonIndex - 1] : null;
+
   const nextLesson =
     lessonIndex < course.lessons.length - 1
       ? course.lessons[lessonIndex + 1]
@@ -184,7 +188,7 @@ export default async function LessonPage({ params }: PageProps) {
 
             <div className="mt-8 max-w-3xl">
               <div className="mb-2 flex justify-between text-sm font-bold text-gray-600">
-                <span>Course Progress</span>
+                <span>Lesson Position</span>
                 <span>{progressPercent}%</span>
               </div>
 
@@ -410,6 +414,24 @@ export default async function LessonPage({ params }: PageProps) {
                   Start Practice Quiz
                   <ArrowRight size={18} />
                 </Link>
+              </div>
+            </div>
+
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold">Lesson Progress</h2>
+
+                  <p className="mt-2 text-gray-600">
+                    Mark this lesson as complete to update your course progress
+                    on your learner profile.
+                  </p>
+                </div>
+
+                <MarkLessonCompleteButton
+                  courseSlug={course.slug}
+                  lessonSlug={currentLesson.slug}
+                />
               </div>
             </div>
 

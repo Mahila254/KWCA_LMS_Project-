@@ -14,6 +14,7 @@ import {
   Award,
   CheckCircle,
   ShieldCheck,
+  Database,
 } from "lucide-react";
 
 type Learner = {
@@ -30,6 +31,7 @@ export default function ProfilePage() {
   const [learner, setLearner] = useState<Learner | null>(null);
   const [loading, setLoading] = useState(true);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [synced, setSynced] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
@@ -44,7 +46,32 @@ export default function ProfilePage() {
           return;
         }
 
-        setLearner(user as Learner);
+        const learnerUser = user as Learner;
+        setLearner(learnerUser);
+
+        const response = await fetch("/api/auth/sync-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: learnerUser.id,
+            email: learnerUser.email,
+            name:
+              learnerUser.user_metadata?.full_name ||
+              learnerUser.email ||
+              "Learner",
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error(data.error || "User sync failed.");
+          setSynced(false);
+        } else {
+          setSynced(true);
+        }
       } catch (error) {
         console.error(error);
         alert("Something went wrong while loading your profile.");
@@ -129,15 +156,45 @@ export default function ProfilePage() {
               {learner?.email}
             </p>
 
-            <div className="mt-6 rounded-2xl bg-[#F2FBF8] p-5">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="text-[#007F73]" size={24} />
+            <div className="mt-6 space-y-4">
+              <div className="rounded-2xl bg-[#F2FBF8] p-5">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="text-[#007F73]" size={24} />
 
-                <div>
-                  <p className="font-bold">Logged In</p>
-                  <p className="text-sm text-gray-600">
-                    Your Supabase learner session is active.
-                  </p>
+                  <div>
+                    <p className="font-bold">Logged In</p>
+                    <p className="text-sm text-gray-600">
+                      Your Supabase learner session is active.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={`rounded-2xl p-5 ${
+                  synced ? "bg-green-50" : "bg-orange-50"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Database
+                    className={synced ? "text-green-600" : "text-[#D94A00]"}
+                    size={24}
+                  />
+
+                  <div>
+                    <p
+                      className={`font-bold ${
+                        synced ? "text-green-700" : "text-[#D94A00]"
+                      }`}
+                    >
+                      {synced ? "Database Synced" : "Database Sync Pending"}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {synced
+                        ? "Your learner account is saved in the LMS database."
+                        : "Your Supabase account has not synced to the LMS database yet."}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -220,12 +277,12 @@ export default function ProfilePage() {
             </div>
 
             <div className="rounded-3xl bg-[#07122E] p-8 text-white">
-              <h2 className="text-3xl font-bold">Next Profile Upgrade</h2>
+              <h2 className="text-3xl font-bold">User Sync Active</h2>
 
               <p className="mt-3 leading-7 text-white/70">
-                The next backend step is linking this Supabase Auth user to your
-                Prisma User table, so certificates and quiz results belong to
-                the real logged-in learner instead of the demo learner.
+                This learner profile is now connected to Supabase Auth and the
+                Prisma User table. The next step is linking certificates and
+                quiz results to this real learner account.
               </p>
             </div>
           </div>

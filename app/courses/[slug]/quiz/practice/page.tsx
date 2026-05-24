@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -9,105 +9,256 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle,
-  HelpCircle,
-  RotateCcw,
   XCircle,
+  RotateCcw,
+  HelpCircle,
 } from "lucide-react";
 
-const questions = [
-  {
-    question: "What is a wildlife conservancy?",
-    options: [
-      "A private zoo for tourism",
-      "A community or land-based conservation area managed for wildlife and livelihoods",
-      "A government office for wildlife permits",
-      "A place only used for farming",
-    ],
-    answer:
-      "A community or land-based conservation area managed for wildlife and livelihoods",
-    explanation:
-      "A conservancy supports both biodiversity protection and community benefits through structured management.",
-  },
-  {
-    question: "Why are conservancies important in Kenya?",
-    options: [
-      "They only attract tourists",
-      "They help protect wildlife, support communities, and improve land management",
-      "They replace national parks completely",
-      "They are only used for livestock markets",
-    ],
-    answer:
-      "They help protect wildlife, support communities, and improve land management",
-    explanation:
-      "Conservancies connect conservation, governance, community livelihoods, and sustainable land use.",
-  },
-  {
-    question: "Who should be involved in conservancy leadership?",
-    options: [
-      "Only external donors",
-      "Only tourism companies",
-      "Community members, leaders, managers, women, youth, and stakeholders",
-      "Only government officials",
-    ],
-    answer:
-      "Community members, leaders, managers, women, youth, and stakeholders",
-    explanation:
-      "Strong conservancy leadership should include local voices and key stakeholders, especially women and youth.",
-  },
-];
+type QuizQuestion = {
+  id: string;
+  quizType: "PRACTICE" | "FINAL";
+  question: string;
+  optionA: string;
+  optionB: string;
+  optionC: string;
+  optionD: string;
+  correctAnswer: string;
+  explanation?: string;
+  order: number;
+};
+
+type Course = {
+  title: string;
+  slug: string;
+};
 
 export default function PracticeQuizPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+  const params = useParams<{ slug: string }>();
+  const courseSlug = params.slug;
 
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [course, setCourse] = useState<Course | null>(null);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [showResult, setShowResult] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [score, setScore] = useState(0);
+  const [completed, setCompleted] = useState(false);
 
-  const question = questions[currentQuestion];
-  const isLastQuestion = currentQuestion === questions.length - 1;
+  useEffect(() => {
+    async function fetchPracticeQuestions() {
+      try {
+        const response = await fetch(
+          `/api/admin/courses/${courseSlug}/quiz-questions`
+        );
 
-  const score = answers.filter(
-    (answer, index) => answer === questions[index].answer
-  ).length;
+        const data = await response.json();
 
-  const percentage = Math.round((score / questions.length) * 100);
+        if (!response.ok) {
+          alert(data.error || "Something went wrong while loading quiz.");
+          return;
+        }
 
-  function handleNext() {
-    if (!selectedAnswer) {
-      alert("Please select an answer before continuing.");
-      return;
+        setCourse(data.course);
+
+        const practiceQuestions = (data.quizQuestions || []).filter(
+          (item: QuizQuestion) => item.quizType === "PRACTICE"
+        );
+
+        setQuestions(practiceQuestions);
+      } catch (error) {
+        console.error(error);
+        alert("Something went wrong while loading the practice quiz.");
+      } finally {
+        setLoading(false);
+      }
     }
 
-    const updatedAnswers = [...answers];
-    updatedAnswers[currentQuestion] = selectedAnswer;
-    setAnswers(updatedAnswers);
+    if (courseSlug) {
+      fetchPracticeQuestions();
+    }
+  }, [courseSlug]);
 
-    if (isLastQuestion) {
-      setShowResult(true);
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
+          <h1 className="text-3xl font-bold">Loading practice quiz...</h1>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 text-[#07122E]">
+          <section className="bg-[#F2FBF8] px-6 py-16">
+            <div className="mx-auto max-w-4xl">
+              <Link
+                href={`/courses/${courseSlug}`}
+                className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              >
+                <ArrowLeft size={18} />
+                Back to Course
+              </Link>
+
+              <h1 className="mt-6 text-5xl font-extrabold">Practice Quiz</h1>
+
+              <p className="mt-4 text-lg text-gray-600">
+                {course?.title || "Course"}
+              </p>
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-3xl px-6 py-16">
+            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                <HelpCircle size={32} />
+              </div>
+
+              <h2 className="text-3xl font-bold">No practice questions yet</h2>
+
+              <p className="mt-3 text-gray-600">
+                Practice quiz questions added by the admin will appear here.
+              </p>
+
+              <Link
+                href={`/courses/${courseSlug}`}
+                className="mt-6 inline-block rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+              >
+                Back to Course
+              </Link>
+            </div>
+          </section>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  const currentQuestion = questions[currentQuestionIndex];
+
+  const answerOptions = [
+    { label: "A", text: currentQuestion.optionA },
+    { label: "B", text: currentQuestion.optionB },
+    { label: "C", text: currentQuestion.optionC },
+    { label: "D", text: currentQuestion.optionD },
+  ];
+
+  const progressPercent = Math.round(
+    ((currentQuestionIndex + 1) / questions.length) * 100
+  );
+
+  const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+
+  function handleSelectAnswer(answer: string) {
+    if (showFeedback) return;
+
+    setSelectedAnswer(answer);
+    setShowFeedback(true);
+
+    if (answer === currentQuestion.correctAnswer) {
+      setScore((previousScore) => previousScore + 1);
+    }
+  }
+
+  function handleNextQuestion() {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((previousIndex) => previousIndex + 1);
+      setSelectedAnswer("");
+      setShowFeedback(false);
     } else {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(updatedAnswers[currentQuestion + 1] || "");
+      setCompleted(true);
     }
   }
 
-  function handlePrevious() {
-    if (currentQuestion === 0) return;
-
-    const updatedAnswers = [...answers];
-    updatedAnswers[currentQuestion] = selectedAnswer;
-    setAnswers(updatedAnswers);
-
-    setCurrentQuestion(currentQuestion - 1);
-    setSelectedAnswer(updatedAnswers[currentQuestion - 1] || "");
+  function handleRetakeQuiz() {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer("");
+    setShowFeedback(false);
+    setScore(0);
+    setCompleted(false);
   }
 
-  function restartQuiz() {
-    setCurrentQuestion(0);
-    setSelectedAnswer("");
-    setAnswers([]);
-    setShowResult(false);
+  if (completed) {
+    const percentage = Math.round((score / questions.length) * 100);
+
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 text-[#07122E]">
+          <section className="bg-[#F2FBF8] px-6 py-16">
+            <div className="mx-auto max-w-4xl">
+              <Link
+                href={`/courses/${courseSlug}`}
+                className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              >
+                <ArrowLeft size={18} />
+                Back to Course
+              </Link>
+
+              <h1 className="mt-6 text-5xl font-extrabold">
+                Practice Quiz Complete
+              </h1>
+
+              <p className="mt-4 text-lg text-gray-600">
+                {course?.title || "Course"}
+              </p>
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-3xl px-6 py-16">
+            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                <CheckCircle size={42} />
+              </div>
+
+              <h2 className="text-4xl font-bold">Your Score</h2>
+
+              <p className="mt-6 text-6xl font-extrabold text-[#007F73]">
+                {percentage}%
+              </p>
+
+              <p className="mt-4 text-lg text-gray-600">
+                You answered {score} out of {questions.length} questions
+                correctly.
+              </p>
+
+              <div className="mt-8 flex flex-wrap justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={handleRetakeQuiz}
+                  className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                >
+                  <RotateCcw size={18} />
+                  Retake Practice Quiz
+                </button>
+
+                <Link
+                  href={`/courses/${courseSlug}/quiz/final`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                >
+                  Continue to Final Quiz
+                  <ArrowRight size={18} />
+                </Link>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <Footer />
+      </>
+    );
   }
 
   return (
@@ -115,199 +266,115 @@ export default function PracticeQuizPage() {
       <Navbar />
 
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#F2FBF8] px-6 py-12">
-          <div className="mx-auto max-w-5xl">
+        <section className="bg-[#F2FBF8] px-6 py-16">
+          <div className="mx-auto max-w-4xl">
             <Link
-              href={`/courses/${slug}/lesson-1`}
-              className="mb-6 inline-flex items-center gap-2 font-bold text-[#007F73]"
+              href={`/courses/${courseSlug}`}
+              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
             >
               <ArrowLeft size={18} />
-              Back to Lesson
+              Back to Course
             </Link>
 
-            <p className="font-bold text-[#007F73]">Practice Quiz</p>
+            <p className="mt-8 font-bold text-[#007F73]">Practice Quiz</p>
 
             <h1 className="mt-3 text-5xl font-extrabold">
-              Check Your Understanding
+              {course?.title || "Course"}
             </h1>
 
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
-              This practice quiz helps you review the lesson before taking the
-              final graded quiz.
-            </p>
+            <div className="mt-8">
+              <div className="mb-2 flex justify-between text-sm font-bold text-gray-600">
+                <span>
+                  Question {currentQuestionIndex + 1} of {questions.length}
+                </span>
+                <span>{progressPercent}%</span>
+              </div>
+
+              <div className="h-3 rounded-full bg-white">
+                <div
+                  className="h-3 rounded-full bg-[#007F73]"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            </div>
           </div>
         </section>
 
-        <section className="px-6 py-14">
-          <div className="mx-auto max-w-4xl">
-            {!showResult ? (
-              <div className="rounded-3xl bg-white p-8 shadow-sm">
-                <div className="mb-8 flex items-center justify-between gap-4">
-                  <div>
-                    <p className="font-bold text-[#007F73]">
-                      Question {currentQuestion + 1} of {questions.length}
-                    </p>
+        <section className="mx-auto max-w-4xl px-6 py-12">
+          <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <h2 className="text-3xl font-bold leading-snug">
+              {currentQuestion.question}
+            </h2>
 
-                    <h2 className="mt-3 text-3xl font-bold">
-                      {question.question}
-                    </h2>
-                  </div>
+            <div className="mt-8 grid gap-4">
+              {answerOptions.map((option) => {
+                const selected = selectedAnswer === option.label;
+                const correct = currentQuestion.correctAnswer === option.label;
 
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
-                    <HelpCircle size={28} />
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {question.options.map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => setSelectedAnswer(option)}
-                      className={`w-full rounded-2xl border p-5 text-left font-semibold transition-all duration-300 hover:border-[#007F73] hover:bg-[#F2FBF8] ${
-                        selectedAnswer === option
-                          ? "border-[#007F73] bg-[#F2FBF8]"
-                          : "border-gray-200 bg-white"
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-
-                {selectedAnswer && (
-                  <div
-                    className={`mt-6 rounded-2xl p-5 ${
-                      selectedAnswer === question.answer
-                        ? "bg-green-50 text-green-800"
-                        : "bg-orange-50 text-orange-800"
+                return (
+                  <button
+                    key={option.label}
+                    type="button"
+                    onClick={() => handleSelectAnswer(option.label)}
+                    className={`rounded-2xl border p-5 text-left font-semibold transition ${
+                      showFeedback && correct
+                        ? "border-green-500 bg-green-50 text-green-700"
+                        : showFeedback && selected && !correct
+                        ? "border-red-500 bg-red-50 text-red-700"
+                        : selected
+                        ? "border-[#007F73] bg-[#F2FBF8]"
+                        : "border-gray-200 hover:border-[#007F73] hover:bg-[#F2FBF8]"
                     }`}
                   >
-                    <div className="flex items-start gap-3">
-                      {selectedAnswer === question.answer ? (
-                        <CheckCircle className="mt-1 shrink-0" size={22} />
-                      ) : (
-                        <XCircle className="mt-1 shrink-0" size={22} />
-                      )}
-
-                      <div>
-                        <p className="font-bold">
-                          {selectedAnswer === question.answer
-                            ? "Correct"
-                            : "Not quite"}
-                        </p>
-
-                        <p className="mt-1">{question.explanation}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-8 flex flex-wrap justify-between gap-4">
-                  <button
-                    type="button"
-                    onClick={handlePrevious}
-                    disabled={currentQuestion === 0}
-                    className="rounded-xl border px-6 py-3 font-bold transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    Previous
+                    <span className="mr-2 font-extrabold">{option.label}.</span>
+                    {option.text}
                   </button>
+                );
+              })}
+            </div>
 
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white transition hover:bg-[#00665d]"
+            {showFeedback && (
+              <div
+                className={`mt-8 rounded-2xl p-6 ${
+                  isCorrect ? "bg-green-50" : "bg-red-50"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  {isCorrect ? (
+                    <CheckCircle className="text-green-600" size={26} />
+                  ) : (
+                    <XCircle className="text-red-600" size={26} />
+                  )}
+
+                  <h3
+                    className={`text-xl font-bold ${
+                      isCorrect ? "text-green-700" : "text-red-700"
+                    }`}
                   >
-                    {isLastQuestion ? "Finish Quiz" : "Next Question"}
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
-                  <CheckCircle size={42} />
+                    {isCorrect ? "Correct answer" : "Not quite"}
+                  </h3>
                 </div>
 
-                <p className="font-bold text-[#007F73]">
-                  Practice Quiz Complete
+                <p className="mt-4 leading-7 text-gray-700">
+                  {currentQuestion.explanation ||
+                    `The correct answer is ${currentQuestion.correctAnswer}.`}
                 </p>
-
-                <h2 className="mt-3 text-5xl font-extrabold">
-                  Your Score: {percentage}%
-                </h2>
-
-                <p className="mt-4 text-lg text-gray-600">
-                  You answered {score} out of {questions.length} questions
-                  correctly.
-                </p>
-
-                <div className="mt-8 rounded-2xl bg-gray-50 p-6 text-left">
-                  <h3 className="text-xl font-bold">Review</h3>
-
-                  <div className="mt-5 space-y-4">
-                    {questions.map((item, index) => {
-                      const correct = answers[index] === item.answer;
-
-                      return (
-                        <div
-                          key={item.question}
-                          className="rounded-xl bg-white p-5"
-                        >
-                          <div className="flex items-start gap-3">
-                            {correct ? (
-                              <CheckCircle
-                                className="mt-1 shrink-0 text-green-600"
-                                size={20}
-                              />
-                            ) : (
-                              <XCircle
-                                className="mt-1 shrink-0 text-red-600"
-                                size={20}
-                              />
-                            )}
-
-                            <div>
-                              <p className="font-bold">
-                                {index + 1}. {item.question}
-                              </p>
-
-                              <p className="mt-2 text-sm text-gray-600">
-                                Your answer: {answers[index]}
-                              </p>
-
-                              {!correct && (
-                                <p className="mt-1 text-sm font-semibold text-green-700">
-                                  Correct answer: {item.answer}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="mt-8 flex flex-wrap justify-center gap-4">
-                  <button
-                    type="button"
-                    onClick={restartQuiz}
-                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold transition hover:bg-gray-50"
-                  >
-                    <RotateCcw size={18} />
-                    Retake Practice Quiz
-                  </button>
-
-                  <Link
-                    href={`/courses/${slug}/quiz/final`}
-                    className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white transition hover:bg-[#00665d]"
-                  >
-                    Continue to Final Quiz
-                  </Link>
-                </div>
               </div>
             )}
+
+            <div className="mt-8 flex justify-end">
+              <button
+                type="button"
+                onClick={handleNextQuestion}
+                disabled={!showFeedback}
+                className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {currentQuestionIndex === questions.length - 1
+                  ? "Finish Quiz"
+                  : "Next Question"}
+                <ArrowRight size={18} />
+              </button>
+            </div>
           </div>
         </section>
       </main>

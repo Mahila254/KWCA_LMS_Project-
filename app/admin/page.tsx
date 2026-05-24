@@ -1,127 +1,248 @@
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import AdminLogout from "@/components/AdminLogout";
-
+import Link from "next/link";
 import {
   BookOpen,
   Users,
-  Video,
-  FileText,
-  HelpCircle,
   BarChart3,
+  Settings,
+  PlusCircle,
+  Award,
+  LayoutDashboard,
 } from "lucide-react";
 
-export default function AdminPage() {
-  const adminCards = [
-    {
-      title: "Manage Courses",
-      description: "Create, edit, and organize course modules.",
-      icon: BookOpen,
-      href: "/admin/courses",
-    },
-    {
-      title: "Manage Lessons",
-      description: "Add lesson notes, videos, activities, and resources.",
-      icon: Video,
-      href: "/admin/lessons",
-    },
-    {
-      title: "Resources",
-      description: "Upload PDFs, guides, templates, and tools.",
-      icon: FileText,
-      href: "/admin/resources",
-    },
-    {
-      title: "Quizzes",
-      description: "Create quiz questions and manage assessments.",
-      icon: HelpCircle,
-      href: "/admin/quizzes",
-    },
-    {
-      title: "Learners",
-      description: "View learners, enrollments, and completion progress.",
-      icon: Users,
-      href: "/admin/learners",
-    },
-    {
-      title: "Reports",
-      description: "Track platform usage and course performance.",
-      icon: BarChart3,
-      href: "/admin/reports",
-    },
-  ];
-
+export default function AdminDashboardPage() {
   return (
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50">
-
-        {/* Hero */}
-
+      <main className="min-h-screen bg-gray-50 text-[#07122E]">
         <section className="bg-[#EDF5F3] py-16">
-          <div className="mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-7xl px-6">
+            <p className="font-bold text-[#007F73]">Admin Dashboard</p>
 
-            <p className="font-bold text-[#007F73]">
-              Admin Dashboard
-            </p>
-
-            <h1 className="mt-3 text-6xl font-bold text-[#07122E]">
-              Manage KWCA Learning Hub
+            <h1 className="mt-4 text-5xl font-bold">
+              KWCA LMS Management
             </h1>
 
-            <p className="mt-4 max-w-2xl text-xl text-gray-600">
-              Manage courses, lessons, resources,
-              quizzes, learners and reports
-              from one central dashboard.
+            <p className="mt-4 max-w-3xl text-xl text-gray-600">
+              Manage courses, lessons, quiz questions, certificates, learners,
+              reports, and platform settings.
             </p>
+          </div>
+        </section>
 
-            {/* Logout Button */}
+        <section className="mx-auto max-w-7xl px-6 py-12">
+          <div className="mb-10 grid gap-6 md:grid-cols-4">
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <BookOpen size={26} />
+              </div>
 
-            <div className="mt-6">
-              <AdminLogout />
+              <p className="text-sm font-bold text-gray-500">
+                Course Management
+              </p>
+
+              <h2 className="mt-2 text-3xl font-bold">Courses</h2>
             </div>
 
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Award size={26} />
+              </div>
+
+              <p className="text-sm font-bold text-gray-500">
+                Certificate Records
+              </p>
+
+              <h2 className="mt-2 text-3xl font-bold">Certificates</h2>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Users size={26} />
+              </div>
+
+              <p className="text-sm font-bold text-gray-500">
+                Learner Management
+              </p>
+
+              <h2 className="mt-2 text-3xl font-bold">Learners</h2>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <BarChart3 size={26} />
+              </div>
+
+              <p className="text-sm font-bold text-gray-500">
+                Platform Reports
+              </p>
+
+              <h2 className="mt-2 text-3xl font-bold">Reports</h2>
+            </div>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <Link
+              href="/admin/courses"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <BookOpen size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#07122E]">
+                Manage Courses
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                Create, edit, publish, and manage all KWCA LMS courses,
+                lessons, quizzes, and learning content.
+              </p>
+
+              <p className="mt-5 font-bold text-[#007F73]">
+                Open Courses →
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/courses/create"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <PlusCircle size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#07122E]">
+                Add New Course
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                Add a new course to the platform, including course title,
+                category, description, access type, and learning outcomes.
+              </p>
+
+              <p className="mt-5 font-bold text-[#007F73]">
+                Create Course →
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/certificates"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Award size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#07122E]">
+                Certificates
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                View issued learner certificates, certificate IDs, course
+                titles, learner emails, and issue dates.
+              </p>
+
+              <p className="mt-5 font-bold text-[#007F73]">
+                View Certificates →
+              </p>
+            </Link>
+
+            <Link
+              href="/admin"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Users size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#07122E]">
+                Learners
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                View registered learners, course progress, quiz activity, and
+                completion status once authentication is connected.
+              </p>
+
+              <p className="mt-5 font-bold text-gray-400">
+                Coming Soon →
+              </p>
+            </Link>
+
+            <Link
+              href="/admin"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <BarChart3 size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#07122E]">
+                Reports
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                Track course completion, quiz performance, certificates issued,
+                and learner engagement.
+              </p>
+
+              <p className="mt-5 font-bold text-gray-400">
+                Coming Soon →
+              </p>
+            </Link>
+
+            <Link
+              href="/admin"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Settings size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#07122E]">
+                Settings
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                Manage platform settings, payment options, access rules, and
+                system configuration.
+              </p>
+
+              <p className="mt-5 font-bold text-gray-400">
+                Coming Soon →
+              </p>
+            </Link>
+          </div>
+
+          <div className="mt-12 rounded-3xl bg-[#07122E] p-8 text-white">
+            <div className="flex flex-wrap items-center justify-between gap-6">
+              <div>
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white">
+                  <LayoutDashboard size={30} />
+                </div>
+
+                <h2 className="text-3xl font-bold">
+                  KWCA LMS Admin Control Centre
+                </h2>
+
+                <p className="mt-3 max-w-3xl leading-7 text-white/70">
+                  This dashboard brings together the core management tools for
+                  courses, lessons, quizzes, learners, and certificates.
+                </p>
+              </div>
+
+              <Link
+                href="/admin/courses"
+                className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+              >
+                Manage Courses
+              </Link>
+            </div>
           </div>
         </section>
-
-        {/* Dashboard Cards */}
-
-        <section className="mx-auto max-w-6xl px-6 py-16">
-
-          <div className="grid gap-8 md:grid-cols-3">
-
-            {adminCards.map((card) => {
-              const Icon = card.icon;
-
-              return (
-                <Link
-                  key={card.title}
-                  href={card.href}
-                  className="rounded-3xl border bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-                >
-
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#007F73] text-white">
-                    <Icon size={30} />
-                  </div>
-
-                  <h2 className="text-3xl font-bold text-[#07122E]">
-                    {card.title}
-                  </h2>
-
-                  <p className="mt-3 text-gray-600">
-                    {card.description}
-                  </p>
-
-                </Link>
-              );
-            })}
-
-          </div>
-
-        </section>
-
       </main>
 
       <Footer />

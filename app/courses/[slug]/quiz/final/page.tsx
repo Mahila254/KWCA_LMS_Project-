@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import {
   ArrowLeft,
   ArrowRight,
@@ -33,6 +34,14 @@ type Course = {
   slug: string;
 };
 
+type SupabaseLearner = {
+  id: string;
+  email?: string;
+  user_metadata?: {
+    full_name?: string;
+  };
+};
+
 export default function FinalQuizPage() {
   const params = useParams<{ slug: string }>();
   const courseSlug = params.slug;
@@ -45,6 +54,9 @@ export default function FinalQuizPage() {
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [answers, setAnswers] = useState<string[]>([]);
   const [completed, setCompleted] = useState(false);
+
+  const [resultSaved, setResultSaved] = useState(false);
+  const [savingResult, setSavingResult] = useState(false);
 
   useEffect(() => {
     async function fetchFinalQuestions() {
@@ -79,6 +91,61 @@ export default function FinalQuizPage() {
       fetchFinalQuestions();
     }
   }, [courseSlug]);
+
+  async function saveQuizResult(score: number, passed: boolean) {
+    try {
+      setSavingResult(true);
+
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error || !user) {
+        alert("Please login before submitting your final quiz result.");
+        return;
+      }
+
+      const learner = user as SupabaseLearner;
+
+      if (!learner.email) {
+        alert("Your account email could not be found. Please login again.");
+        return;
+      }
+
+      const learnerName =
+        learner.user_metadata?.full_name || learner.email || "Learner";
+
+      const response = await fetch(`/api/courses/${courseSlug}/quiz-results`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: learner.id,
+          email: learner.email,
+          name: learnerName,
+          quizType: "FINAL",
+          score,
+          passed,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Something went wrong while saving quiz result.");
+        return;
+      }
+
+      setResultSaved(true);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while saving your quiz result.");
+    } finally {
+      setSavingResult(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -158,7 +225,13 @@ export default function FinalQuizPage() {
     ((currentQuestionIndex + 1) / questions.length) * 100
   );
 
-  function handleNextQuestion() {
+  function calculateScore(finalAnswers: string[]) {
+    return questions.reduce((total, question, index) => {
+      return finalAnswers[index] === question.correctAnswer ? total + 1 : total;
+    }, 0);
+  }
+
+  async function handleNextQuestion() {
     if (!selectedAnswer) {
       alert("Please select an answer before continuing.");
       return;
@@ -172,7 +245,13 @@ export default function FinalQuizPage() {
       setCurrentQuestionIndex((previousIndex) => previousIndex + 1);
       setSelectedAnswer(updatedAnswers[currentQuestionIndex + 1] || "");
     } else {
+      const score = calculateScore(updatedAnswers);
+      const percentage = Math.round((score / questions.length) * 100);
+      const passed = percentage >= 70;
+
       setCompleted(true);
+
+      await saveQuizResult(percentage, passed);
     }
   }
 
@@ -192,17 +271,16 @@ export default function FinalQuizPage() {
     setSelectedAnswer("");
     setAnswers([]);
     setCompleted(false);
+    setResultSaved(false);
+    setSavingResult(false);
   }
 
   if (completed) {
     const finalAnswers = [...answers];
     finalAnswers[currentQuestionIndex] = selectedAnswer;
 
-    const score = questions.reduce((total, question, index) => {
-      return finalAnswers[index] === question.correctAnswer ? total + 1 : total;
-    }, 0);
-
-    const percentage = Math.round((score / questions.length) * 100);
+    const correctCount = calculateScore(finalAnswers);
+    const percentage = Math.round((correctCount / questions.length) * 100);
     const passed = percentage >= 70;
 
     return (
@@ -255,9 +333,25 @@ export default function FinalQuizPage() {
               </p>
 
               <p className="mt-4 text-lg text-gray-600">
-                You answered {score} out of {questions.length} questions
+                You answered {correctCount} out of {questions.length} questions
                 correctly. Passing score is 70%.
               </p>
+
+              <div
+                className={`mx-auto mt-6 max-w-xl rounded-2xl p-4 text-sm font-bold ${
+                  resultSaved
+                    ? "bg-green-50 text-green-700"
+                    : savingResult
+                    ? "bg-orange-50 text-[#D94A00]"
+                    : "bg-red-50 text-red-600"
+                }`}
+              >
+                {resultSaved
+                  ? "Quiz result saved to your learner profile."
+                  : savingResult
+                  ? "Saving quiz result..."
+                  : "Quiz result was not saved. Please check your login session."}
+              </div>
 
               <div className="mt-10 rounded-2xl bg-gray-50 p-6 text-left">
                 <h3 className="text-2xl font-bold">Review Answers</h3>

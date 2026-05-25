@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminLogoutButton from "@/components/AdminLogoutButton";
 import {
   LayoutDashboard,
   BookOpen,
@@ -19,9 +20,7 @@ export default function AdminNavbar() {
           </div>
 
           <div>
-            <p className="text-lg font-extrabold leading-none">
-              KWCA Admin
-            </p>
+            <p className="text-lg font-extrabold leading-none">KWCA Admin</p>
             <p className="mt-1 text-xs font-semibold text-white/60">
               LMS Control Centre
             </p>
@@ -80,6 +79,8 @@ export default function AdminNavbar() {
             <Home size={18} />
             Public Site
           </Link>
+
+          <AdminLogoutButton />
         </div>
 
         <div className="flex items-center gap-3 md:hidden">

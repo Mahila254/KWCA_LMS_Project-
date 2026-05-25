@@ -7,13 +7,17 @@ import {
   Lock,
   ShieldCheck,
   ArrowLeft,
+  Mail,
   KeyRound,
   AlertCircle,
 } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [accessCode, setAccessCode] = useState("");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [error, setError] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
@@ -24,8 +28,13 @@ export default function AdminLoginPage() {
       setLoggingIn(true);
       setError("");
 
-      if (!accessCode.trim()) {
-        setError("Please enter the admin access code.");
+      if (!email.trim()) {
+        setError("Please enter your admin email.");
+        return;
+      }
+
+      if (!password) {
+        setError("Please enter your admin password.");
         return;
       }
 
@@ -35,14 +44,15 @@ export default function AdminLoginPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          accessCode: accessCode.trim(),
+          email: email.trim(),
+          password,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Invalid admin access code.");
+        setError(data.error || "Admin login failed.");
         return;
       }
 
@@ -77,13 +87,12 @@ export default function AdminLoginPage() {
               <p className="font-bold text-[#8BE0D4]">KWCA LMS Admin</p>
 
               <h1 className="mt-4 text-5xl font-extrabold leading-tight">
-                Secure Admin Access
+                Secure Admin Login
               </h1>
 
               <p className="mt-5 max-w-xl text-lg leading-8 text-white/70">
-                This area is reserved for approved KWCA LMS administrators who
-                manage courses, learners, reports, certificates, and platform
-                settings.
+                This area is reserved for approved KWCA LMS administrators.
+                Only users with the ADMIN role can access the control centre.
               </p>
             </div>
           </section>
@@ -97,13 +106,35 @@ export default function AdminLoginPage() {
               <h2 className="text-4xl font-bold">Admin Login</h2>
 
               <p className="mt-3 leading-7 text-gray-600">
-                Enter the admin access code to unlock the LMS control centre.
+                Sign in with your approved admin email and password.
               </p>
 
               <form onSubmit={handleLogin} className="mt-8 space-y-5">
                 <div>
-                  <label htmlFor="accessCode" className="mb-2 block font-bold">
-                    Admin Access Code
+                  <label htmlFor="email" className="mb-2 block font-bold">
+                    Admin Email
+                  </label>
+
+                  <div className="relative">
+                    <Mail
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                      size={20}
+                    />
+
+                    <input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      placeholder="admin@example.com"
+                      className="w-full rounded-xl border px-12 py-4 outline-none focus:border-[#007F73]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="mb-2 block font-bold">
+                    Password
                   </label>
 
                   <div className="relative">
@@ -113,11 +144,11 @@ export default function AdminLoginPage() {
                     />
 
                     <input
-                      id="accessCode"
+                      id="password"
                       type="password"
-                      value={accessCode}
-                      onChange={(event) => setAccessCode(event.target.value)}
-                      placeholder="Enter admin code"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      placeholder="Enter password"
                       className="w-full rounded-xl border px-12 py-4 outline-none focus:border-[#007F73]"
                     />
                   </div>
@@ -138,13 +169,13 @@ export default function AdminLoginPage() {
                   disabled={loggingIn}
                   className="w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {loggingIn ? "Checking Access..." : "Unlock Admin Dashboard"}
+                  {loggingIn ? "Checking Admin Access..." : "Login as Admin"}
                 </button>
               </form>
 
               <p className="mt-6 text-sm leading-6 text-gray-500">
-                For now, this protects admin pages using a secure server-side
-                cookie. Later, we can connect this to real admin user roles.
+                Your account must exist in Supabase and must also have the ADMIN
+                role inside the LMS database.
               </p>
             </div>
           </section>

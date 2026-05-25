@@ -207,7 +207,7 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link
-              href="/admin"
+              href="/admin/settings"
               className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
@@ -223,8 +223,8 @@ export default function AdminDashboardPage() {
                 system configuration.
               </p>
 
-              <p className="mt-5 font-bold text-gray-400">
-                Coming Soon →
+              <p className="mt-5 font-bold text-[#007F73]">
+                Open Settings →
               </p>
             </Link>
           </div>
@@ -242,8 +242,8 @@ export default function AdminDashboardPage() {
 
                 <p className="mt-3 max-w-3xl leading-7 text-white/70">
                   This dashboard brings together the core management tools for
-                  courses, lessons, quizzes, learners, certificates, and platform
-                  reporting.
+                  courses, lessons, quizzes, learners, certificates, platform
+                  reporting, and settings.
                 </p>
               </div>
 
@@ -260,6 +260,13 @@ export default function AdminDashboardPage() {
                   className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
                 >
                   View Reports
+                </Link>
+
+                <Link
+                  href="/admin/settings"
+                  className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
+                >
+                  Settings
                 </Link>
               </div>
             </div>

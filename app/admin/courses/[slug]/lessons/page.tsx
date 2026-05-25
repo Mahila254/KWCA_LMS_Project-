@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -40,7 +40,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
   if (!course) {
     return (
       <>
-        <Navbar />
+        <AdminNavbar />
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
           <h1 className="text-4xl font-bold">Course not found</h1>

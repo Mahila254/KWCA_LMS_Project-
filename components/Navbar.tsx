@@ -1,10 +1,5 @@
 import Link from "next/link";
-import {
-  BookOpen,
-  LayoutDashboard,
-  ShieldCheck,
-  UserCircle,
-} from "lucide-react";
+import { BookOpen, ShieldCheck, UserCircle } from "lucide-react";
 
 export default function Navbar() {
   return (
@@ -44,30 +39,15 @@ export default function Navbar() {
           >
             Profile
           </Link>
-
-          <Link
-            href="/admin"
-            className="font-semibold text-[#07122E] hover:text-[#007F73]"
-          >
-            Admin
-          </Link>
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
           <Link
             href="/profile"
-            className="inline-flex items-center gap-2 rounded-xl border px-4 py-2 font-bold hover:bg-gray-50"
-          >
-            <UserCircle size={18} />
-            Learner
-          </Link>
-
-          <Link
-            href="/admin"
             className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-4 py-2 font-bold text-white hover:bg-[#00665d]"
           >
-            <LayoutDashboard size={18} />
-            Dashboard
+            <UserCircle size={18} />
+            Learner Profile
           </Link>
         </div>
 
@@ -81,11 +61,11 @@ export default function Navbar() {
           </Link>
 
           <Link
-            href="/admin"
+            href="/profile"
             className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#007F73] text-white"
-            aria-label="Admin Dashboard"
+            aria-label="Learner Profile"
           >
-            <LayoutDashboard size={20} />
+            <UserCircle size={20} />
           </Link>
         </div>
       </nav>

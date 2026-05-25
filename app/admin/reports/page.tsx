@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -118,7 +118,7 @@ export default async function AdminReportsPage() {
 
   return (
     <>
-      <Navbar />
+      <AdminNavbar />
 
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
         <section className="bg-[#EDF5F3] py-16">

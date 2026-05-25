@@ -80,7 +80,7 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link
-              href="/admin"
+              href="/admin/reports"
               className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
@@ -185,7 +185,7 @@ export default function AdminDashboardPage() {
             </Link>
 
             <Link
-              href="/admin"
+              href="/admin/reports"
               className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
@@ -197,12 +197,12 @@ export default function AdminDashboardPage() {
               </h2>
 
               <p className="mt-3 leading-7 text-gray-600">
-                Track course completion, quiz performance, certificates issued,
-                learner engagement, and platform activity.
+                View platform activity, learner progress, quiz performance,
+                completion rates, and certificate summaries.
               </p>
 
-              <p className="mt-5 font-bold text-gray-400">
-                Coming Soon →
+              <p className="mt-5 font-bold text-[#007F73]">
+                View Reports →
               </p>
             </Link>
 
@@ -256,10 +256,10 @@ export default function AdminDashboardPage() {
                 </Link>
 
                 <Link
-                  href="/admin/learners"
+                  href="/admin/reports"
                   className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
                 >
-                  View Learners
+                  View Reports
                 </Link>
               </div>
             </div>

@@ -66,9 +66,7 @@ export default function AdminSettingsPage() {
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 <CreditCard className="text-[#D94A00]" size={28} />
-                <p className="text-sm font-bold text-gray-500">
-                  Payments
-                </p>
+                <p className="text-sm font-bold text-gray-500">Payments</p>
               </div>
 
               <p className="text-2xl font-bold">Planned</p>
@@ -283,7 +281,7 @@ export default function AdminSettingsPage() {
                   </h2>
 
                   <p className="mt-1 text-gray-600">
-                    Current certificate generation rules.
+                    Current certificate generation and verification rules.
                   </p>
                 </div>
               </div>
@@ -317,6 +315,28 @@ export default function AdminSettingsPage() {
                     Each certificate is saved with a unique code for tracking
                     and verification.
                   </p>
+                </div>
+
+                <div className="rounded-2xl bg-[#F2FBF8] p-5">
+                  <p className="text-sm font-bold text-gray-500">
+                    Public Verification
+                  </p>
+
+                  <h3 className="mt-2 text-xl font-bold">
+                    Verify Certificates Online
+                  </h3>
+
+                  <p className="mt-2 text-gray-600">
+                    Anyone can verify whether a certificate code exists in the
+                    KWCA LMS database.
+                  </p>
+
+                  <Link
+                    href="/verify-certificate"
+                    className="mt-5 inline-flex rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    Open Certificate Verification
+                  </Link>
                 </div>
               </div>
             </div>
@@ -374,7 +394,8 @@ export default function AdminSettingsPage() {
             <p className="mt-3 max-w-4xl leading-7 text-white/70">
               This page gives KWCA a clear view of the platform configuration.
               It also prepares the system for the next major upgrade: real
-              payment-based premium access and stronger admin protection.
+              payment-based premium access, certificate verification, and
+              stronger admin protection.
             </p>
           </div>
         </section>

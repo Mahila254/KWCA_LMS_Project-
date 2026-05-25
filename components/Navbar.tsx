@@ -1,41 +1,94 @@
 import Link from "next/link";
+import {
+  BookOpen,
+  LayoutDashboard,
+  ShieldCheck,
+  UserCircle,
+} from "lucide-react";
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 z-10 bg-white border-b border-gray-200">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link href="/">
+    <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 text-[#07122E]">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+            <BookOpen size={24} />
+          </div>
+
           <div>
-            <h1 className="text-xl font-bold text-[#8B3A12]">
-              KWCA
-            </h1>
-            <p className="text-xs text-gray-500">
-              Living nature, living people
+            <p className="text-lg font-extrabold leading-none">KWCA LMS</p>
+            <p className="mt-1 text-xs font-semibold text-gray-500">
+              Conservation Learning
             </p>
           </div>
         </Link>
 
-        <div className="hidden items-center gap-8 font-medium text-gray-700 md:flex">
-          <Link href="/#about">About Us</Link>
-          <Link href="/courses">Courses</Link>
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/#resources">Resources</Link>
-
+        <div className="hidden items-center gap-8 md:flex">
           <Link
-            href="/login"
-            className="font-bold text-[#007F73]"
+            href="/courses"
+            className="font-semibold text-[#07122E] hover:text-[#007F73]"
           >
-            Login
+            Courses
           </Link>
 
           <Link
-            href="/register"
-            className="rounded-xl bg-[#007F73] px-6 py-3 text-white"
+            href="/verify-certificate"
+            className="font-semibold text-[#07122E] hover:text-[#007F73]"
           >
-            Get Started
+            Verify Certificate
+          </Link>
+
+          <Link
+            href="/profile"
+            className="font-semibold text-[#07122E] hover:text-[#007F73]"
+          >
+            Profile
+          </Link>
+
+          <Link
+            href="/admin"
+            className="font-semibold text-[#07122E] hover:text-[#007F73]"
+          >
+            Admin
           </Link>
         </div>
-      </div>
-    </nav>
+
+        <div className="hidden items-center gap-3 md:flex">
+          <Link
+            href="/profile"
+            className="inline-flex items-center gap-2 rounded-xl border px-4 py-2 font-bold hover:bg-gray-50"
+          >
+            <UserCircle size={18} />
+            Learner
+          </Link>
+
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-4 py-2 font-bold text-white hover:bg-[#00665d]"
+          >
+            <LayoutDashboard size={18} />
+            Dashboard
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-3 md:hidden">
+          <Link
+            href="/verify-certificate"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border text-[#007F73]"
+            aria-label="Verify Certificate"
+          >
+            <ShieldCheck size={20} />
+          </Link>
+
+          <Link
+            href="/admin"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#007F73] text-white"
+            aria-label="Admin Dashboard"
+          >
+            <LayoutDashboard size={20} />
+          </Link>
+        </div>
+      </nav>
+    </header>
   );
 }

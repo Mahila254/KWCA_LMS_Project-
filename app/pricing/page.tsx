@@ -64,7 +64,7 @@ export default function PricingPage() {
               </p>
 
               <div className="mt-6">
-                <p className="text-5xl font-extrabold">KES 1,500</p>
+                <p className="text-5xl font-extrabold">KES 500</p>
                 <p className="mt-1 text-sm text-gray-500">per course</p>
               </div>
 
@@ -77,7 +77,7 @@ export default function PricingPage() {
 
               <CreatePaymentButton
                 paymentType="PAY_PER_COURSE"
-                amount={1500}
+                amount={500}
                 label="Create Pay Per Course Payment"
               />
             </div>
@@ -101,7 +101,7 @@ export default function PricingPage() {
               </p>
 
               <div className="mt-6">
-                <p className="text-5xl font-extrabold">KES 3,000</p>
+                <p className="text-5xl font-extrabold">KES 1,200</p>
                 <p className="mt-1 text-sm text-gray-500">per month</p>
               </div>
 
@@ -114,7 +114,7 @@ export default function PricingPage() {
 
               <CreatePaymentButton
                 paymentType="MONTHLY_SUBSCRIPTION"
-                amount={3000}
+                amount={1200}
                 label="Create Monthly Payment"
               />
             </div>
@@ -133,7 +133,7 @@ export default function PricingPage() {
               </p>
 
               <div className="mt-6">
-                <p className="text-5xl font-extrabold">KES 25,000</p>
+                <p className="text-5xl font-extrabold">KES 5,000</p>
                 <p className="mt-1 text-sm text-gray-500">per year</p>
               </div>
 
@@ -146,7 +146,7 @@ export default function PricingPage() {
 
               <CreatePaymentButton
                 paymentType="ANNUAL_SUBSCRIPTION"
-                amount={25000}
+                amount={5000}
                 label="Create Annual Payment"
               />
             </div>

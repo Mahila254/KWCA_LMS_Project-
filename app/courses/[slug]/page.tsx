@@ -6,13 +6,16 @@ import EnrollCourseButton from "@/components/EnrollCourseButton";
 import {
   ArrowLeft,
   BookOpen,
+  CheckCircle,
+  Clock,
   Eye,
+  FileText,
+  GraduationCap,
+  HelpCircle,
   Lock,
   PlayCircle,
-  CheckCircle,
-  GraduationCap,
-  ClipboardList,
-  Award,
+  ShieldCheck,
+  Star,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -21,10 +24,19 @@ type PageProps = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{
+    adminPreview?: string;
+  }>;
 };
 
-export default async function CourseDetailPage({ params }: PageProps) {
+export default async function CourseDetailsPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { slug } = await params;
+  const query = await searchParams;
+
+  const isAdminPreview = query.adminPreview === "true";
 
   const course = await prisma.course.findUnique({
     where: {
@@ -45,18 +57,15 @@ export default async function CourseDetailPage({ params }: PageProps) {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
-          <h1 className="text-4xl font-bold">Course not found</h1>
-
-          <p className="mt-4 text-gray-600">
-            This course may not exist or may have been removed.
-          </p>
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
+          <h1 className="text-4xl font-bold text-[#07122E]">
+            Course not found
+          </h1>
 
           <Link
             href="/courses"
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+            className="mt-6 inline-block font-bold text-[#007F73]"
           >
-            <ArrowLeft size={18} />
             Back to Courses
           </Link>
         </main>
@@ -74,6 +83,8 @@ export default async function CourseDetailPage({ params }: PageProps) {
     (lesson) => lesson.accessType === "PREMIUM"
   );
 
+  const firstPreviewLesson = previewLessons[0] || course.lessons[0] || null;
+
   const practiceQuestions = course.quizQuestions.filter(
     (question) => question.quizType === "PRACTICE"
   );
@@ -82,20 +93,33 @@ export default async function CourseDetailPage({ params }: PageProps) {
     (question) => question.quizType === "FINAL"
   );
 
-  const courseAccess =
-    course.accessType === "FREE_PREVIEW"
-      ? "Free Preview"
-      : course.accessType === "SUBSCRIPTION_ONLY"
-      ? "Subscription Only"
-      : "Premium";
-
   return (
     <>
       <Navbar />
 
+      {isAdminPreview && (
+        <div className="border-b bg-[#07122E] px-6 py-4 text-white">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="font-bold">Admin Preview Mode</p>
+              <p className="text-sm text-white/70">
+                You are viewing this course as it appears on the learner side.
+              </p>
+            </div>
+
+            <Link
+              href="/admin/courses"
+              className="rounded-xl bg-white px-5 py-3 font-bold text-[#07122E] hover:bg-white/90"
+            >
+              Back to Course Management
+            </Link>
+          </div>
+        </div>
+      )}
+
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#F2FBF8] px-6 py-16">
-          <div className="mx-auto max-w-7xl">
+        <section className="bg-[#EDF5F3] py-16">
+          <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/courses"
               className="inline-flex items-center gap-2 font-bold text-[#007F73]"
@@ -104,65 +128,57 @@ export default async function CourseDetailPage({ params }: PageProps) {
               Back to Courses
             </Link>
 
-            <div className="mt-10 grid gap-10 lg:grid-cols-[1.4fr_0.8fr]">
+            <div className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_0.9fr]">
               <div>
-                <div className="mb-5 flex flex-wrap gap-3">
-                  <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#007F73]">
+                <div className="flex flex-wrap gap-3">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
+                    <ShieldCheck size={16} />
+                    {course.status === "PUBLISHED" ? "Published" : "Draft"}
+                  </span>
+
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
+                    <BookOpen size={16} />
                     {course.category || "General"}
                   </span>
 
-                  <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
-                    <Eye size={15} />
-                    {courseAccess}
-                  </span>
-
-                  <span
-                    className={`rounded-full px-4 py-2 text-sm font-bold ${
-                      course.status === "PUBLISHED"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {course.status === "PUBLISHED" ? "Published" : "Draft"}
+                  <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+                    <Eye size={16} />
+                    {course.accessType === "FREE_PREVIEW"
+                      ? "Free Preview"
+                      : course.accessType === "PREMIUM"
+                      ? "Premium"
+                      : "Subscription Only"}
                   </span>
                 </div>
 
-                <h1 className="max-w-5xl text-5xl font-extrabold leading-tight">
+                <h1 className="mt-6 max-w-5xl text-5xl font-extrabold leading-tight">
                   {course.title}
                 </h1>
 
-                <p className="mt-6 max-w-4xl text-lg leading-8 text-gray-600">
+                <p className="mt-5 max-w-4xl text-xl leading-9 text-gray-600">
                   {course.description ||
-                    "This course is designed to support conservancy leaders, managers, board members, and community stakeholders with practical learning."}
+                    "This course introduces learners to practical conservation knowledge and skills."}
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-4">
-                  <EnrollCourseButton courseSlug={course.slug} />
-
-                  {course.lessons.length > 0 && previewLessons[0] ? (
+                  {firstPreviewLesson && (
                     <Link
-                      href={`/courses/${course.slug}/${previewLessons[0].slug}`}
-                      className="inline-flex items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-white"
+                      href={`/courses/${course.slug}/${firstPreviewLesson.slug}`}
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
                     >
-                      <PlayCircle size={18} />
-                      Start Preview Lesson
+                      <PlayCircle size={19} />
+                      Start Learning
                     </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold text-gray-400"
-                    >
-                      <PlayCircle size={18} />
-                      Lessons Coming Soon
-                    </button>
                   )}
 
+                  <EnrollCourseButton courseSlug={course.slug} />
+
                   <Link
-                    href="/pricing"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-white"
+                    href={`/courses/${course.slug}/quiz/practice`}
+                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-white"
                   >
-                    <Lock size={18} />
-                    View Pricing
+                    <HelpCircle size={19} />
+                    Practice Quiz
                   </Link>
                 </div>
               </div>
@@ -177,6 +193,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
                       allowFullScreen
                     />
                   ) : course.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={course.imageUrl}
                       alt={course.title}
@@ -185,42 +202,47 @@ export default async function CourseDetailPage({ params }: PageProps) {
                   ) : (
                     <div className="text-center">
                       <GraduationCap className="mx-auto mb-4" size={64} />
-
                       <p className="text-2xl font-bold">Course Preview</p>
-
                       <p className="mt-2 text-white/70">
-                        Course image or video will appear here.
+                        Video or image preview will appear here.
                       </p>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-6 grid gap-4">
-                  <div className="flex items-center justify-between rounded-2xl bg-gray-50 p-4">
-                    <span className="font-bold text-gray-600">
-                      Total Lessons
-                    </span>
-                    <span className="font-extrabold">
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl bg-gray-50 p-4">
+                    <p className="text-sm font-bold text-gray-500">Lessons</p>
+                    <p className="mt-1 text-3xl font-bold">
                       {course.lessons.length}
-                    </span>
+                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between rounded-2xl bg-gray-50 p-4">
-                    <span className="font-bold text-gray-600">
+                  <div className="rounded-2xl bg-gray-50 p-4">
+                    <p className="text-sm font-bold text-gray-500">
+                      Quiz Questions
+                    </p>
+                    <p className="mt-1 text-3xl font-bold">
+                      {course.quizQuestions.length}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl bg-gray-50 p-4">
+                    <p className="text-sm font-bold text-gray-500">
                       Free Preview
-                    </span>
-                    <span className="font-extrabold">
+                    </p>
+                    <p className="mt-1 text-3xl font-bold">
                       {previewLessons.length}
-                    </span>
+                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between rounded-2xl bg-gray-50 p-4">
-                    <span className="font-bold text-gray-600">
-                      Premium Lessons
-                    </span>
-                    <span className="font-extrabold">
+                  <div className="rounded-2xl bg-gray-50 p-4">
+                    <p className="text-sm font-bold text-gray-500">
+                      Premium
+                    </p>
+                    <p className="mt-1 text-3xl font-bold">
                       {premiumLessons.length}
-                    </span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -231,94 +253,105 @@ export default async function CourseDetailPage({ params }: PageProps) {
         <section className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-[1.4fr_0.8fr]">
           <div className="space-y-8">
             <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <div className="mb-6 flex items-center gap-3">
-                <CheckCircle className="text-[#007F73]" size={28} />
+              <div className="mb-5 flex items-center gap-3">
+                <Star className="text-[#007F73]" size={28} />
                 <h2 className="text-3xl font-bold">Learning Outcomes</h2>
               </div>
 
               <p className="leading-8 text-gray-600">
                 {course.learningOutcomes ||
-                  "By the end of this course, learners will understand the key concepts, practical tools, and management approaches needed to apply the topic in a conservancy setting."}
+                  "By the end of this course, learners will understand the key concepts, practical tools, and real-world applications covered in the course."}
               </p>
             </div>
 
-            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-              <div className="border-b px-8 py-6">
-                <h2 className="text-3xl font-bold">Course Lessons</h2>
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="mb-6 flex items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-3xl font-bold">Course Lessons</h2>
+                  <p className="mt-2 text-gray-600">
+                    Follow the lessons in order and track your learning
+                    progress.
+                  </p>
+                </div>
 
-                <p className="mt-2 text-gray-600">
-                  Explore the course outline and access available preview
-                  lessons.
-                </p>
+                <span className="rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
+                  {course.lessons.length} Lessons
+                </span>
               </div>
 
               {course.lessons.length === 0 ? (
-                <div className="p-10 text-center">
-                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
-                    <BookOpen size={32} />
-                  </div>
-
-                  <h3 className="text-2xl font-bold">No lessons yet</h3>
-
-                  <p className="mt-3 text-gray-600">
-                    Lessons added by the admin will appear here.
-                  </p>
+                <div className="rounded-2xl bg-gray-50 p-6 text-gray-600">
+                  Lessons have not been added to this course yet.
                 </div>
               ) : (
-                <div className="divide-y">
+                <div className="space-y-4">
                   {course.lessons.map((lesson, index) => {
                     const isPreview = lesson.accessType === "PREVIEW";
 
                     return (
-                      <div
+                      <Link
                         key={lesson.id}
-                        className="grid gap-5 px-8 py-6 md:grid-cols-[60px_1fr_auto]"
+                        href={
+                          isPreview
+                            ? `/courses/${course.slug}/${lesson.slug}`
+                            : "/pricing"
+                        }
+                        className="block rounded-2xl border p-5 transition hover:border-[#007F73] hover:bg-gray-50"
                       >
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-lg font-extrabold text-[#007F73]">
-                          {index + 1}
-                        </div>
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div className="flex gap-4">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F2FBF8] font-bold text-[#007F73]">
+                              {index + 1}
+                            </div>
 
-                        <div>
-                          <div className="mb-2 flex flex-wrap gap-2">
+                            <div>
+                              <h3 className="text-xl font-bold">
+                                {lesson.title}
+                              </h3>
+
+                              <p className="mt-2 line-clamp-2 text-gray-600">
+                                {lesson.content ||
+                                  "Lesson content will be added here."}
+                              </p>
+
+                              <div className="mt-3 flex flex-wrap gap-3">
+                                {lesson.videoUrl && (
+                                  <span className="inline-flex items-center gap-1 text-sm font-bold text-[#007F73]">
+                                    <PlayCircle size={15} />
+                                    Video
+                                  </span>
+                                )}
+
+                                {lesson.readingUrl && (
+                                  <span className="inline-flex items-center gap-1 text-sm font-bold text-[#007F73]">
+                                    <FileText size={15} />
+                                    Reading
+                                  </span>
+                                )}
+
+                                <span className="inline-flex items-center gap-1 text-sm font-bold text-gray-500">
+                                  <Clock size={15} />
+                                  Lesson {index + 1}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
                             {isPreview ? (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
-                                <Eye size={13} />
+                              <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
+                                <Eye size={15} />
                                 Free Preview
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-[#D94A00]">
-                                <Lock size={13} />
+                              <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+                                <Lock size={15} />
                                 Premium Locked
                               </span>
                             )}
                           </div>
-
-                          <h3 className="text-xl font-bold">{lesson.title}</h3>
-
-                          <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
-                            {lesson.content ||
-                              "Lesson content will appear once added by the admin."}
-                          </p>
                         </div>
-
-                        <div className="flex items-start">
-                          {isPreview ? (
-                            <Link
-                              href={`/courses/${course.slug}/${lesson.slug}`}
-                              className="rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
-                            >
-                              Open Lesson
-                            </Link>
-                          ) : (
-                            <Link
-                              href="/pricing"
-                              className="rounded-xl border px-5 py-3 font-bold hover:bg-gray-50"
-                            >
-                              Unlock
-                            </Link>
-                          )}
-                        </div>
-                      </div>
+                      </Link>
                     );
                   })}
                 </div>
@@ -331,22 +364,40 @@ export default async function CourseDetailPage({ params }: PageProps) {
               <h2 className="text-2xl font-bold">Course Actions</h2>
 
               <div className="mt-6 space-y-4">
+                {firstPreviewLesson && (
+                  <Link
+                    href={`/courses/${course.slug}/${firstPreviewLesson.slug}`}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    <PlayCircle size={18} />
+                    Start First Lesson
+                  </Link>
+                )}
+
                 <EnrollCourseButton courseSlug={course.slug} />
 
                 <Link
                   href={`/courses/${course.slug}/quiz/practice`}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
                 >
-                  <ClipboardList size={18} />
+                  <HelpCircle size={18} />
                   Practice Quiz
                 </Link>
 
                 <Link
                   href={`/courses/${course.slug}/quiz/final`}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#D94A00] px-6 py-3 font-bold text-[#D94A00] hover:bg-orange-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
                 >
-                  <Award size={18} />
+                  <CheckCircle size={18} />
                   Final Quiz
+                </Link>
+
+                <Link
+                  href={`/courses/${course.slug}/certificate`}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                >
+                  <GraduationCap size={18} />
+                  View Certificate
                 </Link>
               </div>
             </div>
@@ -354,42 +405,51 @@ export default async function CourseDetailPage({ params }: PageProps) {
             <div className="rounded-3xl bg-white p-8 shadow-sm">
               <h2 className="text-2xl font-bold">Quiz Availability</h2>
 
-              <div className="mt-6 space-y-4">
-                <div className="flex items-center justify-between rounded-2xl bg-gray-50 p-4">
-                  <span className="font-bold text-gray-600">
-                    Practice Questions
-                  </span>
-                  <span className="font-extrabold">
+              <div className="mt-5 space-y-4">
+                <div className="rounded-2xl bg-[#F2FBF8] p-5">
+                  <p className="font-bold text-[#007F73]">Practice Quiz</p>
+                  <p className="mt-1 text-3xl font-bold">
                     {practiceQuestions.length}
-                  </span>
+                  </p>
+                  <p className="mt-1 text-sm text-gray-600">Questions</p>
                 </div>
 
-                <div className="flex items-center justify-between rounded-2xl bg-gray-50 p-4">
-                  <span className="font-bold text-gray-600">
-                    Final Questions
-                  </span>
-                  <span className="font-extrabold">
+                <div className="rounded-2xl bg-orange-50 p-5">
+                  <p className="font-bold text-[#D94A00]">Final Quiz</p>
+                  <p className="mt-1 text-3xl font-bold">
                     {finalQuestions.length}
-                  </span>
+                  </p>
+                  <p className="mt-1 text-sm text-gray-600">Questions</p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-3xl bg-[#07122E] p-8 text-white">
-              <h2 className="text-2xl font-bold">Need full access?</h2>
+            {isAdminPreview && (
+              <div className="rounded-3xl border-2 border-[#07122E] bg-white p-8 shadow-sm">
+                <h2 className="text-2xl font-bold">Admin Shortcut</h2>
 
-              <p className="mt-3 leading-7 text-white/70">
-                Unlock premium lessons, final assessments, downloadable
-                resources, and certificates.
-              </p>
+                <p className="mt-3 leading-7 text-gray-600">
+                  This shortcut is only visible because you opened the course in
+                  admin preview mode.
+                </p>
 
-              <Link
-                href="/pricing"
-                className="mt-6 inline-flex rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-              >
-                View Pricing
-              </Link>
-            </div>
+                <div className="mt-5 space-y-3">
+                  <Link
+                    href="/admin/courses"
+                    className="block rounded-xl bg-[#07122E] px-5 py-3 text-center font-bold text-white hover:bg-[#101b3d]"
+                  >
+                    Back to Course Management
+                  </Link>
+
+                  <Link
+                    href={`/admin/courses/${course.slug}/edit`}
+                    className="block rounded-xl border px-5 py-3 text-center font-bold hover:bg-gray-50"
+                  >
+                    Edit This Course
+                  </Link>
+                </div>
+              </div>
+            )}
           </aside>
         </section>
       </main>

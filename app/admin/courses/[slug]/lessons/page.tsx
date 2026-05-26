@@ -64,7 +64,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
   return (
     <>
-      <Navbar />
+      <AdminNavbar />
 
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
         <section className="bg-[#EDF5F3] py-16">

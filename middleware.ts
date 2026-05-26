@@ -9,10 +9,12 @@ export function middleware(request: NextRequest) {
 
   if (isAdminPage && !isAdminLoginPage) {
     const adminSession = request.cookies.get("kwca_admin_session")?.value;
+    const adminEmail = request.cookies.get("kwca_admin_email")?.value;
 
-    if (adminSession !== "active") {
+    if (adminSession !== "active" || !adminEmail) {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = "/admin/login";
+
       return NextResponse.redirect(loginUrl);
     }
   }

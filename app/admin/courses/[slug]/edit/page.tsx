@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
+import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -146,7 +146,7 @@ export default function EditCoursePage() {
   if (loading) {
     return (
       <>
-        <Navbar />
+        <AdminNavbar />
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
           <h1 className="text-3xl font-bold">Loading course...</h1>
@@ -159,7 +159,7 @@ export default function EditCoursePage() {
 
   return (
     <>
-      <Navbar />
+      <AdminNavbar />
 
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
         <section className="bg-[#EDF5F3] py-16">

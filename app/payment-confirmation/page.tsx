@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import CheckPaymentStatusButton from "@/components/CheckPaymentStatusButton";
 import {
   CheckCircle,
   Clock,
@@ -60,9 +61,8 @@ export default async function PaymentConfirmationPage({
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">
-                Your payment request has been saved. The next step will be
-                connecting this flow to Paystack or M-PESA for real payment
-                confirmation.
+                Your payment request has been saved. Once the admin confirms it,
+                you can check the status here and continue to your course.
               </p>
             </div>
           </div>
@@ -90,22 +90,50 @@ export default async function PaymentConfirmationPage({
             </div>
           ) : (
             <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-              <div className="bg-[#07122E] p-8 text-white">
+              <div
+                className={`p-8 text-white ${
+                  payment.status === "PAID"
+                    ? "bg-[#007F73]"
+                    : payment.status === "FAILED"
+                    ? "bg-red-700"
+                    : "bg-[#07122E]"
+                }`}
+              >
                 <div className="flex flex-wrap items-start justify-between gap-6">
                   <div>
                     <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 font-bold text-white">
-                      <Clock size={18} />
-                      Pending Payment
+                      {payment.status === "PAID" ? (
+                        <>
+                          <CheckCircle size={18} />
+                          Payment Confirmed
+                        </>
+                      ) : payment.status === "FAILED" ? (
+                        <>
+                          <AlertCircle size={18} />
+                          Payment Failed
+                        </>
+                      ) : (
+                        <>
+                          <Clock size={18} />
+                          Pending Payment
+                        </>
+                      )}
                     </div>
 
                     <h2 className="text-4xl font-extrabold">
-                      Payment Awaiting Confirmation
+                      {payment.status === "PAID"
+                        ? "Premium Access Unlocked"
+                        : payment.status === "FAILED"
+                        ? "Payment Could Not Be Confirmed"
+                        : "Payment Awaiting Confirmation"}
                     </h2>
 
                     <p className="mt-3 max-w-3xl leading-7 text-white/70">
-                      This record is currently marked as PENDING. Once Paystack
-                      or M-PESA is connected, successful payments will
-                      automatically update to PAID.
+                      {payment.status === "PAID"
+                        ? "Your payment has been confirmed. You can now continue to the course and open premium lessons."
+                        : payment.status === "FAILED"
+                        ? "This payment was marked as failed. Please contact the admin or create a new payment request."
+                        : "This record is currently marked as PENDING. After admin confirmation, click the status check button below to continue."}
                     </p>
                   </div>
 
@@ -116,16 +144,37 @@ export default async function PaymentConfirmationPage({
               </div>
 
               <div className="grid gap-6 p-8 md:grid-cols-2">
-                <InfoCard label="Learner" value={payment.user.name || payment.user.email} />
+                <InfoCard
+                  label="Learner"
+                  value={payment.user.name || payment.user.email}
+                />
+
                 <InfoCard label="Email" value={payment.user.email} />
-                <InfoCard label="Payment Type" value={payment.paymentType.replaceAll("_", " ")} />
-                <InfoCard label="Amount" value={`${payment.currency} ${payment.amount.toLocaleString()}`} />
+
+                <InfoCard
+                  label="Payment Type"
+                  value={payment.paymentType.replaceAll("_", " ")}
+                />
+
+                <InfoCard
+                  label="Amount"
+                  value={`${payment.currency} ${payment.amount.toLocaleString()}`}
+                />
+
                 <InfoCard label="Status" value={payment.status} />
+
                 <InfoCard label="Provider" value={payment.provider} />
-                <InfoCard label="Reference" value={payment.providerRef || "Not available"} />
+
+                <InfoCard
+                  label="Reference"
+                  value={payment.providerRef || "Not available"}
+                />
+
                 <InfoCard
                   label="Course"
-                  value={payment.course?.title || "Subscription / General Access"}
+                  value={
+                    payment.course?.title || "Subscription / General Access"
+                  }
                 />
               </div>
 
@@ -136,20 +185,33 @@ export default async function PaymentConfirmationPage({
 
                     <div>
                       <h3 className="text-xl font-bold">
-                        Real payment gateway coming next
+                        Manual payment confirmation MVP
                       </h3>
 
                       <p className="mt-2 leading-7 text-gray-600">
-                        This confirms that your database payment flow is working.
-                        The next upgrade is connecting this payment record to
-                        Paystack or M-PESA so the LMS can automatically unlock
-                        premium access after payment.
+                        For now, the admin can confirm payment from the Admin
+                        Payments page. Once marked as PAID, click the button
+                        below to refresh the payment status and continue.
                       </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-4">
+                  <CheckPaymentStatusButton
+                    paymentId={payment.id}
+                    courseSlug={payment.course?.slug || null}
+                  />
+
+                  {payment.course?.slug && (
+                    <Link
+                      href={`/courses/${payment.course.slug}`}
+                      className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                    >
+                      Back to Course
+                    </Link>
+                  )}
+
                   <Link
                     href="/pricing"
                     className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
@@ -159,7 +221,7 @@ export default async function PaymentConfirmationPage({
 
                   <Link
                     href="/profile"
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#07122E] px-6 py-3 font-bold text-white hover:bg-[#101b3d]"
                   >
                     <CheckCircle size={18} />
                     View Profile

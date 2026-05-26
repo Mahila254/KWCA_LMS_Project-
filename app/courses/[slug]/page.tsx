@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import EnrollCourseButton from "@/components/EnrollCourseButton";
+import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
 import {
   ArrowLeft,
   BookOpen,
@@ -237,9 +238,7 @@ export default async function CourseDetailsPage({
                   </div>
 
                   <div className="rounded-2xl bg-gray-50 p-4">
-                    <p className="text-sm font-bold text-gray-500">
-                      Premium
-                    </p>
+                    <p className="text-sm font-bold text-gray-500">Premium</p>
                     <p className="mt-1 text-3xl font-bold">
                       {premiumLessons.length}
                     </p>
@@ -289,13 +288,8 @@ export default async function CourseDetailsPage({
                     const isPreview = lesson.accessType === "PREVIEW";
 
                     return (
-                      <Link
+                      <div
                         key={lesson.id}
-                        href={
-                          isPreview
-                            ? `/courses/${course.slug}/${lesson.slug}`
-                            : "/pricing"
-                        }
                         className="block rounded-2xl border p-5 transition hover:border-[#007F73] hover:bg-gray-50"
                       >
                         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -339,19 +333,23 @@ export default async function CourseDetailsPage({
 
                           <div>
                             {isPreview ? (
-                              <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
+                              <Link
+                                href={`/courses/${course.slug}/${lesson.slug}`}
+                                className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700 hover:bg-green-200"
+                              >
                                 <Eye size={15} />
                                 Free Preview
-                              </span>
+                              </Link>
                             ) : (
-                              <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
-                                <Lock size={15} />
-                                Premium Locked
-                              </span>
+                              <PremiumLessonAccessButton
+                                courseId={course.id}
+                                courseSlug={course.slug}
+                                lessonSlug={lesson.slug}
+                              />
                             )}
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     );
                   })}
                 </div>

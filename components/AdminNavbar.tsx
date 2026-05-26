@@ -8,6 +8,7 @@ import {
   Award,
   Settings,
   Home,
+  CreditCard,
 } from "lucide-react";
 
 export default function AdminNavbar() {
@@ -27,7 +28,7 @@ export default function AdminNavbar() {
           </div>
         </Link>
 
-        <div className="hidden items-center gap-7 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           <Link
             href="/admin"
             className="font-semibold text-white/80 hover:text-white"
@@ -47,6 +48,13 @@ export default function AdminNavbar() {
             className="font-semibold text-white/80 hover:text-white"
           >
             Learners
+          </Link>
+
+          <Link
+            href="/admin/payments"
+            className="font-semibold text-white/80 hover:text-white"
+          >
+            Payments
           </Link>
 
           <Link
@@ -98,6 +106,14 @@ export default function AdminNavbar() {
             aria-label="Admin Learners"
           >
             <Users size={20} />
+          </Link>
+
+          <Link
+            href="/admin/payments"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 text-white"
+            aria-label="Admin Payments"
+          >
+            <CreditCard size={20} />
           </Link>
 
           <Link

@@ -9,6 +9,7 @@ import {
   PlusCircle,
   Award,
   LayoutDashboard,
+  CreditCard,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -26,14 +27,14 @@ export default function AdminDashboardPage() {
             </h1>
 
             <p className="mt-4 max-w-3xl text-xl text-gray-600">
-              Manage courses, lessons, quiz questions, certificates, learners,
-              reports, and platform settings.
+              Manage courses, lessons, quiz questions, learners, payments,
+              reports, certificates, and platform settings.
             </p>
           </div>
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-12">
-          <div className="mb-10 grid gap-6 md:grid-cols-4">
+          <div className="mb-10 grid gap-6 md:grid-cols-3 lg:grid-cols-6">
             <Link
               href="/admin/courses"
               className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
@@ -46,22 +47,7 @@ export default function AdminDashboardPage() {
                 Course Management
               </p>
 
-              <h2 className="mt-2 text-3xl font-bold">Courses</h2>
-            </Link>
-
-            <Link
-              href="/admin/certificates"
-              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
-                <Award size={26} />
-              </div>
-
-              <p className="text-sm font-bold text-gray-500">
-                Certificate Records
-              </p>
-
-              <h2 className="mt-2 text-3xl font-bold">Certificates</h2>
+              <h2 className="mt-2 text-2xl font-bold">Courses</h2>
             </Link>
 
             <Link
@@ -76,7 +62,22 @@ export default function AdminDashboardPage() {
                 Learner Management
               </p>
 
-              <h2 className="mt-2 text-3xl font-bold">Learners</h2>
+              <h2 className="mt-2 text-2xl font-bold">Learners</h2>
+            </Link>
+
+            <Link
+              href="/admin/payments"
+              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <CreditCard size={26} />
+              </div>
+
+              <p className="text-sm font-bold text-gray-500">
+                Payment Records
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold">Payments</h2>
             </Link>
 
             <Link
@@ -91,7 +92,37 @@ export default function AdminDashboardPage() {
                 Platform Reports
               </p>
 
-              <h2 className="mt-2 text-3xl font-bold">Reports</h2>
+              <h2 className="mt-2 text-2xl font-bold">Reports</h2>
+            </Link>
+
+            <Link
+              href="/admin/certificates"
+              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Award size={26} />
+              </div>
+
+              <p className="text-sm font-bold text-gray-500">
+                Certificate Records
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold">Certificates</h2>
+            </Link>
+
+            <Link
+              href="/admin/settings"
+              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Settings size={26} />
+              </div>
+
+              <p className="text-sm font-bold text-gray-500">
+                Platform Settings
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold">Settings</h2>
             </Link>
           </div>
 
@@ -159,6 +190,28 @@ export default function AdminDashboardPage() {
 
               <p className="mt-5 font-bold text-[#007F73]">
                 View Learners →
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/payments"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <CreditCard size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#07122E]">
+                Payments
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                View learner payment requests, payment types, amounts, payment
+                status, and provider references.
+              </p>
+
+              <p className="mt-5 font-bold text-[#007F73]">
+                View Payments →
               </p>
             </Link>
 
@@ -242,8 +295,8 @@ export default function AdminDashboardPage() {
 
                 <p className="mt-3 max-w-3xl leading-7 text-white/70">
                   This dashboard brings together the core management tools for
-                  courses, lessons, quizzes, learners, certificates, platform
-                  reporting, and settings.
+                  courses, learners, payments, reports, certificates, platform
+                  settings, and admin operations.
                 </p>
               </div>
 
@@ -256,17 +309,17 @@ export default function AdminDashboardPage() {
                 </Link>
 
                 <Link
+                  href="/admin/payments"
+                  className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
+                >
+                  View Payments
+                </Link>
+
+                <Link
                   href="/admin/reports"
                   className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
                 >
                   View Reports
-                </Link>
-
-                <Link
-                  href="/admin/settings"
-                  className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
-                >
-                  Settings
                 </Link>
               </div>
             </div>

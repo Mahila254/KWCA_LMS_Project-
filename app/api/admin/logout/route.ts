@@ -13,5 +13,13 @@ export async function POST() {
     maxAge: 0,
   });
 
+  response.cookies.set("kwca_admin_email", "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  });
+
   return response;
 }

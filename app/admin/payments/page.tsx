@@ -2,6 +2,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import UpdatePaymentStatusButton from "@/components/UpdatePaymentStatusButton";
 import {
   ArrowLeft,
   CreditCard,
@@ -13,6 +14,7 @@ import {
   XCircle,
   BookOpen,
   Hash,
+  RefreshCw,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -188,7 +190,7 @@ export default async function AdminPaymentsPage() {
 
                   return (
                     <div key={payment.id} className="p-6">
-                      <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr_1fr_180px]">
+                      <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr_1fr_230px]">
                         <div>
                           <div className="flex gap-4">
                             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
@@ -270,9 +272,36 @@ export default async function AdminPaymentsPage() {
                             Provider
                           </p>
 
-                          <p className="mt-2 font-bold">
-                            {payment.provider}
-                          </p>
+                          <p className="mt-2 font-bold">{payment.provider}</p>
+
+                          <div className="mt-5 rounded-2xl bg-gray-50 p-4 text-left">
+                            <div className="mb-3 flex items-center gap-2">
+                              <RefreshCw size={16} className="text-[#007F73]" />
+                              <p className="text-sm font-bold text-gray-600">
+                                Update Status
+                              </p>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                              <UpdatePaymentStatusButton
+                                paymentId={payment.id}
+                                status="PENDING"
+                                label="Pending"
+                              />
+
+                              <UpdatePaymentStatusButton
+                                paymentId={payment.id}
+                                status="PAID"
+                                label="Paid"
+                              />
+
+                              <UpdatePaymentStatusButton
+                                paymentId={payment.id}
+                                status="FAILED"
+                                label="Failed"
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

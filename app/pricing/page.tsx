@@ -1,207 +1,212 @@
-"use client";
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import {
+  ArrowLeft,
   CheckCircle,
   CreditCard,
-  Calendar,
+  Smartphone,
+  Building2,
   Crown,
-  ArrowLeft,
+  BookOpen,
+  ShieldCheck,
+  CalendarDays,
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default function PricingPage() {
-  const plans = [
-    {
-      title: "Pay Per Course",
-      price: "KES 1,500",
-      period: "one-time payment",
-      description: "Best for learners who only want access to one course.",
-      icon: CreditCard,
-      features: [
-        "Access one selected course",
-        "Unlock all premium lessons",
-        "Course resources included",
-        "Practice and final quiz access",
-        "Certificate after completion",
-      ],
-      button: "Unlock One Course",
-      highlight: false,
-    },
-    {
-      title: "Monthly Subscription",
-      price: "KES 2,500",
-      period: "per month",
-      description: "Best for learners who want access to several courses.",
-      icon: Calendar,
-      features: [
-        "Access all premium courses",
-        "Unlimited lessons while subscribed",
-        "Downloadable resources",
-        "Practice and final quizzes",
-        "Certificates for completed courses",
-      ],
-      button: "Subscribe Monthly",
-      highlight: true,
-    },
-    {
-      title: "Annual Subscription",
-      price: "KES 20,000",
-      period: "per year",
-      description: "Best value for conservancy teams and serious learners.",
-      icon: Crown,
-      features: [
-        "Full platform access for one year",
-        "All current and future courses",
-        "All premium lessons unlocked",
-        "All resources and templates",
-        "Certificates for all completed courses",
-      ],
-      button: "Subscribe Annually",
-      highlight: false,
-    },
-  ];
-
-  function handlePaymentClick(planTitle: string) {
-    alert(
-      `${planTitle} selected. Payment integration will be connected later.`
-    );
-  }
-
   return (
     <>
       <Navbar />
 
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#F2FBF8] px-6 py-16">
-          <div className="mx-auto max-w-6xl">
+        <section className="bg-[#EDF5F3] py-16">
+          <div className="mx-auto max-w-7xl px-6">
             <Link
-              href="/courses/what-is-a-conservancy"
-              className="mb-6 inline-flex items-center gap-2 font-bold text-[#007F73]"
+              href="/courses"
+              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
             >
               <ArrowLeft size={18} />
-              Back to Course
+              Back to Courses
             </Link>
 
-            <p className="font-bold text-[#007F73]">
-              Premium Access
-            </p>
+            <div className="mt-8 max-w-4xl">
+              <p className="font-bold text-[#007F73]">Premium Access</p>
 
-            <h1 className="mt-3 max-w-4xl text-5xl font-extrabold">
-              Unlock premium lessons and continue learning.
-            </h1>
+              <h1 className="mt-3 text-5xl font-bold">
+                Unlock KWCA LMS Learning
+              </h1>
 
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-gray-600">
-              Choose how you want to access KWCA Learning Hub courses. You can
-              unlock one course, subscribe monthly, or subscribe annually for
-              full platform access.
-            </p>
+              <p className="mt-4 text-xl leading-8 text-gray-600">
+                Choose a payment option to access premium lessons, final quizzes,
+                downloadable resources, and certificates.
+              </p>
+            </div>
           </div>
         </section>
 
-        <section className="px-6 py-16">
-          <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-3">
-            {plans.map((plan) => {
-              const Icon = plan.icon;
+        <section className="mx-auto max-w-7xl px-6 py-12">
+          <div className="mb-10 grid gap-6 md:grid-cols-3">
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <BookOpen size={34} />
+              </div>
 
-              return (
-                <div
-                  key={plan.title}
-                  className={`rounded-3xl border bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl ${
-                    plan.highlight
-                      ? "border-[#007F73] ring-2 ring-[#007F73]/20"
-                      : "border-gray-200"
-                  }`}
-                >
-                  {plan.highlight && (
-                    <p className="mb-5 inline-block rounded-full bg-[#007F73] px-4 py-2 text-sm font-bold text-white">
-                      Recommended
-                    </p>
-                  )}
+              <p className="font-bold text-[#007F73]">Pay Per Course</p>
 
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#007F73] text-white">
-                    <Icon size={30} />
-                  </div>
+              <h2 className="mt-3 text-3xl font-bold">Single Course</h2>
 
-                  <h2 className="text-3xl font-extrabold">
-                    {plan.title}
-                  </h2>
+              <p className="mt-4 text-gray-600 leading-7">
+                Best for learners who want access to one specific course and its
+                certificate.
+              </p>
 
-                  <p className="mt-3 text-gray-600">
-                    {plan.description}
+              <div className="mt-6">
+                <p className="text-5xl font-extrabold">KES 1,500</p>
+                <p className="mt-1 text-sm text-gray-500">per course</p>
+              </div>
+
+              <div className="mt-8 space-y-3">
+                <Feature text="Access to one premium course" />
+                <Feature text="All lessons unlocked" />
+                <Feature text="Practice and final quiz" />
+                <Feature text="Certificate after completion" />
+              </div>
+
+              <button
+                type="button"
+                className="mt-8 w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d]"
+              >
+                Pay Per Course
+              </button>
+            </div>
+
+            <div className="relative rounded-3xl border-2 border-[#007F73] bg-white p-8 shadow-sm">
+              <div className="absolute right-6 top-6 rounded-full bg-[#007F73] px-4 py-2 text-sm font-bold text-white">
+                Recommended
+              </div>
+
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <Crown size={34} />
+              </div>
+
+              <p className="font-bold text-[#007F73]">Monthly Subscription</p>
+
+              <h2 className="mt-3 text-3xl font-bold">Monthly Access</h2>
+
+              <p className="mt-4 text-gray-600 leading-7">
+                Best for active learners who want access to several KWCA LMS
+                courses.
+              </p>
+
+              <div className="mt-6">
+                <p className="text-5xl font-extrabold">KES 3,000</p>
+                <p className="mt-1 text-sm text-gray-500">per month</p>
+              </div>
+
+              <div className="mt-8 space-y-3">
+                <Feature text="Access to all premium courses" />
+                <Feature text="All lessons and readings unlocked" />
+                <Feature text="Unlimited quizzes" />
+                <Feature text="Certificates for completed courses" />
+              </div>
+
+              <button
+                type="button"
+                className="mt-8 w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d]"
+              >
+                Start Monthly Access
+              </button>
+            </div>
+
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                <CalendarDays size={34} />
+              </div>
+
+              <p className="font-bold text-[#007F73]">Annual Subscription</p>
+
+              <h2 className="mt-3 text-3xl font-bold">Annual Access</h2>
+
+              <p className="mt-4 text-gray-600 leading-7">
+                Best for organizations, staff teams, or long-term learners.
+              </p>
+
+              <div className="mt-6">
+                <p className="text-5xl font-extrabold">KES 25,000</p>
+                <p className="mt-1 text-sm text-gray-500">per year</p>
+              </div>
+
+              <div className="mt-8 space-y-3">
+                <Feature text="Full-year access" />
+                <Feature text="All premium courses included" />
+                <Feature text="Certificates included" />
+                <Feature text="Best value for long-term learning" />
+              </div>
+
+              <button
+                type="button"
+                className="mt-8 w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d]"
+              >
+                Choose Annual Access
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="mb-6 flex items-center gap-3">
+                <CreditCard className="text-[#007F73]" size={30} />
+
+                <div>
+                  <h2 className="text-3xl font-bold">Payment Methods</h2>
+                  <p className="mt-1 text-gray-600">
+                    Planned payment options for the KWCA LMS.
                   </p>
-
-                  <div className="mt-7">
-                    <p className="text-4xl font-extrabold">
-                      {plan.price}
-                    </p>
-
-                    <p className="mt-1 text-gray-500">
-                      {plan.period}
-                    </p>
-                  </div>
-
-                  <ul className="mt-8 space-y-4">
-                    {plan.features.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex gap-3 text-gray-700"
-                      >
-                        <CheckCircle
-                          className="mt-1 shrink-0 text-[#007F73]"
-                          size={18}
-                        />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <button
-                    type="button"
-                    onClick={() => handlePaymentClick(plan.title)}
-                    className={`mt-8 w-full rounded-xl px-6 py-4 font-bold transition-all duration-300 ${
-                      plan.highlight
-                        ? "bg-[#007F73] text-white hover:bg-[#00665d]"
-                        : "border border-[#007F73] text-[#007F73] hover:bg-[#007F73] hover:text-white"
-                    }`}
-                  >
-                    {plan.button}
-                  </button>
                 </div>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="px-6 pb-20">
-          <div className="mx-auto max-w-5xl rounded-3xl bg-white p-8 shadow-sm">
-            <h2 className="text-3xl font-bold">
-              What happens after payment?
-            </h2>
-
-            <div className="mt-6 grid gap-6 md:grid-cols-3">
-              <div className="rounded-2xl bg-gray-50 p-6">
-                <p className="text-2xl font-bold text-[#007F73]">1</p>
-                <h3 className="mt-3 font-bold">Unlock lessons</h3>
-                <p className="mt-2 text-gray-600">
-                  Premium lessons become available inside the course.
-                </p>
               </div>
 
-              <div className="rounded-2xl bg-gray-50 p-6">
-                <p className="text-2xl font-bold text-[#007F73]">2</p>
-                <h3 className="mt-3 font-bold">Complete quizzes</h3>
-                <p className="mt-2 text-gray-600">
-                  Learners complete practice and final graded quizzes.
-                </p>
+              <div className="space-y-4">
+                <PaymentOption
+                  icon={<Smartphone size={24} />}
+                  title="M-PESA"
+                  description="Mobile money payment option for learners in Kenya."
+                />
+
+                <PaymentOption
+                  icon={<CreditCard size={24} />}
+                  title="Paystack"
+                  description="Card, mobile money, and payment reference support."
+                />
+
+                <PaymentOption
+                  icon={<Building2 size={24} />}
+                  title="Institutional Payment"
+                  description="Partner or organization-sponsored access for groups."
+                />
+              </div>
+            </div>
+
+            <div className="rounded-3xl bg-[#07122E] p-8 text-white shadow-sm">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-white">
+                <ShieldCheck size={34} />
               </div>
 
-              <div className="rounded-2xl bg-gray-50 p-6">
-                <p className="text-2xl font-bold text-[#007F73]">3</p>
-                <h3 className="mt-3 font-bold">Earn certificate</h3>
-                <p className="mt-2 text-gray-600">
-                  Certificates unlock after course completion and passing.
+              <h2 className="text-3xl font-bold">Premium Access Notice</h2>
+
+              <p className="mt-4 leading-8 text-white/70">
+                This page currently prepares the LMS for payment integration.
+                The next development step is connecting successful payments to
+                database access, so learners can automatically unlock premium
+                lessons after paying.
+              </p>
+
+              <div className="mt-8 rounded-2xl bg-white/10 p-5">
+                <p className="font-bold">Next Build Step</p>
+                <p className="mt-2 text-white/70">
+                  Add a Payment record, confirm payment status, and unlock
+                  premium lessons for paid learners.
                 </p>
               </div>
             </div>
@@ -211,5 +216,43 @@ export default function PricingPage() {
 
       <Footer />
     </>
+  );
+}
+
+function Feature({ text }: { text: string }) {
+  return (
+    <div className="flex gap-3">
+      <CheckCircle className="mt-1 shrink-0 text-[#007F73]" size={20} />
+      <p className="text-gray-600">{text}</p>
+    </div>
+  );
+}
+
+function PaymentOption({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="rounded-2xl border p-5">
+      <div className="flex gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+          {icon}
+        </div>
+
+        <div>
+          <h3 className="text-xl font-bold">{title}</h3>
+          <p className="mt-1 leading-7 text-gray-600">{description}</p>
+
+          <span className="mt-3 inline-flex rounded-full bg-orange-50 px-3 py-1 text-sm font-bold text-[#D94A00]">
+            Coming Soon
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }

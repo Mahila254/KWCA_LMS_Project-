@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import CreatePaymentButton from "@/components/CreatePaymentButton";
 import {
   ArrowLeft,
   CheckCircle,
@@ -39,8 +40,8 @@ export default function PricingPage() {
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">
-                Choose a payment option to access premium lessons, final quizzes,
-                downloadable resources, and certificates.
+                Choose a payment option to access premium lessons, final
+                quizzes, downloadable resources, and certificates.
               </p>
             </div>
           </div>
@@ -57,7 +58,7 @@ export default function PricingPage() {
 
               <h2 className="mt-3 text-3xl font-bold">Single Course</h2>
 
-              <p className="mt-4 text-gray-600 leading-7">
+              <p className="mt-4 leading-7 text-gray-600">
                 Best for learners who want access to one specific course and its
                 certificate.
               </p>
@@ -74,12 +75,11 @@ export default function PricingPage() {
                 <Feature text="Certificate after completion" />
               </div>
 
-              <button
-                type="button"
-                className="mt-8 w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d]"
-              >
-                Pay Per Course
-              </button>
+              <CreatePaymentButton
+                paymentType="PAY_PER_COURSE"
+                amount={1500}
+                label="Create Pay Per Course Payment"
+              />
             </div>
 
             <div className="relative rounded-3xl border-2 border-[#007F73] bg-white p-8 shadow-sm">
@@ -95,7 +95,7 @@ export default function PricingPage() {
 
               <h2 className="mt-3 text-3xl font-bold">Monthly Access</h2>
 
-              <p className="mt-4 text-gray-600 leading-7">
+              <p className="mt-4 leading-7 text-gray-600">
                 Best for active learners who want access to several KWCA LMS
                 courses.
               </p>
@@ -112,12 +112,11 @@ export default function PricingPage() {
                 <Feature text="Certificates for completed courses" />
               </div>
 
-              <button
-                type="button"
-                className="mt-8 w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d]"
-              >
-                Start Monthly Access
-              </button>
+              <CreatePaymentButton
+                paymentType="MONTHLY_SUBSCRIPTION"
+                amount={3000}
+                label="Create Monthly Payment"
+              />
             </div>
 
             <div className="rounded-3xl bg-white p-8 shadow-sm">
@@ -129,7 +128,7 @@ export default function PricingPage() {
 
               <h2 className="mt-3 text-3xl font-bold">Annual Access</h2>
 
-              <p className="mt-4 text-gray-600 leading-7">
+              <p className="mt-4 leading-7 text-gray-600">
                 Best for organizations, staff teams, or long-term learners.
               </p>
 
@@ -145,12 +144,11 @@ export default function PricingPage() {
                 <Feature text="Best value for long-term learning" />
               </div>
 
-              <button
-                type="button"
-                className="mt-8 w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d]"
-              >
-                Choose Annual Access
-              </button>
+              <CreatePaymentButton
+                paymentType="ANNUAL_SUBSCRIPTION"
+                amount={25000}
+                label="Create Annual Payment"
+              />
             </div>
           </div>
 
@@ -196,17 +194,17 @@ export default function PricingPage() {
               <h2 className="text-3xl font-bold">Premium Access Notice</h2>
 
               <p className="mt-4 leading-8 text-white/70">
-                This page currently prepares the LMS for payment integration.
-                The next development step is connecting successful payments to
-                database access, so learners can automatically unlock premium
-                lessons after paying.
+                This page now creates pending payment records in the LMS
+                database. The next upgrade is connecting these records to a real
+                payment gateway such as Paystack or M-PESA.
               </p>
 
               <div className="mt-8 rounded-2xl bg-white/10 p-5">
-                <p className="font-bold">Next Build Step</p>
+                <p className="font-bold">Current MVP Flow</p>
                 <p className="mt-2 text-white/70">
-                  Add a Payment record, confirm payment status, and unlock
-                  premium lessons for paid learners.
+                  Learner selects a plan, the LMS creates a PENDING payment
+                  record, and the learner is redirected to a payment confirmation
+                  page.
                 </p>
               </div>
             </div>

@@ -68,7 +68,8 @@ export default function PremiumLessonAccessButton({
         alert(
           "This is premium content. Please complete payment or subscription to unlock it."
         );
-        router.push("/pricing");
+
+        router.push(`/pricing?courseId=${courseId}&courseSlug=${courseSlug}`);
         return;
       }
 

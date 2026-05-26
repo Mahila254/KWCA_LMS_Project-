@@ -12,11 +12,26 @@ import {
   BookOpen,
   ShieldCheck,
   CalendarDays,
+  AlertCircle,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default function PricingPage() {
+type PageProps = {
+  searchParams: Promise<{
+    courseId?: string;
+    courseSlug?: string;
+  }>;
+};
+
+export default async function PricingPage({ searchParams }: PageProps) {
+  const query = await searchParams;
+
+  const courseId = query.courseId || null;
+  const courseSlug = query.courseSlug || null;
+
+  const hasCourseContext = Boolean(courseId && courseSlug);
+
   return (
     <>
       <Navbar />
@@ -25,11 +40,11 @@ export default function PricingPage() {
         <section className="bg-[#EDF5F3] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
-              href="/courses"
+              href={courseSlug ? `/courses/${courseSlug}` : "/courses"}
               className="inline-flex items-center gap-2 font-bold text-[#007F73]"
             >
               <ArrowLeft size={18} />
-              Back to Courses
+              {courseSlug ? "Back to Course" : "Back to Courses"}
             </Link>
 
             <div className="mt-8 max-w-4xl">
@@ -43,6 +58,29 @@ export default function PricingPage() {
                 Choose a payment option to access premium lessons, final
                 quizzes, downloadable resources, and certificates.
               </p>
+
+              {hasCourseContext && (
+                <div className="mt-6 rounded-2xl bg-orange-50 p-5">
+                  <div className="flex gap-3">
+                    <AlertCircle
+                      className="mt-1 shrink-0 text-[#D94A00]"
+                      size={22}
+                    />
+
+                    <div>
+                      <p className="font-bold text-[#D94A00]">
+                        Unlocking one specific course
+                      </p>
+
+                      <p className="mt-1 text-gray-600">
+                        The Pay Per Course option will be attached to the course
+                        you were trying to access. Once the payment is marked as
+                        paid, premium lessons for that course can be opened.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -70,7 +108,7 @@ export default function PricingPage() {
 
               <div className="mt-8 space-y-3">
                 <Feature text="Access to one premium course" />
-                <Feature text="All lessons unlocked" />
+                <Feature text="All lessons unlocked for that course" />
                 <Feature text="Practice and final quiz" />
                 <Feature text="Certificate after completion" />
               </div>
@@ -78,8 +116,20 @@ export default function PricingPage() {
               <CreatePaymentButton
                 paymentType="PAY_PER_COURSE"
                 amount={500}
-                label="Create Pay Per Course Payment"
+                label={
+                  hasCourseContext
+                    ? "Create Course Payment"
+                    : "Create Pay Per Course Payment"
+                }
+                courseId={courseId}
               />
+
+              {!hasCourseContext && (
+                <p className="mt-4 text-sm leading-6 text-gray-500">
+                  For best results, choose this option after opening a locked
+                  premium lesson so the payment links to that exact course.
+                </p>
+              )}
             </div>
 
             <div className="relative rounded-3xl border-2 border-[#007F73] bg-white p-8 shadow-sm">
@@ -194,17 +244,17 @@ export default function PricingPage() {
               <h2 className="text-3xl font-bold">Premium Access Notice</h2>
 
               <p className="mt-4 leading-8 text-white/70">
-                This page now creates pending payment records in the LMS
-                database. The next upgrade is connecting these records to a real
-                payment gateway such as Paystack or M-PESA.
+                This page creates pending payment records in the LMS database.
+                The next upgrade is connecting these records to a real payment
+                gateway such as Paystack or M-PESA.
               </p>
 
               <div className="mt-8 rounded-2xl bg-white/10 p-5">
                 <p className="font-bold">Current MVP Flow</p>
                 <p className="mt-2 text-white/70">
                   Learner selects a plan, the LMS creates a PENDING payment
-                  record, and the learner is redirected to a payment confirmation
-                  page.
+                  record, and the admin can mark it as PAID to unlock premium
+                  access.
                 </p>
               </div>
             </div>

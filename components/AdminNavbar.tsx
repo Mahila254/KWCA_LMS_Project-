@@ -1,146 +1,65 @@
 import Link from "next/link";
-import AdminLogoutButton from "@/components/AdminLogoutButton";
-import {
-  LayoutDashboard,
-  BookOpen,
-  Users,
-  BarChart3,
-  Award,
-  Settings,
-  Home,
-  CreditCard,
-} from "lucide-react";
 
 export default function AdminNavbar() {
   return (
-    <header className="sticky top-0 z-50 border-b bg-[#07122E] text-white">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <header className="sticky top-0 z-50 border-b bg-[#07122E]/95 text-white backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link href="/admin" className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-white">
-            <LayoutDashboard size={24} />
+          <div className="rounded-xl bg-white p-2">
+            <img
+              src="/logo.png"
+              alt="KWCA Logo"
+              className="h-12 w-auto object-contain"
+            />
           </div>
 
-          <div>
-            <p className="text-lg font-extrabold leading-none">KWCA Admin</p>
-            <p className="mt-1 text-xs font-semibold text-white/60">
-              LMS Control Centre
-            </p>
-          </div>
+          <p className="text-lg font-extrabold">Admin</p>
         </Link>
 
-        <div className="hidden items-center gap-6 md:flex">
-          <Link
-            href="/admin"
-            className="font-semibold text-white/80 hover:text-white"
-          >
+        <nav className="hidden items-center gap-5 text-sm md:flex">
+          <Link href="/admin" className="font-bold hover:text-[#9DE0D2]">
             Dashboard
           </Link>
 
-          <Link
-            href="/admin/courses"
-            className="font-semibold text-white/80 hover:text-white"
-          >
+          <Link href="/admin/courses" className="font-bold hover:text-[#9DE0D2]">
             Courses
           </Link>
 
-          <Link
-            href="/admin/learners"
-            className="font-semibold text-white/80 hover:text-white"
-          >
+          <Link href="/admin/learners" className="font-bold hover:text-[#9DE0D2]">
             Learners
           </Link>
 
-          <Link
-            href="/admin/payments"
-            className="font-semibold text-white/80 hover:text-white"
-          >
+          <Link href="/admin/payments" className="font-bold hover:text-[#9DE0D2]">
             Payments
           </Link>
 
-          <Link
-            href="/admin/reports"
-            className="font-semibold text-white/80 hover:text-white"
-          >
+          <Link href="/admin/reports" className="font-bold hover:text-[#9DE0D2]">
             Reports
           </Link>
 
           <Link
             href="/admin/certificates"
-            className="font-semibold text-white/80 hover:text-white"
+            className="font-bold hover:text-[#9DE0D2]"
           >
             Certificates
           </Link>
 
-          <Link
-            href="/admin/settings"
-            className="font-semibold text-white/80 hover:text-white"
-          >
+          <Link href="/admin/settings" className="font-bold hover:text-[#9DE0D2]">
             Settings
           </Link>
-        </div>
 
-        <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2 font-bold text-white hover:bg-white/10"
-          >
-            <Home size={18} />
+          <Link href="/" className="font-bold hover:text-[#9DE0D2]">
             Public Site
           </Link>
 
-          <AdminLogoutButton />
-        </div>
-
-        <div className="flex items-center gap-3 md:hidden">
           <Link
-            href="/admin/courses"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 text-white"
-            aria-label="Admin Courses"
+            href="/api/admin/logout"
+            className="rounded-xl bg-white px-4 py-2 font-bold text-[#07122E] hover:bg-gray-100"
           >
-            <BookOpen size={20} />
+            Logout
           </Link>
-
-          <Link
-            href="/admin/learners"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 text-white"
-            aria-label="Admin Learners"
-          >
-            <Users size={20} />
-          </Link>
-
-          <Link
-            href="/admin/payments"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 text-white"
-            aria-label="Admin Payments"
-          >
-            <CreditCard size={20} />
-          </Link>
-
-          <Link
-            href="/admin/reports"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 text-white"
-            aria-label="Admin Reports"
-          >
-            <BarChart3 size={20} />
-          </Link>
-
-          <Link
-            href="/admin/certificates"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 text-white"
-            aria-label="Admin Certificates"
-          >
-            <Award size={20} />
-          </Link>
-
-          <Link
-            href="/admin/settings"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 text-white"
-            aria-label="Admin Settings"
-          >
-            <Settings size={20} />
-          </Link>
-        </div>
-      </nav>
+        </nav>
+      </div>
     </header>
   );
 }

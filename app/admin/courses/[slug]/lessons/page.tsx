@@ -21,10 +21,42 @@ type PageProps = {
   }>;
 };
 
+type LessonRecord = {
+  id: string;
+  courseId: string;
+  title: string;
+  slug: string;
+  content: string | null;
+  videoUrl: string | null;
+  readingUrl: string | null;
+  notes: string | null;
+  order: number;
+  accessType: "PREVIEW" | "PREMIUM";
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type CourseWithLessons = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  category: string | null;
+  imageUrl: string | null;
+  introVideoUrl: string | null;
+  learningOutcomes: string | null;
+  numberOfLessons: number;
+  status: "DRAFT" | "PUBLISHED";
+  accessType: "FREE_PREVIEW" | "PREMIUM" | "SUBSCRIPTION_ONLY";
+  createdAt: Date;
+  updatedAt: Date;
+  lessons: LessonRecord[];
+};
+
 export default async function AdminCourseLessonsPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const course = await prisma.course.findUnique({
+  const course: CourseWithLessons | null = await prisma.course.findUnique({
     where: {
       slug,
     },
@@ -161,7 +193,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
               </div>
 
               <div className="divide-y">
-                {course.lessons.map((lesson) => {
+                {course.lessons.map((lesson: LessonRecord) => {
                   const isPreview = lesson.accessType === "PREVIEW";
 
                   return (

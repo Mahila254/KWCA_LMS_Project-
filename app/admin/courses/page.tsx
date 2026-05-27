@@ -17,6 +17,28 @@ import {
 
 export const dynamic = "force-dynamic";
 
+type AdminCourseRecord = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  category: string | null;
+  imageUrl: string | null;
+  introVideoUrl: string | null;
+  learningOutcomes: string | null;
+  numberOfLessons: number;
+  status: "DRAFT" | "PUBLISHED";
+  accessType: "FREE_PREVIEW" | "PREMIUM" | "SUBSCRIPTION_ONLY";
+  createdAt: Date;
+  updatedAt: Date;
+  lessons: {
+    id: string;
+  }[];
+  quizQuestions: {
+    id: string;
+  }[];
+};
+
 async function deleteCourse(formData: FormData) {
   "use server";
 
@@ -37,13 +59,21 @@ async function deleteCourse(formData: FormData) {
 }
 
 export default async function AdminCoursesPage() {
-  const courses = await prisma.course.findMany({
+  const courses: AdminCourseRecord[] = await prisma.course.findMany({
     orderBy: {
       createdAt: "desc",
     },
     include: {
-      lessons: true,
-      quizQuestions: true,
+      lessons: {
+        select: {
+          id: true,
+        },
+      },
+      quizQuestions: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
@@ -116,7 +146,7 @@ export default async function AdminCoursesPage() {
               </div>
             ) : (
               <div>
-                {courses.map((course) => (
+                {courses.map((course: AdminCourseRecord) => (
                   <div
                     key={course.id}
                     className="grid gap-6 border-b p-6 last:border-b-0 lg:grid-cols-[280px_190px_190px_1fr]"

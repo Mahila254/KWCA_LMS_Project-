@@ -76,7 +76,7 @@ export default async function AdminCertificatesPage() {
               </div>
 
               <p className="text-4xl font-bold">
-                {new Set(certificates.map((item) => item.courseId)).size}
+               {new Set(certificates.map((item: { courseId: string }) => item.courseId)).size}
               </p>
             </div>
 

@@ -12,64 +12,72 @@ import {
   CheckCircle,
   BarChart3,
   GraduationCap,
+  CreditCard,
+  Clock,
+  XCircle,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminReportsPage() {
-  const [
-    courses,
-    learners,
-    enrollments,
-    quizResults,
-    certificates,
-  ] = await Promise.all([
-    prisma.course.findMany({
-      include: {
-        lessons: true,
-        quizQuestions: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
+  const [courses, learners, enrollments, quizResults, certificates, payments] =
+    await Promise.all([
+      prisma.course.findMany({
+        include: {
+          lessons: true,
+          quizQuestions: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
 
-    prisma.user.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
+      prisma.user.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
 
-    prisma.enrollment.findMany({
-      include: {
-        course: true,
-        user: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
+      prisma.enrollment.findMany({
+        include: {
+          course: true,
+          user: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
 
-    prisma.quizResult.findMany({
-      include: {
-        course: true,
-        user: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
+      prisma.quizResult.findMany({
+        include: {
+          course: true,
+          user: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
 
-    prisma.certificate.findMany({
-      include: {
-        course: true,
-        user: true,
-      },
-      orderBy: {
-        issuedAt: "desc",
-      },
-    }),
-  ]);
+      prisma.certificate.findMany({
+        include: {
+          course: true,
+          user: true,
+        },
+        orderBy: {
+          issuedAt: "desc",
+        },
+      }),
+
+      prisma.payment.findMany({
+        include: {
+          course: true,
+          user: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+    ]);
 
   const completedEnrollments = enrollments.filter(
     (item) => item.completed
@@ -113,8 +121,34 @@ export default async function AdminReportsPage() {
     0
   );
 
+  const pendingPayments = payments.filter(
+    (payment) => payment.status === "PENDING"
+  ).length;
+
+  const paidPayments = payments.filter(
+    (payment) => payment.status === "PAID"
+  ).length;
+
+  const failedPayments = payments.filter(
+    (payment) => payment.status === "FAILED"
+  ).length;
+
+  const totalPendingPaymentValue = payments
+    .filter((payment) => payment.status === "PENDING")
+    .reduce((total, payment) => total + payment.amount, 0);
+
+  const totalPaidPaymentValue = payments
+    .filter((payment) => payment.status === "PAID")
+    .reduce((total, payment) => total + payment.amount, 0);
+
+  const totalPaymentValue = payments.reduce(
+    (total, payment) => total + payment.amount,
+    0
+  );
+
   const recentQuizResults = quizResults.slice(0, 5);
   const recentCertificates = certificates.slice(0, 5);
+  const recentPayments = payments.slice(0, 5);
 
   return (
     <>
@@ -134,13 +168,11 @@ export default async function AdminReportsPage() {
             <div className="mt-8">
               <p className="font-bold text-[#007F73]">Platform Reports</p>
 
-              <h1 className="mt-3 text-5xl font-bold">
-                KWCA LMS Reports
-              </h1>
+              <h1 className="mt-3 text-5xl font-bold">KWCA LMS Reports</h1>
 
               <p className="mt-4 max-w-3xl text-xl text-gray-600">
                 Monitor platform activity, learner progress, quiz performance,
-                certificates, and course engagement.
+                certificates, payments, and course engagement.
               </p>
             </div>
           </div>
@@ -193,6 +225,52 @@ export default async function AdminReportsPage() {
             </div>
           </div>
 
+          <div className="mb-8 grid gap-6 md:grid-cols-4">
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <CreditCard className="text-[#007F73]" size={28} />
+                <p className="text-sm font-bold text-gray-500">
+                  Total Payments
+                </p>
+              </div>
+
+              <p className="text-4xl font-bold">{payments.length}</p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <Clock className="text-[#D94A00]" size={28} />
+                <p className="text-sm font-bold text-gray-500">
+                  Pending Payments
+                </p>
+              </div>
+
+              <p className="text-4xl font-bold">{pendingPayments}</p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <CheckCircle className="text-[#007F73]" size={28} />
+                <p className="text-sm font-bold text-gray-500">
+                  Paid Payments
+                </p>
+              </div>
+
+              <p className="text-4xl font-bold">{paidPayments}</p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3">
+                <XCircle className="text-red-600" size={28} />
+                <p className="text-sm font-bold text-gray-500">
+                  Failed Payments
+                </p>
+              </div>
+
+              <p className="text-4xl font-bold">{failedPayments}</p>
+            </div>
+          </div>
+
           <div className="mb-8 grid gap-6 md:grid-cols-3">
             <div className="rounded-3xl bg-white p-8 shadow-sm">
               <div className="mb-5 flex items-center gap-3">
@@ -238,6 +316,50 @@ export default async function AdminReportsPage() {
               <p className="mt-3 text-gray-600">
                 {completedEnrollments} out of {enrollments.length} enrollments
                 are completed.
+              </p>
+            </div>
+          </div>
+
+          <div className="mb-8 grid gap-6 md:grid-cols-3">
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <p className="text-sm font-bold text-gray-500">
+                Total Payment Value
+              </p>
+
+              <p className="mt-2 text-4xl font-extrabold text-[#07122E]">
+                KES {totalPaymentValue.toLocaleString()}
+              </p>
+
+              <p className="mt-3 text-gray-600">
+                Combined value of all payment records.
+              </p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <p className="text-sm font-bold text-gray-500">
+                Pending Payment Value
+              </p>
+
+              <p className="mt-2 text-4xl font-extrabold text-[#D94A00]">
+                KES {totalPendingPaymentValue.toLocaleString()}
+              </p>
+
+              <p className="mt-3 text-gray-600">
+                Payment value awaiting admin confirmation.
+              </p>
+            </div>
+
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <p className="text-sm font-bold text-gray-500">
+                Confirmed Payment Value
+              </p>
+
+              <p className="mt-2 text-4xl font-extrabold text-[#007F73]">
+                KES {totalPaidPaymentValue.toLocaleString()}
+              </p>
+
+              <p className="mt-3 text-gray-600">
+                Payment value marked as paid.
               </p>
             </div>
           </div>
@@ -322,6 +444,81 @@ export default async function AdminReportsPage() {
             </div>
 
             <div className="space-y-8">
+              <div className="rounded-3xl bg-white p-8 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <h2 className="text-3xl font-bold">Recent Payments</h2>
+
+                  <Link
+                    href="/admin/payments"
+                    className="rounded-xl bg-[#007F73] px-4 py-2 text-sm font-bold text-white hover:bg-[#00665d]"
+                  >
+                    View All Payments
+                  </Link>
+                </div>
+
+                {recentPayments.length === 0 ? (
+                  <p className="mt-6 rounded-2xl bg-gray-50 p-5 text-gray-600">
+                    No payment records yet.
+                  </p>
+                ) : (
+                  <div className="mt-6 space-y-4">
+                    {recentPayments.map((payment) => {
+                      const paymentDate = new Date(
+                        payment.createdAt
+                      ).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      return (
+                        <div
+                          key={payment.id}
+                          className="rounded-2xl border p-5"
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-4">
+                            <div>
+                              <h3 className="font-bold">
+                                {payment.user.name || payment.user.email}
+                              </h3>
+
+                              <p className="mt-1 text-sm text-gray-600">
+                                {payment.paymentType.replaceAll("_", " ")} •{" "}
+                                {payment.course?.title ||
+                                  "Subscription / General Access"}
+                              </p>
+
+                              <p className="mt-1 text-sm text-gray-500">
+                                {paymentDate}
+                              </p>
+                            </div>
+
+                            <div className="text-right">
+                              <p className="text-2xl font-extrabold">
+                                {payment.currency}{" "}
+                                {payment.amount.toLocaleString()}
+                              </p>
+
+                              <p
+                                className={`text-sm font-bold ${
+                                  payment.status === "PAID"
+                                    ? "text-green-700"
+                                    : payment.status === "FAILED"
+                                    ? "text-red-600"
+                                    : "text-[#D94A00]"
+                                }`}
+                              >
+                                {payment.status}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
               <div className="rounded-3xl bg-white p-8 shadow-sm">
                 <h2 className="text-3xl font-bold">Recent Quiz Results</h2>
 
@@ -453,9 +650,9 @@ export default async function AdminReportsPage() {
 
             <p className="mt-3 max-w-4xl leading-7 text-white/70">
               This page provides a live database summary of learner activity,
-              course content, quiz performance, enrollments, and certificates.
-              It gives KWCA administrators a quick picture of how the learning
-              platform is being used.
+              course content, quiz performance, enrollments, certificates, and
+              payment activity. It gives KWCA administrators a quick picture of
+              how the learning platform is being used.
             </p>
           </div>
         </section>

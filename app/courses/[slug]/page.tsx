@@ -4,19 +4,19 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import EnrollCourseButton from "@/components/EnrollCourseButton";
 import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
+import CourseAccessBadge from "@/components/CourseAccessBadge";
 import {
   ArrowLeft,
   BookOpen,
   CheckCircle,
   Clock,
   Eye,
-  FileText,
-  GraduationCap,
-  HelpCircle,
   Lock,
   PlayCircle,
-  ShieldCheck,
-  Star,
+  Award,
+  ClipboardList,
+  Users,
+  ArrowRight,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -25,19 +25,10 @@ type PageProps = {
   params: Promise<{
     slug: string;
   }>;
-  searchParams: Promise<{
-    adminPreview?: string;
-  }>;
 };
 
-export default async function CourseDetailsPage({
-  params,
-  searchParams,
-}: PageProps) {
+export default async function CourseDetailsPage({ params }: PageProps) {
   const { slug } = await params;
-  const query = await searchParams;
-
-  const isAdminPreview = query.adminPreview === "true";
 
   const course = await prisma.course.findUnique({
     where: {
@@ -50,6 +41,8 @@ export default async function CourseDetailsPage({
         },
       },
       quizQuestions: true,
+      enrollments: true,
+      certificates: true,
     },
   });
 
@@ -65,7 +58,7 @@ export default async function CourseDetailsPage({
 
           <Link
             href="/courses"
-            className="mt-6 inline-block font-bold text-[#007F73]"
+            className="mt-6 inline-flex rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
           >
             Back to Courses
           </Link>
@@ -84,8 +77,6 @@ export default async function CourseDetailsPage({
     (lesson) => lesson.accessType === "PREMIUM"
   );
 
-  const firstPreviewLesson = previewLessons[0] || course.lessons[0] || null;
-
   const practiceQuestions = course.quizQuestions.filter(
     (question) => question.quizType === "PRACTICE"
   );
@@ -98,26 +89,6 @@ export default async function CourseDetailsPage({
     <>
       <Navbar />
 
-      {isAdminPreview && (
-        <div className="border-b bg-[#07122E] px-6 py-4 text-white">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="font-bold">Admin Preview Mode</p>
-              <p className="text-sm text-white/70">
-                You are viewing this course as it appears on the learner side.
-              </p>
-            </div>
-
-            <Link
-              href="/admin/courses"
-              className="rounded-xl bg-white px-5 py-3 font-bold text-[#07122E] hover:bg-white/90"
-            >
-              Back to Course Management
-            </Link>
-          </div>
-        </div>
-      )}
-
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
         <section className="bg-[#EDF5F3] py-16">
           <div className="mx-auto max-w-7xl px-6">
@@ -129,216 +100,224 @@ export default async function CourseDetailsPage({
               Back to Courses
             </Link>
 
-            <div className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_0.9fr]">
+            <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
               <div>
-                <div className="flex flex-wrap gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
-                    <ShieldCheck size={16} />
-                    {course.status === "PUBLISHED" ? "Published" : "Draft"}
-                  </span>
-
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
-                    <BookOpen size={16} />
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#007F73]">
                     {course.category || "General"}
                   </span>
 
-                  <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
-                    <Eye size={16} />
-                    {course.accessType === "FREE_PREVIEW"
-                      ? "Free Preview"
-                      : course.accessType === "PREMIUM"
-                      ? "Premium"
-                      : "Subscription Only"}
+                  <span
+                    className={`rounded-full px-4 py-2 text-sm font-bold ${
+                      course.status === "PUBLISHED"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-orange-100 text-[#D94A00]"
+                    }`}
+                  >
+                    {course.status}
                   </span>
+
+                  <CourseAccessBadge courseId={course.id} />
                 </div>
 
-                <h1 className="mt-6 max-w-5xl text-5xl font-extrabold leading-tight">
+                <h1 className="mt-6 text-5xl font-extrabold leading-tight">
                   {course.title}
                 </h1>
 
-                <p className="mt-5 max-w-4xl text-xl leading-9 text-gray-600">
+                <p className="mt-5 max-w-3xl text-xl leading-8 text-gray-600">
                   {course.description ||
-                    "This course introduces learners to practical conservation knowledge and skills."}
+                    "A practical KWCA learning course designed to support conservancy teams with clear, structured, and accessible training content."}
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-4">
-                  {firstPreviewLesson && (
-                    <Link
-                      href={`/courses/${course.slug}/${firstPreviewLesson.slug}`}
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-                    >
-                      <PlayCircle size={19} />
-                      Start Learning
-                    </Link>
-                  )}
-
                   <EnrollCourseButton courseSlug={course.slug} />
 
-                  <Link
-                    href={`/courses/${course.slug}/quiz/practice`}
-                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-white"
-                  >
-                    <HelpCircle size={19} />
-                    Practice Quiz
-                  </Link>
+                  {previewLessons[0] ? (
+                    <Link
+                      href={`/courses/${course.slug}/${previewLessons[0].slug}`}
+                      className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3 font-bold hover:bg-gray-50"
+                    >
+                      <PlayCircle size={20} />
+                      Start Free Preview
+                    </Link>
+                  ) : course.lessons[0] ? (
+                    <PremiumLessonAccessButton
+                      courseId={course.id}
+                      courseSlug={course.slug}
+                      lessonSlug={course.lessons[0].slug}
+                    />
+                  ) : null}
                 </div>
               </div>
 
-              <div className="rounded-3xl bg-white p-6 shadow-sm">
-                <div className="flex aspect-video items-center justify-center rounded-3xl bg-[#07122E] text-white">
-                  {course.introVideoUrl ? (
-                    <iframe
-                      src={course.introVideoUrl}
-                      title={course.title}
-                      className="h-full w-full rounded-3xl"
-                      allowFullScreen
-                    />
-                  ) : course.imageUrl ? (
+              <div className="rounded-3xl bg-white p-5 shadow-sm">
+                <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-[#07122E] text-white">
+                  {course.imageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={course.imageUrl}
                       alt={course.title}
-                      className="h-full w-full rounded-3xl object-cover"
+                      className="h-full w-full object-cover"
                     />
                   ) : (
                     <div className="text-center">
-                      <GraduationCap className="mx-auto mb-4" size={64} />
-                      <p className="text-2xl font-bold">Course Preview</p>
+                      <BookOpen className="mx-auto mb-4" size={72} />
+                      <p className="text-3xl font-bold">KWCA LMS Course</p>
                       <p className="mt-2 text-white/70">
-                        Video or image preview will appear here.
+                        Course image will appear here.
                       </p>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-2xl bg-gray-50 p-4">
-                    <p className="text-sm font-bold text-gray-500">Lessons</p>
-                    <p className="mt-1 text-3xl font-bold">
-                      {course.lessons.length}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-gray-50 p-4">
-                    <p className="text-sm font-bold text-gray-500">
-                      Quiz Questions
-                    </p>
-                    <p className="mt-1 text-3xl font-bold">
-                      {course.quizQuestions.length}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-gray-50 p-4">
-                    <p className="text-sm font-bold text-gray-500">
-                      Free Preview
-                    </p>
-                    <p className="mt-1 text-3xl font-bold">
-                      {previewLessons.length}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-gray-50 p-4">
-                    <p className="text-sm font-bold text-gray-500">Premium</p>
-                    <p className="mt-1 text-3xl font-bold">
-                      {premiumLessons.length}
-                    </p>
-                  </div>
-                </div>
+                {course.introVideoUrl && (
+                  <Link
+                    href={course.introVideoUrl}
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    <PlayCircle size={20} />
+                    Watch Intro Video
+                  </Link>
+                )}
               </div>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-[1.4fr_0.8fr]">
-          <div className="space-y-8">
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <div className="mb-5 flex items-center gap-3">
-                <Star className="text-[#007F73]" size={28} />
+        <section className="mx-auto max-w-7xl px-6 py-12">
+          <div className="mb-8 grid gap-6 md:grid-cols-4">
+            <StatCard
+              icon={<BookOpen size={28} />}
+              label="Lessons"
+              value={course.lessons.length.toString()}
+              tone="green"
+            />
+
+            <StatCard
+              icon={<Eye size={28} />}
+              label="Free Preview"
+              value={previewLessons.length.toString()}
+              tone="green"
+            />
+
+            <StatCard
+              icon={<Lock size={28} />}
+              label="Premium"
+              value={premiumLessons.length.toString()}
+              tone="orange"
+            />
+
+            <StatCard
+              icon={<Award size={28} />}
+              label="Certificates"
+              value={course.certificates.length.toString()}
+              tone="green"
+            />
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-3">
+            <section className="space-y-8 lg:col-span-2">
+              <div className="rounded-3xl bg-white p-8 shadow-sm">
+                <h2 className="text-3xl font-bold">About This Course</h2>
+
+                <p className="mt-4 leading-8 text-gray-600">
+                  {course.description ||
+                    "This course is structured to help learners understand the topic step by step through video lessons, readings, practical activities, quizzes, and certificates."}
+                </p>
+              </div>
+
+              <div className="rounded-3xl bg-white p-8 shadow-sm">
                 <h2 className="text-3xl font-bold">Learning Outcomes</h2>
+
+                {course.learningOutcomes ? (
+                  <div className="mt-5 whitespace-pre-line leading-8 text-gray-600">
+                    {course.learningOutcomes}
+                  </div>
+                ) : (
+                  <div className="mt-5 grid gap-4 md:grid-cols-2">
+                    <OutcomeCard text="Understand the core concepts covered in this course." />
+                    <OutcomeCard text="Apply the learning to real conservancy management contexts." />
+                    <OutcomeCard text="Use practical tools, examples, and reflections to strengthen decision-making." />
+                    <OutcomeCard text="Complete quizzes and earn a certificate after meeting completion requirements." />
+                  </div>
+                )}
               </div>
 
-              <p className="leading-8 text-gray-600">
-                {course.learningOutcomes ||
-                  "By the end of this course, learners will understand the key concepts, practical tools, and real-world applications covered in the course."}
-              </p>
-            </div>
+              <div className="rounded-3xl bg-white p-8 shadow-sm">
+                <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-3xl font-bold">Course Lessons</h2>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <div className="mb-6 flex items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-3xl font-bold">Course Lessons</h2>
-                  <p className="mt-2 text-gray-600">
-                    Follow the lessons in order and track your learning
-                    progress.
-                  </p>
+                    <p className="mt-2 text-gray-600">
+                      Start with free preview lessons, then unlock premium
+                      lessons through course payment or subscription.
+                    </p>
+                  </div>
+
+                  <CourseAccessBadge courseId={course.id} />
                 </div>
 
-                <span className="rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
-                  {course.lessons.length} Lessons
-                </span>
-              </div>
+                {course.lessons.length === 0 ? (
+                  <div className="rounded-2xl bg-gray-50 p-6 text-center">
+                    <p className="text-gray-600">
+                      No lessons have been added to this course yet.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {course.lessons.map((lesson, index) => {
+                      const isPreview = lesson.accessType === "PREVIEW";
 
-              {course.lessons.length === 0 ? (
-                <div className="rounded-2xl bg-gray-50 p-6 text-gray-600">
-                  Lessons have not been added to this course yet.
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {course.lessons.map((lesson, index) => {
-                    const isPreview = lesson.accessType === "PREVIEW";
+                      return (
+                        <div
+                          key={lesson.id}
+                          className="rounded-2xl border bg-white p-5 transition-all duration-300 hover:border-[#007F73] hover:shadow-sm"
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-5">
+                            <div className="flex gap-4">
+                              <div
+                                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold ${
+                                  isPreview
+                                    ? "bg-green-100 text-green-700"
+                                    : "bg-orange-100 text-[#D94A00]"
+                                }`}
+                              >
+                                {index + 1}
+                              </div>
 
-                    return (
-                      <div
-                        key={lesson.id}
-                        className="block rounded-2xl border p-5 transition hover:border-[#007F73] hover:bg-gray-50"
-                      >
-                        <div className="flex flex-wrap items-center justify-between gap-4">
-                          <div className="flex gap-4">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F2FBF8] font-bold text-[#007F73]">
-                              {index + 1}
-                            </div>
+                              <div>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <h3 className="text-xl font-bold">
+                                    {lesson.title}
+                                  </h3>
 
-                            <div>
-                              <h3 className="text-xl font-bold">
-                                {lesson.title}
-                              </h3>
+                                  {isPreview ? (
+                                    <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                                      <Eye size={13} />
+                                      Free Preview
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-[#D94A00]">
+                                      <Lock size={13} />
+                                      Premium
+                                    </span>
+                                  )}
+                                </div>
 
-                              <p className="mt-2 line-clamp-2 text-gray-600">
-                                {lesson.content ||
-                                  "Lesson content will be added here."}
-                              </p>
-
-                              <div className="mt-3 flex flex-wrap gap-3">
-                                {lesson.videoUrl && (
-                                  <span className="inline-flex items-center gap-1 text-sm font-bold text-[#007F73]">
-                                    <PlayCircle size={15} />
-                                    Video
-                                  </span>
-                                )}
-
-                                {lesson.readingUrl && (
-                                  <span className="inline-flex items-center gap-1 text-sm font-bold text-[#007F73]">
-                                    <FileText size={15} />
-                                    Reading
-                                  </span>
-                                )}
-
-                                <span className="inline-flex items-center gap-1 text-sm font-bold text-gray-500">
-                                  <Clock size={15} />
-                                  Lesson {index + 1}
-                                </span>
+                                <p className="mt-2 line-clamp-2 text-gray-600">
+                                  {lesson.content ||
+                                    "Lesson content and video materials are available inside this lesson."}
+                                </p>
                               </div>
                             </div>
-                          </div>
 
-                          <div>
                             {isPreview ? (
                               <Link
                                 href={`/courses/${course.slug}/${lesson.slug}`}
-                                className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700 hover:bg-green-200"
+                                className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
                               >
-                                <Eye size={15} />
-                                Free Preview
+                                Open Lesson
+                                <ArrowRight size={18} />
                               </Link>
                             ) : (
                               <PremiumLessonAccessButton
@@ -349,110 +328,241 @@ export default async function CourseDetailsPage({
                             )}
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <aside className="space-y-8">
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <h2 className="text-2xl font-bold">Course Actions</h2>
-
-              <div className="mt-6 space-y-4">
-                {firstPreviewLesson && (
-                  <Link
-                    href={`/courses/${course.slug}/${firstPreviewLesson.slug}`}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-                  >
-                    <PlayCircle size={18} />
-                    Start First Lesson
-                  </Link>
+                      );
+                    })}
+                  </div>
                 )}
-
-                <EnrollCourseButton courseSlug={course.slug} />
-
-                <Link
-                  href={`/courses/${course.slug}/quiz/practice`}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
-                >
-                  <HelpCircle size={18} />
-                  Practice Quiz
-                </Link>
-
-                <Link
-                  href={`/courses/${course.slug}/quiz/final`}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
-                >
-                  <CheckCircle size={18} />
-                  Final Quiz
-                </Link>
-
-                <Link
-                  href={`/courses/${course.slug}/certificate`}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
-                >
-                  <GraduationCap size={18} />
-                  View Certificate
-                </Link>
               </div>
-            </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <h2 className="text-2xl font-bold">Quiz Availability</h2>
+              <div className="rounded-3xl bg-white p-8 shadow-sm">
+                <h2 className="text-3xl font-bold">Quizzes & Certificate</h2>
 
-              <div className="mt-5 space-y-4">
-                <div className="rounded-2xl bg-[#F2FBF8] p-5">
-                  <p className="font-bold text-[#007F73]">Practice Quiz</p>
-                  <p className="mt-1 text-3xl font-bold">
-                    {practiceQuestions.length}
-                  </p>
-                  <p className="mt-1 text-sm text-gray-600">Questions</p>
-                </div>
-
-                <div className="rounded-2xl bg-orange-50 p-5">
-                  <p className="font-bold text-[#D94A00]">Final Quiz</p>
-                  <p className="mt-1 text-3xl font-bold">
-                    {finalQuestions.length}
-                  </p>
-                  <p className="mt-1 text-sm text-gray-600">Questions</p>
-                </div>
-              </div>
-            </div>
-
-            {isAdminPreview && (
-              <div className="rounded-3xl border-2 border-[#07122E] bg-white p-8 shadow-sm">
-                <h2 className="text-2xl font-bold">Admin Shortcut</h2>
-
-                <p className="mt-3 leading-7 text-gray-600">
-                  This shortcut is only visible because you opened the course in
-                  admin preview mode.
+                <p className="mt-3 leading-8 text-gray-600">
+                  Learners can complete practice quizzes for revision and a
+                  final graded quiz for certificate eligibility.
                 </p>
 
-                <div className="mt-5 space-y-3">
-                  <Link
-                    href="/admin/courses"
-                    className="block rounded-xl bg-[#07122E] px-5 py-3 text-center font-bold text-white hover:bg-[#101b3d]"
-                  >
-                    Back to Course Management
-                  </Link>
+                <div className="mt-6 grid gap-6 md:grid-cols-3">
+                  <QuizCard
+                    icon={<ClipboardList size={28} />}
+                    title="Practice Quiz"
+                    description={`${practiceQuestions.length} practice questions available.`}
+                    href={`/courses/${course.slug}/quiz/practice`}
+                  />
 
-                  <Link
-                    href={`/admin/courses/${course.slug}/edit`}
-                    className="block rounded-xl border px-5 py-3 text-center font-bold hover:bg-gray-50"
-                  >
-                    Edit This Course
-                  </Link>
+                  <QuizCard
+                    icon={<CheckCircle size={28} />}
+                    title="Final Quiz"
+                    description={`${finalQuestions.length} final graded questions available.`}
+                    href={`/courses/${course.slug}/quiz/final`}
+                  />
+
+                  <QuizCard
+                    icon={<Award size={28} />}
+                    title="Certificate"
+                    description="Generate your certificate after completion and passing the final quiz."
+                    href={`/courses/${course.slug}/certificate`}
+                  />
                 </div>
               </div>
-            )}
-          </aside>
+            </section>
+
+            <aside className="space-y-8">
+              <div className="rounded-3xl bg-white p-8 shadow-sm">
+                <h2 className="text-2xl font-bold">Course Access</h2>
+
+                <div className="mt-5">
+                  <CourseAccessBadge courseId={course.id} />
+                </div>
+
+                <div className="mt-6 space-y-4">
+                  <AccessRow
+                    icon={<Eye size={20} />}
+                    title="Free preview lessons"
+                    description="Available to learners before payment."
+                    tone="green"
+                  />
+
+                  <AccessRow
+                    icon={<Lock size={20} />}
+                    title="Premium lessons"
+                    description="Unlocked after payment or subscription."
+                    tone="orange"
+                  />
+
+                  <AccessRow
+                    icon={<Award size={20} />}
+                    title="Certificate"
+                    description="Available after completion and final quiz pass."
+                    tone="green"
+                  />
+                </div>
+
+                <Link
+                  href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
+                  className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                >
+                  View Pricing Options
+                </Link>
+              </div>
+
+              <div className="rounded-3xl bg-white p-8 shadow-sm">
+                <h2 className="text-2xl font-bold">Course Details</h2>
+
+                <div className="mt-6 space-y-4">
+                  <DetailRow
+                    icon={<BookOpen size={20} />}
+                    label="Total Lessons"
+                    value={course.lessons.length.toString()}
+                  />
+
+                  <DetailRow
+                    icon={<Clock size={20} />}
+                    label="Estimated Duration"
+                    value={`${Math.max(course.lessons.length * 15, 30)} mins`}
+                  />
+
+                  <DetailRow
+                    icon={<Users size={20} />}
+                    label="Enrollments"
+                    value={course.enrollments.length.toString()}
+                  />
+
+                  <DetailRow
+                    icon={<Award size={20} />}
+                    label="Certificates Issued"
+                    value={course.certificates.length.toString()}
+                  />
+                </div>
+              </div>
+
+              <div className="rounded-3xl bg-[#07122E] p-8 text-white shadow-sm">
+                <h2 className="text-2xl font-bold">Need Support?</h2>
+
+                <p className="mt-3 leading-7 text-white/70">
+                  Contact the KWCA learning team if you need help accessing
+                  lessons, confirming payment, or generating your certificate.
+                </p>
+
+                <Link
+                  href="/profile"
+                  className="mt-6 inline-flex rounded-xl bg-white px-6 py-3 font-bold text-[#07122E] hover:bg-gray-100"
+                >
+                  Go to Profile
+                </Link>
+              </div>
+            </aside>
+          </div>
         </section>
       </main>
 
       <Footer />
     </>
+  );
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  tone: "green" | "orange";
+}) {
+  const toneClass = tone === "green" ? "text-[#007F73]" : "text-[#D94A00]";
+
+  return (
+    <div className="rounded-3xl bg-white p-6 shadow-sm">
+      <div className="mb-4 flex items-center gap-3">
+        <div className={toneClass}>{icon}</div>
+        <p className="text-sm font-bold text-gray-500">{label}</p>
+      </div>
+
+      <p className="text-4xl font-bold">{value}</p>
+    </div>
+  );
+}
+
+function OutcomeCard({ text }: { text: string }) {
+  return (
+    <div className="flex gap-3 rounded-2xl bg-gray-50 p-5">
+      <CheckCircle className="mt-1 shrink-0 text-[#007F73]" size={20} />
+      <p className="leading-7 text-gray-600">{text}</p>
+    </div>
+  );
+}
+
+function QuizCard({
+  icon,
+  title,
+  description,
+  href,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="rounded-2xl border p-6 transition-all duration-300 hover:border-[#007F73] hover:bg-gray-50"
+    >
+      <div className="mb-4 text-[#007F73]">{icon}</div>
+
+      <h3 className="text-xl font-bold">{title}</h3>
+
+      <p className="mt-2 leading-7 text-gray-600">{description}</p>
+    </Link>
+  );
+}
+
+function AccessRow({
+  icon,
+  title,
+  description,
+  tone,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  tone: "green" | "orange";
+}) {
+  const toneClass = tone === "green" ? "text-[#007F73]" : "text-[#D94A00]";
+
+  return (
+    <div className="flex gap-3 rounded-2xl bg-gray-50 p-4">
+      <div className={`mt-1 shrink-0 ${toneClass}`}>{icon}</div>
+
+      <div>
+        <h3 className="font-bold">{title}</h3>
+
+        <p className="mt-1 text-sm leading-6 text-gray-600">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function DetailRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 border-b pb-4 last:border-b-0 last:pb-0">
+      <div className="flex items-center gap-3">
+        <div className="text-[#007F73]">{icon}</div>
+        <p className="font-bold text-gray-600">{label}</p>
+      </div>
+
+      <p className="font-extrabold text-[#07122E]">{value}</p>
+    </div>
   );
 }

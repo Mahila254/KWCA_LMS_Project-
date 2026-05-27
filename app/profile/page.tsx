@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import LearnerLogoutButton from "@/components/LearnerLogoutButton";
 import {
   Award,
   BookOpen,
@@ -240,12 +241,16 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  <Link
-                    href="/courses"
-                    className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-                  >
-                    Browse Courses
-                  </Link>
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href="/courses"
+                      className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                    >
+                      Browse Courses
+                    </Link>
+
+                    <LearnerLogoutButton />
+                  </div>
                 </div>
               </div>
 
@@ -291,6 +296,7 @@ export default function ProfilePage() {
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <h2 className="text-3xl font-bold">My Courses</h2>
+
                       <p className="mt-2 text-gray-600">
                         Your enrolled course progress.
                       </p>
@@ -360,6 +366,7 @@ export default function ProfilePage() {
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <h2 className="text-3xl font-bold">My Payments</h2>
+
                       <p className="mt-2 text-gray-600">
                         Track your course and subscription payment records.
                       </p>
@@ -373,6 +380,7 @@ export default function ProfilePage() {
                       <p className="text-sm font-bold text-gray-500">
                         Pending Payments
                       </p>
+
                       <p className="mt-2 text-3xl font-bold text-[#D94A00]">
                         {pendingPayments}
                       </p>
@@ -382,6 +390,7 @@ export default function ProfilePage() {
                       <p className="text-sm font-bold text-gray-500">
                         Paid Payments
                       </p>
+
                       <p className="mt-2 text-3xl font-bold text-[#007F73]">
                         {paidPayments}
                       </p>
@@ -445,6 +454,7 @@ export default function ProfilePage() {
                                 <p className="text-sm font-bold text-gray-500">
                                   Amount
                                 </p>
+
                                 <p className="mt-1 text-xl font-bold">
                                   {payment.currency}{" "}
                                   {payment.amount.toLocaleString()}
@@ -455,6 +465,7 @@ export default function ProfilePage() {
                                 <p className="text-sm font-bold text-gray-500">
                                   Reference
                                 </p>
+
                                 <p className="mt-1 flex items-center gap-2 break-words text-sm font-bold">
                                   <Hash size={14} />
                                   {payment.providerRef || "Not available"}
@@ -492,6 +503,7 @@ export default function ProfilePage() {
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <h2 className="text-3xl font-bold">Quiz Results</h2>
+
                       <p className="mt-2 text-gray-600">
                         Your submitted practice and final quiz scores.
                       </p>
@@ -571,6 +583,7 @@ export default function ProfilePage() {
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <h2 className="text-3xl font-bold">Certificates</h2>
+
                       <p className="mt-2 text-gray-600">
                         Your issued certificates and verification codes.
                       </p>

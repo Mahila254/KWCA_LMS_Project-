@@ -13,16 +13,52 @@ import {
 
 export const dynamic = "force-dynamic";
 
+type CertificateRecord = {
+  id: string;
+  userId: string;
+  courseId: string;
+  certificateCode: string;
+  issuedAt: Date;
+  user: {
+    name: string | null;
+    email: string;
+  };
+  course: {
+    title: string;
+    slug: string;
+    category: string | null;
+  };
+};
+
 export default async function AdminCertificatesPage() {
-  const certificates = await prisma.certificate.findMany({
+  const certificates: CertificateRecord[] = await prisma.certificate.findMany({
     orderBy: {
       issuedAt: "desc",
     },
     include: {
-      user: true,
-      course: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+      course: {
+        select: {
+          title: true,
+          slug: true,
+          category: true,
+        },
+      },
     },
   });
+
+  const certifiedCourseCount = new Set(
+    certificates.map((item: CertificateRecord) => item.courseId)
+  ).size;
+
+  const certifiedLearnerCount = new Set(
+    certificates.map((item: CertificateRecord) => item.userId)
+  ).size;
 
   return (
     <>
@@ -42,9 +78,7 @@ export default async function AdminCertificatesPage() {
             <div className="mt-8">
               <p className="font-bold text-[#007F73]">Certificates</p>
 
-              <h1 className="mt-3 text-5xl font-bold">
-                Issued Certificates
-              </h1>
+              <h1 className="mt-3 text-5xl font-bold">Issued Certificates</h1>
 
               <p className="mt-4 max-w-3xl text-xl text-gray-600">
                 View certificates issued to learners after course completion and
@@ -75,9 +109,7 @@ export default async function AdminCertificatesPage() {
                 </p>
               </div>
 
-              <p className="text-4xl font-bold">
-               {new Set(certificates.map((item: { courseId: string }) => item.courseId)).size}
-              </p>
+              <p className="text-4xl font-bold">{certifiedCourseCount}</p>
             </div>
 
             <div className="rounded-3xl bg-white p-6 shadow-sm">
@@ -88,9 +120,7 @@ export default async function AdminCertificatesPage() {
                 </p>
               </div>
 
-              <p className="text-4xl font-bold">
-                {new Set(certificates.map((item: { userId: string }) => item.userId)).size}
-              </p>
+              <p className="text-4xl font-bold">{certifiedLearnerCount}</p>
             </div>
           </div>
 
@@ -100,9 +130,7 @@ export default async function AdminCertificatesPage() {
                 <Award size={32} />
               </div>
 
-              <h2 className="text-3xl font-bold">
-                No certificates issued yet
-              </h2>
+              <h2 className="text-3xl font-bold">No certificates issued yet</h2>
 
               <p className="mt-3 text-gray-600">
                 Certificates will appear here once learners pass final quizzes
@@ -121,7 +149,7 @@ export default async function AdminCertificatesPage() {
               </div>
 
               <div className="divide-y">
-                {certificates.map((certificate) => {
+                {certificates.map((certificate: CertificateRecord) => {
                   const issuedDate = new Date(
                     certificate.issuedAt
                   ).toLocaleDateString("en-GB", {

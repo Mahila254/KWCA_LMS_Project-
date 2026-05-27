@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -24,12 +25,70 @@ type PageProps = {
     slug: string;
     lesson: string;
   }>;
+  searchParams: Promise<{
+    adminPreview?: string;
+  }>;
 };
 
-export default async function LessonPage({ params }: PageProps) {
-  const { slug, lesson } = await params;
+type LessonRecord = {
+  id: string;
+  courseId: string;
+  title: string;
+  slug: string;
+  content: string | null;
+  videoUrl: string | null;
+  readingUrl: string | null;
+  notes: string | null;
+  order: number;
+  accessType: "PREVIEW" | "PREMIUM";
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-  const course = await prisma.course.findUnique({
+type CourseWithLessons = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  category: string | null;
+  imageUrl: string | null;
+  introVideoUrl: string | null;
+  learningOutcomes: string | null;
+  numberOfLessons: number;
+  status: "DRAFT" | "PUBLISHED";
+  accessType: "FREE_PREVIEW" | "PREMIUM" | "SUBSCRIPTION_ONLY";
+  createdAt: Date;
+  updatedAt: Date;
+  lessons: LessonRecord[];
+};
+
+function getYoutubeEmbedUrl(videoUrl: string | null) {
+  if (!videoUrl) return null;
+
+  if (videoUrl.includes("youtube.com/embed/")) {
+    return videoUrl;
+  }
+
+  if (videoUrl.includes("youtube.com/watch?v=")) {
+    const videoId = videoUrl.split("v=")[1]?.split("&")[0];
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
+  }
+
+  if (videoUrl.includes("youtu.be/")) {
+    const videoId = videoUrl.split("youtu.be/")[1]?.split("?")[0];
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
+  }
+
+  return videoUrl;
+}
+
+export default async function LessonPage({ params, searchParams }: PageProps) {
+  const { slug, lesson } = await params;
+  const query = await searchParams;
+
+  const isAdminPreview = query.adminPreview === "true";
+
+  const course: CourseWithLessons | null = await prisma.course.findUnique({
     where: {
       slug,
     },
@@ -45,7 +104,7 @@ export default async function LessonPage({ params }: PageProps) {
   if (!course) {
     return (
       <>
-        <Navbar />
+        {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
           <h1 className="text-4xl font-bold text-[#07122E]">
@@ -53,7 +112,7 @@ export default async function LessonPage({ params }: PageProps) {
           </h1>
 
           <Link
-            href="/courses"
+            href={isAdminPreview ? "/admin/courses" : "/courses"}
             className="mt-6 inline-block font-bold text-[#007F73]"
           >
             Back to Courses
@@ -65,12 +124,14 @@ export default async function LessonPage({ params }: PageProps) {
     );
   }
 
-  const currentLesson = course.lessons.find((item) => item.slug === lesson);
+  const currentLesson = course.lessons.find(
+    (item: LessonRecord) => item.slug === lesson
+  );
 
   if (!currentLesson) {
     return (
       <>
-        <Navbar />
+        {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
           <h1 className="text-4xl font-bold text-[#07122E]">
@@ -78,7 +139,11 @@ export default async function LessonPage({ params }: PageProps) {
           </h1>
 
           <Link
-            href={`/courses/${slug}`}
+            href={
+              isAdminPreview
+                ? `/admin/courses/${course.slug}/lessons`
+                : `/courses/${slug}`
+            }
             className="mt-6 inline-block font-bold text-[#007F73]"
           >
             Back to Course
@@ -91,7 +156,7 @@ export default async function LessonPage({ params }: PageProps) {
   }
 
   const lessonIndex = course.lessons.findIndex(
-    (item) => item.id === currentLesson.id
+    (item: LessonRecord) => item.id === currentLesson.id
   );
 
   const lessonNumber = lessonIndex + 1;
@@ -106,20 +171,54 @@ export default async function LessonPage({ params }: PageProps) {
 
   const isPreview = currentLesson.accessType === "PREVIEW";
 
-  const progressPercent = Math.round(
-    (lessonNumber / course.lessons.length) * 100
-  );
+  const progressPercent =
+    course.lessons.length > 0
+      ? Math.round((lessonNumber / course.lessons.length) * 100)
+      : 0;
+
+  const videoEmbedUrl = getYoutubeEmbedUrl(currentLesson.videoUrl);
+
+  const lessonHref = (lessonSlug: string) =>
+    isAdminPreview
+      ? `/courses/${course.slug}/${lessonSlug}?adminPreview=true`
+      : `/courses/${course.slug}/${lessonSlug}`;
+
+  const backToCourseHref = isAdminPreview
+    ? `/admin/courses/${course.slug}/lessons`
+    : `/courses/${course.slug}`;
 
   const lessonContent = (
     <main className="min-h-screen bg-gray-50 text-[#07122E]">
+      {isAdminPreview && (
+        <section className="border-b bg-[#07122E] px-6 py-4 text-white">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold text-white/70">
+                Admin Preview Mode
+              </p>
+              <p className="font-bold">
+                You are viewing this lesson as an administrator.
+              </p>
+            </div>
+
+            <Link
+              href={`/admin/courses/${course.slug}/lessons`}
+              className="rounded-xl bg-white px-5 py-3 font-bold text-[#07122E] hover:bg-gray-100"
+            >
+              Back to Admin Lessons
+            </Link>
+          </div>
+        </section>
+      )}
+
       <section className="bg-[#F2FBF8] px-6 py-12">
         <div className="mx-auto max-w-7xl">
           <Link
-            href={`/courses/${slug}`}
+            href={backToCourseHref}
             className="mb-6 inline-flex items-center gap-2 font-bold text-[#007F73]"
           >
             <ArrowLeft size={18} />
-            Back to Course
+            {isAdminPreview ? "Back to Admin Lessons" : "Back to Course"}
           </Link>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -136,6 +235,12 @@ export default async function LessonPage({ params }: PageProps) {
               <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-sm font-bold text-[#D94A00]">
                 <Lock size={14} />
                 Premium Lesson
+              </span>
+            )}
+
+            {isAdminPreview && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#07122E] px-3 py-1 text-sm font-bold text-white">
+                Admin Preview
               </span>
             )}
           </div>
@@ -173,7 +278,7 @@ export default async function LessonPage({ params }: PageProps) {
           </p>
 
           <div className="mt-6 space-y-3">
-            {course.lessons.map((item, index) => {
+            {course.lessons.map((item: LessonRecord, index: number) => {
               const itemIsPreview = item.accessType === "PREVIEW";
               const activeLesson = item.id === currentLesson.id;
               const itemCompleted = index + 1 < lessonNumber;
@@ -181,11 +286,7 @@ export default async function LessonPage({ params }: PageProps) {
               return (
                 <Link
                   key={item.id}
-                  href={
-                    itemIsPreview
-                      ? `/courses/${course.slug}/${item.slug}`
-                      : `/courses/${course.slug}/${item.slug}`
-                  }
+                  href={lessonHref(item.slug)}
                   className={`block rounded-xl border p-4 transition-all duration-300 hover:shadow-sm ${
                     activeLesson
                       ? "border-[#007F73] bg-[#F2FBF8]"
@@ -244,30 +345,34 @@ export default async function LessonPage({ params }: PageProps) {
             })}
           </div>
 
-          <div className="mt-6 rounded-2xl bg-gray-50 p-5">
-            <p className="font-bold">Need full access?</p>
+          {!isAdminPreview && (
+            <div className="mt-6 rounded-2xl bg-gray-50 p-5">
+              <p className="font-bold">Need full access?</p>
 
-            <p className="mt-2 text-sm text-gray-600">
-              Unlock all premium lessons, quizzes, resources, and certificates.
-            </p>
+              <p className="mt-2 text-sm text-gray-600">
+                Unlock all premium lessons, quizzes, resources, and
+                certificates.
+              </p>
 
-            <Link
-              href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
-              className="mt-4 inline-block rounded-xl bg-[#007F73] px-4 py-3 text-sm font-bold text-white hover:bg-[#00665d]"
-            >
-              View Pricing
-            </Link>
-          </div>
+              <Link
+                href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
+                className="mt-4 inline-block rounded-xl bg-[#007F73] px-4 py-3 text-sm font-bold text-white hover:bg-[#00665d]"
+              >
+                View Pricing
+              </Link>
+            </div>
+          )}
         </aside>
 
         <section className="space-y-8 lg:col-span-3">
           <div className="rounded-3xl bg-white p-8 shadow-sm">
             <div className="flex aspect-video items-center justify-center rounded-3xl bg-[#07122E] text-white">
-              {currentLesson.videoUrl ? (
+              {videoEmbedUrl ? (
                 <iframe
-                  src={currentLesson.videoUrl}
+                  src={videoEmbedUrl}
                   title={currentLesson.title}
                   className="h-full w-full rounded-3xl"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
               ) : (
@@ -385,29 +490,31 @@ export default async function LessonPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-bold">Lesson Progress</h2>
+          {!isAdminPreview && (
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold">Lesson Progress</h2>
 
-                <p className="mt-2 text-gray-600">
-                  Mark this lesson as complete to update your course progress on
-                  your learner profile.
-                </p>
+                  <p className="mt-2 text-gray-600">
+                    Mark this lesson as complete to update your course progress
+                    on your learner profile.
+                  </p>
+                </div>
+
+                <MarkLessonCompleteButton
+                  courseSlug={course.slug}
+                  lessonSlug={currentLesson.slug}
+                />
               </div>
-
-              <MarkLessonCompleteButton
-                courseSlug={course.slug}
-                lessonSlug={currentLesson.slug}
-              />
             </div>
-          </div>
+          )}
 
           <div className="rounded-3xl bg-white p-8 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-4">
               {previousLesson ? (
                 <Link
-                  href={`/courses/${slug}/${previousLesson.slug}`}
+                  href={lessonHref(previousLesson.slug)}
                   className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
                 >
                   <ArrowLeft size={18} />
@@ -415,17 +522,17 @@ export default async function LessonPage({ params }: PageProps) {
                 </Link>
               ) : (
                 <Link
-                  href={`/courses/${slug}`}
+                  href={backToCourseHref}
                   className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
                 >
                   <ArrowLeft size={18} />
-                  Back to Course
+                  {isAdminPreview ? "Back to Admin Lessons" : "Back to Course"}
                 </Link>
               )}
 
               {nextLesson ? (
                 <Link
-                  href={`/courses/${slug}/${nextLesson.slug}`}
+                  href={lessonHref(nextLesson.slug)}
                   className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
                 >
                   Next Lesson
@@ -433,10 +540,14 @@ export default async function LessonPage({ params }: PageProps) {
                 </Link>
               ) : (
                 <Link
-                  href={`/courses/${slug}/quiz/practice`}
+                  href={
+                    isAdminPreview
+                      ? `/admin/courses/${course.slug}/lessons`
+                      : `/courses/${slug}/quiz/practice`
+                  }
                   className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
                 >
-                  Continue to Quiz
+                  {isAdminPreview ? "Back to Admin Lessons" : "Continue to Quiz"}
                   <ArrowRight size={18} />
                 </Link>
               )}
@@ -449,9 +560,11 @@ export default async function LessonPage({ params }: PageProps) {
 
   return (
     <>
-      <Navbar />
+      {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
-      {!isPreview ? (
+      {isAdminPreview ? (
+        lessonContent
+      ) : !isPreview ? (
         <PremiumLessonGate courseId={course.id} courseSlug={course.slug}>
           {lessonContent}
         </PremiumLessonGate>

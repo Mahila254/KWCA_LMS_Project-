@@ -116,7 +116,8 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
                 <h1 className="mt-3 text-5xl font-bold">{course.title}</h1>
 
                 <p className="mt-4 max-w-3xl text-xl text-gray-600">
-                  Add, edit, reorder, and manage lessons for this course.
+                  Add, edit, reorder, preview, and manage lessons for this
+                  course.
                 </p>
               </div>
 
@@ -258,7 +259,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
                       <div className="flex flex-wrap items-start gap-3">
                         <Link
-                          href={`/courses/${course.slug}/${lesson.slug}`}
+                          href={`/courses/${course.slug}/${lesson.slug}?adminPreview=true`}
                           className="rounded-xl border px-4 py-3 font-bold hover:bg-gray-50"
                         >
                           View

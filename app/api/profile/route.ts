@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -13,11 +15,19 @@ export async function GET(request: Request) {
       );
     }
 
-    const user = await prisma.user.findUnique({
+    const learner = await prisma.user.findUnique({
       where: {
         email,
       },
       include: {
+        enrollments: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          include: {
+            course: true,
+          },
+        },
         quizResults: {
           orderBy: {
             createdAt: "desc",
@@ -34,7 +44,7 @@ export async function GET(request: Request) {
             course: true,
           },
         },
-        enrollments: {
+        payments: {
           orderBy: {
             createdAt: "desc",
           },
@@ -45,32 +55,21 @@ export async function GET(request: Request) {
       },
     });
 
-    if (!user) {
+    if (!learner) {
       return NextResponse.json(
-        { error: "Learner not found in database." },
+        { error: "Learner profile not found." },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
-      user,
-      quizResults: user.quizResults,
-      certificates: user.certificates,
-      enrollments: user.enrollments,
-      summary: {
-        enrolledCourses: user.enrollments.length,
-        quizResults: user.quizResults.length,
-        certificates: user.certificates.length,
-        passedFinalQuizzes: user.quizResults.filter(
-          (result) => result.quizType === "FINAL" && result.passed
-        ).length,
-      },
+      learner,
     });
   } catch (error) {
-    console.error("Profile summary error:", error);
+    console.error("Profile fetch error:", error);
 
     return NextResponse.json(
-      { error: "Something went wrong while loading profile summary." },
+      { error: "Something went wrong while fetching the learner profile." },
       { status: 500 }
     );
   }

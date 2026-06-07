@@ -1,6 +1,8 @@
 import Navbar from "@/components/Navbar";
+import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { prisma } from "@/lib/prisma";
 import EnrollCourseButton from "@/components/EnrollCourseButton";
 import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
@@ -25,12 +27,69 @@ type PageProps = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{
+    adminPreview?: string;
+  }>;
 };
 
-export default async function CourseDetailsPage({ params }: PageProps) {
-  const { slug } = await params;
+type LessonRecord = {
+  id: string;
+  courseId: string;
+  title: string;
+  slug: string;
+  content: string | null;
+  videoUrl: string | null;
+  readingUrl: string | null;
+  notes: string | null;
+  order: number;
+  accessType: "PREVIEW" | "PREMIUM";
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-  const course = await prisma.course.findUnique({
+type QuizQuestionRecord = {
+  id: string;
+  quizType: "PRACTICE" | "FINAL";
+};
+
+type EnrollmentRecord = {
+  id: string;
+};
+
+type CertificateRecord = {
+  id: string;
+};
+
+type CourseDetailsRecord = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  category: string | null;
+  imageUrl: string | null;
+  introVideoUrl: string | null;
+  learningOutcomes: string | null;
+  numberOfLessons: number;
+  status: "DRAFT" | "PUBLISHED";
+  accessType: "FREE_PREVIEW" | "PREMIUM" | "SUBSCRIPTION_ONLY";
+  createdAt: Date;
+  updatedAt: Date;
+  lessons: LessonRecord[];
+  quizQuestions: QuizQuestionRecord[];
+  enrollments: EnrollmentRecord[];
+  certificates: CertificateRecord[];
+};
+
+export default async function CourseDetailsPage({
+  params,
+  searchParams,
+}: PageProps) {
+  const { slug } = await params;
+  const query = await searchParams;
+
+  const isAdminPreview = query.adminPreview === "true";
+
+  const course: CourseDetailsRecord | null = await prisma.course.findUnique({
     where: {
       slug,
     },
@@ -40,16 +99,29 @@ export default async function CourseDetailsPage({ params }: PageProps) {
           order: "asc",
         },
       },
-      quizQuestions: true,
-      enrollments: true,
-      certificates: true,
+      quizQuestions: {
+        select: {
+          id: true,
+          quizType: true,
+        },
+      },
+      enrollments: {
+        select: {
+          id: true,
+        },
+      },
+      certificates: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
   if (!course) {
     return (
       <>
-        <Navbar />
+        {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
           <h1 className="text-4xl font-bold text-[#07122E]">
@@ -57,10 +129,10 @@ export default async function CourseDetailsPage({ params }: PageProps) {
           </h1>
 
           <Link
-            href="/courses"
+            href={isAdminPreview ? "/admin/courses" : "/courses"}
             className="mt-6 inline-flex rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
           >
-            Back to Courses
+            {isAdminPreview ? "Back to Admin Courses" : "Back to Courses"}
           </Link>
         </main>
 
@@ -70,34 +142,58 @@ export default async function CourseDetailsPage({ params }: PageProps) {
   }
 
   const previewLessons = course.lessons.filter(
-    (lesson) => lesson.accessType === "PREVIEW"
+    (lesson: LessonRecord) => lesson.accessType === "PREVIEW"
   );
 
   const premiumLessons = course.lessons.filter(
-    (lesson) => lesson.accessType === "PREMIUM"
+    (lesson: LessonRecord) => lesson.accessType === "PREMIUM"
   );
 
   const practiceQuestions = course.quizQuestions.filter(
-    (question) => question.quizType === "PRACTICE"
+    (question: QuizQuestionRecord) => question.quizType === "PRACTICE"
   );
 
   const finalQuestions = course.quizQuestions.filter(
-    (question) => question.quizType === "FINAL"
+    (question: QuizQuestionRecord) => question.quizType === "FINAL"
   );
+
+  const backHref = isAdminPreview ? "/admin/courses" : "/courses";
 
   return (
     <>
-      <Navbar />
+      {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
+        {isAdminPreview && (
+          <section className="border-b bg-[#07122E] px-6 py-4 text-white">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-bold text-white/70">
+                  Admin Preview Mode
+                </p>
+                <p className="font-bold">
+                  You are viewing this course as an administrator.
+                </p>
+              </div>
+
+              <Link
+                href="/admin/courses"
+                className="rounded-xl bg-white px-5 py-3 font-bold text-[#07122E] hover:bg-gray-100"
+              >
+                Back to Admin Courses
+              </Link>
+            </div>
+          </section>
+        )}
+
         <section className="bg-[#EDF5F3] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
-              href="/courses"
+              href={backHref}
               className="inline-flex items-center gap-2 font-bold text-[#007F73]"
             >
               <ArrowLeft size={18} />
-              Back to Courses
+              {isAdminPreview ? "Back to Admin Courses" : "Back to Courses"}
             </Link>
 
             <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
@@ -117,7 +213,13 @@ export default async function CourseDetailsPage({ params }: PageProps) {
                     {course.status}
                   </span>
 
-                  <CourseAccessBadge courseId={course.id} />
+                  {!isAdminPreview && <CourseAccessBadge courseId={course.id} />}
+
+                  {isAdminPreview && (
+                    <span className="rounded-full bg-[#07122E] px-4 py-2 text-sm font-bold text-white">
+                      Admin Preview
+                    </span>
+                  )}
                 </div>
 
                 <h1 className="mt-6 text-5xl font-extrabold leading-tight">
@@ -130,23 +232,49 @@ export default async function CourseDetailsPage({ params }: PageProps) {
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-4">
-                  <EnrollCourseButton courseSlug={course.slug} />
+                  {!isAdminPreview && (
+                    <EnrollCourseButton courseSlug={course.slug} />
+                  )}
 
                   {previewLessons[0] ? (
                     <Link
-                      href={`/courses/${course.slug}/${previewLessons[0].slug}`}
+                      href={
+                        isAdminPreview
+                          ? `/courses/${course.slug}/${previewLessons[0].slug}?adminPreview=true`
+                          : `/courses/${course.slug}/${previewLessons[0].slug}`
+                      }
                       className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3 font-bold hover:bg-gray-50"
                     >
                       <PlayCircle size={20} />
-                      Start Free Preview
+                      {isAdminPreview ? "Preview First Lesson" : "Start Free Preview"}
                     </Link>
                   ) : course.lessons[0] ? (
-                    <PremiumLessonAccessButton
-                      courseId={course.id}
-                      courseSlug={course.slug}
-                      lessonSlug={course.lessons[0].slug}
-                    />
+                    isAdminPreview ? (
+                      <Link
+                        href={`/courses/${course.slug}/${course.lessons[0].slug}?adminPreview=true`}
+                        className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3 font-bold hover:bg-gray-50"
+                      >
+                        <PlayCircle size={20} />
+                        Preview First Lesson
+                      </Link>
+                    ) : (
+                      <PremiumLessonAccessButton
+                        courseId={course.id}
+                        courseSlug={course.slug}
+                        lessonSlug={course.lessons[0].slug}
+                      />
+                    )
                   ) : null}
+
+                  {isAdminPreview && (
+                    <Link
+                      href={`/admin/courses/${course.slug}/lessons`}
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                    >
+                      Manage Lessons
+                      <ArrowRight size={18} />
+                    </Link>
+                  )}
                 </div>
               </div>
 
@@ -254,7 +382,7 @@ export default async function CourseDetailsPage({ params }: PageProps) {
                     </p>
                   </div>
 
-                  <CourseAccessBadge courseId={course.id} />
+                  {!isAdminPreview && <CourseAccessBadge courseId={course.id} />}
                 </div>
 
                 {course.lessons.length === 0 ? (
@@ -265,71 +393,77 @@ export default async function CourseDetailsPage({ params }: PageProps) {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {course.lessons.map((lesson, index) => {
-                      const isPreview = lesson.accessType === "PREVIEW";
+                    {course.lessons.map(
+                      (lesson: LessonRecord, index: number) => {
+                        const isPreview = lesson.accessType === "PREVIEW";
 
-                      return (
-                        <div
-                          key={lesson.id}
-                          className="rounded-2xl border bg-white p-5 transition-all duration-300 hover:border-[#007F73] hover:shadow-sm"
-                        >
-                          <div className="flex flex-wrap items-center justify-between gap-5">
-                            <div className="flex gap-4">
-                              <div
-                                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold ${
-                                  isPreview
-                                    ? "bg-green-100 text-green-700"
-                                    : "bg-orange-100 text-[#D94A00]"
-                                }`}
-                              >
-                                {index + 1}
-                              </div>
-
-                              <div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <h3 className="text-xl font-bold">
-                                    {lesson.title}
-                                  </h3>
-
-                                  {isPreview ? (
-                                    <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
-                                      <Eye size={13} />
-                                      Free Preview
-                                    </span>
-                                  ) : (
-                                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-[#D94A00]">
-                                      <Lock size={13} />
-                                      Premium
-                                    </span>
-                                  )}
+                        return (
+                          <div
+                            key={lesson.id}
+                            className="rounded-2xl border bg-white p-5 transition-all duration-300 hover:border-[#007F73] hover:shadow-sm"
+                          >
+                            <div className="flex flex-wrap items-center justify-between gap-5">
+                              <div className="flex gap-4">
+                                <div
+                                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-bold ${
+                                    isPreview
+                                      ? "bg-green-100 text-green-700"
+                                      : "bg-orange-100 text-[#D94A00]"
+                                  }`}
+                                >
+                                  {index + 1}
                                 </div>
 
-                                <p className="mt-2 line-clamp-2 text-gray-600">
-                                  {lesson.content ||
-                                    "Lesson content and video materials are available inside this lesson."}
-                                </p>
-                              </div>
-                            </div>
+                                <div>
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <h3 className="text-xl font-bold">
+                                      {lesson.title}
+                                    </h3>
 
-                            {isPreview ? (
-                              <Link
-                                href={`/courses/${course.slug}/${lesson.slug}`}
-                                className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
-                              >
-                                Open Lesson
-                                <ArrowRight size={18} />
-                              </Link>
-                            ) : (
-                              <PremiumLessonAccessButton
-                                courseId={course.id}
-                                courseSlug={course.slug}
-                                lessonSlug={lesson.slug}
-                              />
-                            )}
+                                    {isPreview ? (
+                                      <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                                        <Eye size={13} />
+                                        Free Preview
+                                      </span>
+                                    ) : (
+                                      <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-[#D94A00]">
+                                        <Lock size={13} />
+                                        Premium
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  <p className="mt-2 line-clamp-2 text-gray-600">
+                                    {lesson.content ||
+                                      "Lesson content and video materials are available inside this lesson."}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {isPreview || isAdminPreview ? (
+                                <Link
+                                  href={
+                                    isAdminPreview
+                                      ? `/courses/${course.slug}/${lesson.slug}?adminPreview=true`
+                                      : `/courses/${course.slug}/${lesson.slug}`
+                                  }
+                                  className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+                                >
+                                  {isAdminPreview ? "Preview Lesson" : "Open Lesson"}
+                                  <ArrowRight size={18} />
+                                </Link>
+                              ) : (
+                                <PremiumLessonAccessButton
+                                  courseId={course.id}
+                                  courseSlug={course.slug}
+                                  lessonSlug={lesson.slug}
+                                />
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      }
+                    )}
                   </div>
                 )}
               </div>
@@ -372,7 +506,13 @@ export default async function CourseDetailsPage({ params }: PageProps) {
                 <h2 className="text-2xl font-bold">Course Access</h2>
 
                 <div className="mt-5">
-                  <CourseAccessBadge courseId={course.id} />
+                  {isAdminPreview ? (
+                    <span className="inline-flex rounded-full bg-[#07122E] px-4 py-2 text-sm font-bold text-white">
+                      Admin Preview Mode
+                    </span>
+                  ) : (
+                    <CourseAccessBadge courseId={course.id} />
+                  )}
                 </div>
 
                 <div className="mt-6 space-y-4">
@@ -398,12 +538,21 @@ export default async function CourseDetailsPage({ params }: PageProps) {
                   />
                 </div>
 
-                <Link
-                  href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
-                  className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-                >
-                  View Pricing Options
-                </Link>
+                {isAdminPreview ? (
+                  <Link
+                    href={`/admin/courses/${course.slug}/lessons`}
+                    className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    Manage Lessons
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
+                    className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    View Pricing Options
+                  </Link>
+                )}
               </div>
 
               <div className="rounded-3xl bg-white p-8 shadow-sm">
@@ -437,18 +586,25 @@ export default async function CourseDetailsPage({ params }: PageProps) {
               </div>
 
               <div className="rounded-3xl bg-[#07122E] p-8 text-white shadow-sm">
-                <h2 className="text-2xl font-bold">Need Support?</h2>
+                <h2 className="text-2xl font-bold">
+                  {isAdminPreview ? "Admin Tools" : "Need Support?"}
+                </h2>
 
                 <p className="mt-3 leading-7 text-white/70">
-                  Contact the KWCA learning team if you need help accessing
-                  lessons, confirming payment, or generating your certificate.
+                  {isAdminPreview
+                    ? "Use the admin panel to edit lessons, update course content, and manage quizzes."
+                    : "Contact the KWCA learning team if you need help accessing lessons, confirming payment, or generating your certificate."}
                 </p>
 
                 <Link
-                  href="/profile"
+                  href={
+                    isAdminPreview
+                      ? `/admin/courses/${course.slug}/lessons`
+                      : "/profile"
+                  }
                   className="mt-6 inline-flex rounded-xl bg-white px-6 py-3 font-bold text-[#07122E] hover:bg-gray-100"
                 >
-                  Go to Profile
+                  {isAdminPreview ? "Manage Lessons" : "Go to Profile"}
                 </Link>
               </div>
             </aside>
@@ -467,7 +623,7 @@ function StatCard({
   value,
   tone,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   value: string;
   tone: "green" | "orange";
@@ -501,7 +657,7 @@ function QuizCard({
   description,
   href,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
   href: string;
@@ -526,7 +682,7 @@ function AccessRow({
   description,
   tone,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
   tone: "green" | "orange";
@@ -551,7 +707,7 @@ function DetailRow({
   label,
   value,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   value: string;
 }) {

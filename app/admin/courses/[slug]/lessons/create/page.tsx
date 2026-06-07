@@ -1,71 +1,123 @@
-"use client";
-
-import { useState } from "react";
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { ArrowLeft, BookOpen, Save } from "lucide-react";
 
-export default function CreateLessonPage() {
-  const params = useParams<{ slug: string }>();
-  const router = useRouter();
+export const dynamic = "force-dynamic";
 
-  const courseSlug = params.slug;
+type PageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
 
-  const [title, setTitle] = useState("");
-  const [order, setOrder] = useState("");
-  const [accessType, setAccessType] = useState("Free Preview");
-  const [videoUrl, setVideoUrl] = useState("");
-  const [readingUrl, setReadingUrl] = useState("");
-  const [content, setContent] = useState("");
-  const [notes, setNotes] = useState("");
-  const [saving, setSaving] = useState(false);
+function createSlug(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
-  async function handleCreateLesson() {
-    if (!title.trim()) {
-      alert("Please enter a lesson title.");
-      return;
-    }
+async function createLesson(formData: FormData) {
+  "use server";
 
-    try {
-      setSaving(true);
+  const courseId = formData.get("courseId") as string;
+  const courseSlug = formData.get("courseSlug") as string;
+  const title = formData.get("title") as string;
+  const customSlug = formData.get("slug") as string;
+  const orderValue = formData.get("order") as string;
+  const accessType = formData.get("accessType") as "PREVIEW" | "PREMIUM";
+  const videoUrl = formData.get("videoUrl") as string;
+  const readingUrl = formData.get("readingUrl") as string;
+  const content = formData.get("content") as string;
+  const notes = formData.get("notes") as string;
 
-      const response = await fetch(
-        `/api/admin/courses/${courseSlug}/lessons`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title,
-            order,
-            accessType,
-            videoUrl,
-            readingUrl,
-            content,
-            notes,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.error || "Something went wrong.");
-        return;
-      }
-
-      alert("✅ Lesson created successfully!");
-      router.push(`/admin/courses/${courseSlug}/lessons`);
-      router.refresh();
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong while creating the lesson.");
-    } finally {
-      setSaving(false);
-    }
+  if (!courseId || !courseSlug || !title) {
+    return;
   }
+
+  const lessonSlug = customSlug ? createSlug(customSlug) : createSlug(title);
+  const order = Number(orderValue) || 1;
+
+  await prisma.lesson.create({
+    data: {
+      courseId,
+      title,
+      slug: lessonSlug,
+      order,
+      accessType,
+      videoUrl: videoUrl || null,
+      readingUrl: readingUrl || null,
+      content: content || null,
+      notes: notes || null,
+    },
+  });
+
+  await prisma.course.update({
+    where: {
+      id: courseId,
+    },
+    data: {
+      numberOfLessons: {
+        increment: 1,
+      },
+    },
+  });
+
+  revalidatePath(`/admin/courses/${courseSlug}/lessons`);
+  revalidatePath(`/courses/${courseSlug}`);
+
+  redirect(`/admin/courses/${courseSlug}/lessons`);
+}
+
+export default async function CreateLessonPage({ params }: PageProps) {
+  const { slug } = await params;
+
+  const course = await prisma.course.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      lessons: {
+        orderBy: {
+          order: "desc",
+        },
+        take: 1,
+      },
+    },
+  });
+
+  if (!course) {
+    return (
+      <>
+        <AdminNavbar />
+
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
+          <h1 className="text-4xl font-bold">Course not found</h1>
+
+          <p className="mt-4 text-gray-600">
+            This course may not exist or may have been deleted.
+          </p>
+
+          <Link
+            href="/admin/courses"
+            className="mt-6 inline-block rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+          >
+            Back to Courses
+          </Link>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  const nextOrder =
+    course.lessons.length > 0 ? Number(course.lessons[0].order) + 1 : 1;
 
   return (
     <>
@@ -73,131 +125,169 @@ export default function CreateLessonPage() {
 
       <main className="min-h-screen bg-gray-50 text-[#07122E]">
         <section className="bg-[#EDF5F3] py-16">
-          <div className="mx-auto max-w-5xl px-6">
+          <div className="mx-auto max-w-7xl px-6">
             <Link
-              href={`/admin/courses/${courseSlug}/lessons`}
-              className="font-bold text-[#007F73]"
+              href={`/admin/courses/${course.slug}/lessons`}
+              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
             >
-              ← Back to Lessons
+              <ArrowLeft size={18} />
+              Back to Lessons
             </Link>
 
-            <h1 className="mt-6 text-5xl font-bold">Add New Lesson</h1>
+            <div className="mt-8">
+              <p className="font-bold text-[#007F73]">Create Lesson</p>
 
-            <p className="mt-4 text-xl text-gray-600">
-              Create a lesson and attach it to this course.
-            </p>
+              <h1 className="mt-3 text-5xl font-bold">Add New Lesson</h1>
+
+              <p className="mt-4 max-w-3xl text-xl text-gray-600">
+                Add lesson content, access level, video, readings, and notes for{" "}
+                <span className="font-bold text-[#07122E]">
+                  {course.title}
+                </span>
+                .
+              </p>
+            </div>
           </div>
         </section>
 
         <section className="mx-auto max-w-5xl px-6 py-12">
-          <form className="space-y-6 rounded-3xl bg-white p-8 shadow-sm">
-            <div>
-              <label className="mb-2 block font-bold">Lesson Title</label>
+          <form
+            action={createLesson}
+            className="rounded-3xl bg-white p-8 shadow-sm"
+          >
+            <input type="hidden" name="courseId" value={course.id} />
+            <input type="hidden" name="courseSlug" value={course.slug} />
 
-              <input
-                type="text"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder="Definition of a wildlife conservancy"
-                className="w-full rounded-xl border px-4 py-3"
-              />
+            <div className="mb-8 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F2FBF8] text-[#007F73]">
+                <BookOpen size={26} />
+              </div>
+
+              <div>
+                <h2 className="text-2xl font-bold">Lesson Information</h2>
+                <p className="text-gray-600">
+                  Fill in the main lesson details below.
+                </p>
+              </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6">
               <div>
-                <label className="mb-2 block font-bold">Lesson Order</label>
+                <label className="mb-2 block font-bold">Lesson Title</label>
 
                 <input
-                  type="number"
-                  value={order}
-                  onChange={(event) => setOrder(event.target.value)}
-                  placeholder="1"
-                  className="w-full rounded-xl border px-4 py-3"
+                  name="title"
+                  type="text"
+                  required
+                  placeholder="Example: What is a Conservancy?"
+                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#007F73]"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block font-bold">Lesson Slug</label>
+
+                <input
+                  name="slug"
+                  type="text"
+                  placeholder="Example: lesson-1 or what-is-a-conservancy"
+                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#007F73]"
                 />
 
                 <p className="mt-2 text-sm text-gray-500">
-                  Leave blank to add it after the last lesson.
+                  You can leave this blank. The system will create it from the
+                  lesson title.
+                </p>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block font-bold">Lesson Order</label>
+
+                  <input
+                    name="order"
+                    type="number"
+                    min="1"
+                    defaultValue={nextOrder}
+                    className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#007F73]"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block font-bold">Lesson Access</label>
+
+                  <select
+                    name="accessType"
+                    defaultValue="PREVIEW"
+                    className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#007F73]"
+                  >
+                    <option value="PREVIEW">Free Preview</option>
+                    <option value="PREMIUM">Premium Locked</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block font-bold">Lesson Video URL</label>
+
+                <input
+                  name="videoUrl"
+                  type="url"
+                  placeholder="Example: https://www.youtube.com/embed/ogaR6G9Cm7M"
+                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#007F73]"
+                />
+
+                <p className="mt-2 text-sm text-gray-500">
+                  Recommended YouTube format:
+                  https://www.youtube.com/embed/VIDEO_ID
                 </p>
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Lesson Access</label>
+                <label className="mb-2 block font-bold">Reading URL</label>
 
-                <select
-                  value={accessType}
-                  onChange={(event) => setAccessType(event.target.value)}
-                  className="w-full rounded-xl border px-4 py-3"
-                >
-                  <option>Free Preview</option>
-                  <option>Premium</option>
-                </select>
+                <input
+                  name="readingUrl"
+                  type="url"
+                  placeholder="Optional reading or downloadable file link"
+                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#007F73]"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block font-bold">Lesson Content</label>
+
+                <textarea
+                  name="content"
+                  rows={12}
+                  placeholder="Add lesson objective, key notes, important ideas, and practical examples."
+                  className="w-full rounded-xl border px-5 py-4 text-lg leading-8 outline-none focus:border-[#007F73]"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block font-bold">Lesson Notes</label>
+
+                <textarea
+                  name="notes"
+                  rows={6}
+                  placeholder="Add short takeaway notes or summary points."
+                  className="w-full rounded-xl border px-5 py-4 text-lg leading-8 outline-none focus:border-[#007F73]"
+                />
               </div>
             </div>
 
-            <div>
-              <label className="mb-2 block font-bold">Lesson Video URL</label>
-
-              <input
-                type="text"
-                value={videoUrl}
-                onChange={(event) => setVideoUrl(event.target.value)}
-                placeholder="Paste YouTube embed link"
-                className="w-full rounded-xl border px-4 py-3"
-              />
-
-              <p className="mt-2 text-sm text-gray-500">
-                Use an embed link, for example: https://www.youtube.com/embed/VIDEO_ID
-              </p>
-            </div>
-
-            <div>
-              <label className="mb-2 block font-bold">Reading / Resource URL</label>
-
-              <input
-                type="text"
-                value={readingUrl}
-                onChange={(event) => setReadingUrl(event.target.value)}
-                placeholder="Paste reading or downloadable resource link"
-                className="w-full rounded-xl border px-4 py-3"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block font-bold">Lesson Content</label>
-
-              <textarea
-                rows={8}
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-                placeholder="Write the main lesson explanation here..."
-                className="w-full rounded-xl border px-4 py-3"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block font-bold">Lesson Notes / Key Takeaway</label>
-
-              <textarea
-                rows={5}
-                value={notes}
-                onChange={(event) => setNotes(event.target.value)}
-                placeholder="Add short notes, reminders, or key takeaways..."
-                className="w-full rounded-xl border px-4 py-3"
-              />
-            </div>
-
-            <div className="flex flex-wrap gap-4 pt-4">
+            <div className="mt-8 flex flex-wrap gap-4">
               <button
-                type="button"
-                onClick={handleCreateLesson}
-                disabled={saving}
-                className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+                type="submit"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
               >
-                {saving ? "Creating..." : "Create Lesson"}
+                <Save size={18} />
+                Save Lesson
               </button>
 
               <Link
-                href={`/admin/courses/${courseSlug}/lessons`}
+                href={`/admin/courses/${course.slug}/lessons`}
                 className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
               >
                 Cancel

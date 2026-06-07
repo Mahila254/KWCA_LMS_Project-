@@ -414,24 +414,43 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
           </div>
 
           <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="mb-4 flex items-center gap-3">
+            <div className="mb-6 flex items-center gap-3">
               <BookOpen className="text-[#007F73]" size={26} />
 
               <h2 className="text-3xl font-bold">Lesson Notes</h2>
             </div>
 
-            <p className="leading-8 text-gray-600">
-              {currentLesson.content ||
-                "Lesson content will appear here once added by the admin."}
-            </p>
+            {currentLesson.content ? (
+              <div className="space-y-6 text-lg leading-9 text-gray-600">
+                {currentLesson.content
+                  .split(/\n\s*\n/)
+                  .filter((paragraph: string) => paragraph.trim().length > 0)
+                  .map((paragraph: string, index: number) => (
+                    <p key={index} className="whitespace-pre-line">
+                      {paragraph.trim()}
+                    </p>
+                  ))}
+              </div>
+            ) : (
+              <p className="text-lg leading-8 text-gray-600">
+                Lesson content will appear here once added by the admin.
+              </p>
+            )}
 
             {currentLesson.notes && (
               <div className="mt-8 rounded-2xl bg-gray-50 p-6">
                 <h3 className="text-xl font-bold">Key Takeaway</h3>
 
-                <p className="mt-3 leading-8 text-gray-600">
-                  {currentLesson.notes}
-                </p>
+                <div className="mt-3 space-y-4 text-gray-600">
+                  {currentLesson.notes
+                    .split(/\n\s*\n/)
+                    .filter((paragraph: string) => paragraph.trim().length > 0)
+                    .map((paragraph: string, index: number) => (
+                      <p key={index} className="whitespace-pre-line leading-8">
+                        {paragraph.trim()}
+                      </p>
+                    ))}
+                </div>
               </div>
             )}
           </div>

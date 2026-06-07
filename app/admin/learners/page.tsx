@@ -16,8 +16,52 @@ import {
 
 export const dynamic = "force-dynamic";
 
+type LearnerRecord = {
+  id: string;
+  name: string | null;
+  email: string;
+  role: "ADMIN" | "STUDENT";
+  createdAt: Date;
+  updatedAt: Date;
+  enrollments: {
+    id: string;
+    progress: number;
+    completed: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    course: {
+      id: string;
+      title: string;
+      slug: string;
+      category: string | null;
+    };
+  }[];
+  quizResults: {
+    id: string;
+    quizType: string;
+    score: number;
+    passed: boolean;
+    createdAt: Date;
+    course: {
+      id: string;
+      title: string;
+      slug: string;
+    };
+  }[];
+  certificates: {
+    id: string;
+    certificateCode: string;
+    issuedAt: Date;
+    course: {
+      id: string;
+      title: string;
+      slug: string;
+    };
+  }[];
+};
+
 export default async function AdminLearnersPage() {
-  const learners = await prisma.user.findMany({
+  const learners: LearnerRecord[] = await prisma.user.findMany({
     orderBy: {
       createdAt: "desc",
     },
@@ -27,7 +71,14 @@ export default async function AdminLearnersPage() {
           createdAt: "desc",
         },
         include: {
-          course: true,
+          course: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              category: true,
+            },
+          },
         },
       },
       quizResults: {
@@ -35,7 +86,13 @@ export default async function AdminLearnersPage() {
           createdAt: "desc",
         },
         include: {
-          course: true,
+          course: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+            },
+          },
         },
       },
       certificates: {
@@ -43,24 +100,33 @@ export default async function AdminLearnersPage() {
           issuedAt: "desc",
         },
         include: {
-          course: true,
+          course: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+            },
+          },
         },
       },
     },
   });
 
   const totalEnrollments = learners.reduce(
-    (total, learner) => total + learner.enrollments.length,
+    (total: number, learner: LearnerRecord) =>
+      total + learner.enrollments.length,
     0
   );
 
   const totalQuizResults = learners.reduce(
-    (total, learner) => total + learner.quizResults.length,
+    (total: number, learner: LearnerRecord) =>
+      total + learner.quizResults.length,
     0
   );
 
   const totalCertificates = learners.reduce(
-    (total, learner) => total + learner.certificates.length,
+    (total: number, learner: LearnerRecord) =>
+      total + learner.certificates.length,
     0
   );
 
@@ -97,6 +163,7 @@ export default async function AdminLearnersPage() {
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 <User className="text-[#007F73]" size={28} />
+
                 <p className="text-sm font-bold text-gray-500">
                   Total Learners
                 </p>
@@ -108,6 +175,7 @@ export default async function AdminLearnersPage() {
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 <BookOpen className="text-[#007F73]" size={28} />
+
                 <p className="text-sm font-bold text-gray-500">
                   Total Enrollments
                 </p>
@@ -119,6 +187,7 @@ export default async function AdminLearnersPage() {
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 <ClipboardList className="text-[#D94A00]" size={28} />
+
                 <p className="text-sm font-bold text-gray-500">
                   Quiz Results
                 </p>
@@ -130,6 +199,7 @@ export default async function AdminLearnersPage() {
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
                 <Award className="text-[#007F73]" size={28} />
+
                 <p className="text-sm font-bold text-gray-500">
                   Certificates
                 </p>
@@ -154,7 +224,7 @@ export default async function AdminLearnersPage() {
             </div>
           ) : (
             <div className="space-y-8">
-              {learners.map((learner) => {
+              {learners.map((learner: LearnerRecord) => {
                 const createdDate = new Date(
                   learner.createdAt
                 ).toLocaleDateString("en-GB", {
@@ -201,6 +271,7 @@ export default async function AdminLearnersPage() {
                             <p className="text-sm font-bold text-gray-500">
                               Enrolled
                             </p>
+
                             <p className="mt-1 text-2xl font-bold">
                               {learner.enrollments.length}
                             </p>
@@ -210,6 +281,7 @@ export default async function AdminLearnersPage() {
                             <p className="text-sm font-bold text-gray-500">
                               Quizzes
                             </p>
+
                             <p className="mt-1 text-2xl font-bold">
                               {learner.quizResults.length}
                             </p>
@@ -219,6 +291,7 @@ export default async function AdminLearnersPage() {
                             <p className="text-sm font-bold text-gray-500">
                               Passed
                             </p>
+
                             <p className="mt-1 text-2xl font-bold">
                               {passedQuizzes}
                             </p>
@@ -228,6 +301,7 @@ export default async function AdminLearnersPage() {
                             <p className="text-sm font-bold text-gray-500">
                               Certificates
                             </p>
+
                             <p className="mt-1 text-2xl font-bold">
                               {learner.certificates.length}
                             </p>
@@ -240,6 +314,7 @@ export default async function AdminLearnersPage() {
                       <div>
                         <div className="mb-4 flex items-center gap-2">
                           <BookOpen className="text-[#007F73]" size={22} />
+
                           <h3 className="text-xl font-bold">Enrollments</h3>
                         </div>
 
@@ -302,6 +377,7 @@ export default async function AdminLearnersPage() {
                             className="text-[#D94A00]"
                             size={22}
                           />
+
                           <h3 className="text-xl font-bold">Quiz Results</h3>
                         </div>
 
@@ -378,6 +454,7 @@ export default async function AdminLearnersPage() {
                       <div>
                         <div className="mb-4 flex items-center gap-2">
                           <Award className="text-[#007F73]" size={22} />
+
                           <h3 className="text-xl font-bold">Certificates</h3>
                         </div>
 

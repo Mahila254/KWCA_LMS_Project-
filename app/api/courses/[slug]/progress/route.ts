@@ -1,16 +1,57 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 type RouteProps = {
   params: Promise<{
     slug: string;
   }>;
 };
 
+type ProgressRequestBody = {
+  id?: string;
+  email?: string;
+  name?: string;
+  lessonSlug?: string;
+};
+
+type LessonRecord = {
+  id: string;
+  courseId: string;
+  title: string;
+  slug: string;
+  content: string | null;
+  videoUrl: string | null;
+  readingUrl: string | null;
+  notes: string | null;
+  order: number;
+  accessType: "PREVIEW" | "PREMIUM";
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type CourseWithLessons = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  category: string | null;
+  imageUrl: string | null;
+  introVideoUrl: string | null;
+  learningOutcomes: string | null;
+  numberOfLessons: number;
+  status: "DRAFT" | "PUBLISHED";
+  accessType: "FREE_PREVIEW" | "PREMIUM" | "SUBSCRIPTION_ONLY";
+  createdAt: Date;
+  updatedAt: Date;
+  lessons: LessonRecord[];
+};
+
 export async function POST(request: Request, { params }: RouteProps) {
   try {
     const { slug } = await params;
-    const body = await request.json();
+    const body = (await request.json()) as ProgressRequestBody;
 
     const { id, email, name, lessonSlug } = body;
 
@@ -35,7 +76,7 @@ export async function POST(request: Request, { params }: RouteProps) {
       );
     }
 
-    const course = await prisma.course.findUnique({
+    const course: CourseWithLessons | null = await prisma.course.findUnique({
       where: {
         slug,
       },
@@ -71,7 +112,7 @@ export async function POST(request: Request, { params }: RouteProps) {
     });
 
     const currentLesson = course.lessons.find(
-      (lesson) => lesson.slug === lessonSlug
+      (lesson: LessonRecord) => lesson.slug === lessonSlug
     );
 
     if (!currentLesson) {
@@ -82,7 +123,7 @@ export async function POST(request: Request, { params }: RouteProps) {
     }
 
     const lessonIndex = course.lessons.findIndex(
-      (lesson) => lesson.slug === lessonSlug
+      (lesson: LessonRecord) => lesson.slug === lessonSlug
     );
 
     const completedLessons = lessonIndex + 1;

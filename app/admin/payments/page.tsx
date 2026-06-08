@@ -19,38 +19,79 @@ import {
 
 export const dynamic = "force-dynamic";
 
+type PaymentRecord = {
+  id: string;
+  userId: string;
+  courseId: string | null;
+  paymentType:
+    | "PAY_PER_COURSE"
+    | "MONTHLY_SUBSCRIPTION"
+    | "ANNUAL_SUBSCRIPTION";
+  amount: number;
+  currency: string;
+  status: "PENDING" | "PAID" | "FAILED";
+  provider: string;
+  providerRef: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  user: {
+    name: string | null;
+    email: string;
+  };
+  course: {
+    title: string;
+    slug: string;
+  } | null;
+};
+
 export default async function AdminPaymentsPage() {
-  const payments = await prisma.payment.findMany({
+  const payments: PaymentRecord[] = await prisma.payment.findMany({
     orderBy: {
       createdAt: "desc",
     },
     include: {
-      user: true,
-      course: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+      course: {
+        select: {
+          title: true,
+          slug: true,
+        },
+      },
     },
   });
 
   const totalPayments = payments.length;
 
   const pendingPayments = payments.filter(
-    (payment) => payment.status === "PENDING"
+    (payment: PaymentRecord) => payment.status === "PENDING"
   ).length;
 
   const paidPayments = payments.filter(
-    (payment) => payment.status === "PAID"
+    (payment: PaymentRecord) => payment.status === "PAID"
   ).length;
 
   const failedPayments = payments.filter(
-    (payment) => payment.status === "FAILED"
+    (payment: PaymentRecord) => payment.status === "FAILED"
   ).length;
 
   const totalPendingAmount = payments
-    .filter((payment) => payment.status === "PENDING")
-    .reduce((total, payment) => total + payment.amount, 0);
+    .filter((payment: PaymentRecord) => payment.status === "PENDING")
+    .reduce(
+      (total: number, payment: PaymentRecord) => total + payment.amount,
+      0
+    );
 
   const totalPaidAmount = payments
-    .filter((payment) => payment.status === "PAID")
-    .reduce((total, payment) => total + payment.amount, 0);
+    .filter((payment: PaymentRecord) => payment.status === "PAID")
+    .reduce(
+      (total: number, payment: PaymentRecord) => total + payment.amount,
+      0
+    );
 
   return (
     <>
@@ -172,7 +213,7 @@ export default async function AdminPaymentsPage() {
               </div>
 
               <div className="divide-y">
-                {payments.map((payment) => {
+                {payments.map((payment: PaymentRecord) => {
                   const createdDate = new Date(
                     payment.createdAt
                   ).toLocaleDateString("en-GB", {
@@ -277,6 +318,7 @@ export default async function AdminPaymentsPage() {
                           <div className="mt-5 rounded-2xl bg-gray-50 p-4 text-left">
                             <div className="mb-3 flex items-center gap-2">
                               <RefreshCw size={16} className="text-[#007F73]" />
+
                               <p className="text-sm font-bold text-gray-600">
                                 Update Status
                               </p>
@@ -340,6 +382,7 @@ function SummaryCard({
     <div className="rounded-3xl bg-white p-6 shadow-sm">
       <div className="mb-4 flex items-center gap-3">
         <div className={toneClass}>{icon}</div>
+
         <p className="text-sm font-bold text-gray-500">{label}</p>
       </div>
 

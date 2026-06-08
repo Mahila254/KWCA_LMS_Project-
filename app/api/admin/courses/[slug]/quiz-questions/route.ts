@@ -1,10 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 type RouteProps = {
   params: Promise<{
     slug: string;
   }>;
+};
+
+type CreateQuizQuestionBody = {
+  quizType?: "PRACTICE" | "FINAL";
+  question?: string;
+  optionA?: string;
+  optionB?: string;
+  optionC?: string;
+  optionD?: string;
+  correctAnswer?: string;
+  explanation?: string;
+  order?: string | number;
 };
 
 export async function GET(_request: Request, { params }: RouteProps) {
@@ -12,13 +26,8 @@ export async function GET(_request: Request, { params }: RouteProps) {
     const { slug } = await params;
 
     const course = await prisma.course.findUnique({
-      where: { slug },
-      include: {
-        quizQuestions: {
-          orderBy: {
-            order: "asc",
-          },
-        },
+      where: {
+        slug,
       },
     });
 
@@ -29,9 +38,18 @@ export async function GET(_request: Request, { params }: RouteProps) {
       );
     }
 
+    const quizQuestions = await prisma.quizQuestion.findMany({
+      where: {
+        courseId: course.id,
+      },
+      orderBy: {
+        order: "asc",
+      },
+    });
+
     return NextResponse.json({
       course,
-      quizQuestions: course.quizQuestions,
+      quizQuestions,
     });
   } catch (error) {
     console.error("Fetch quiz questions error:", error);
@@ -46,7 +64,7 @@ export async function GET(_request: Request, { params }: RouteProps) {
 export async function POST(request: Request, { params }: RouteProps) {
   try {
     const { slug } = await params;
-    const body = await request.json();
+    const body = (await request.json()) as CreateQuizQuestionBody;
 
     const {
       quizType,
@@ -82,9 +100,8 @@ export async function POST(request: Request, { params }: RouteProps) {
     }
 
     const course = await prisma.course.findUnique({
-      where: { slug },
-      include: {
-        quizQuestions: true,
+      where: {
+        slug,
       },
     });
 
@@ -95,7 +112,13 @@ export async function POST(request: Request, { params }: RouteProps) {
       );
     }
 
-    const questionOrder = Number(order) || course.quizQuestions.length + 1;
+    const existingCount = await prisma.quizQuestion.count({
+      where: {
+        courseId: course.id,
+      },
+    });
+
+    const questionOrder = Number(order) || existingCount + 1;
 
     const quizQuestion = await prisma.quizQuestion.create({
       data: {

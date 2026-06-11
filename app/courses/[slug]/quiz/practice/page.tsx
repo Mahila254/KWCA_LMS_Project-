@@ -208,7 +208,7 @@ export default function PracticeQuizPage() {
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
             title="Practice Quiz Complete"
-            subtitle="You have completed the practice quiz. Review your score below."
+            subtitle="You have completed the practice quiz. You can now continue to the final graded quiz."
           />
 
           <section className="mx-auto max-w-4xl px-6 py-10">
@@ -251,9 +251,17 @@ export default function PracticeQuizPage() {
 
                 <Link
                   href={`/courses/${courseSlug}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
                 >
                   Back to Course
+                  <BookOpen size={18} />
+                </Link>
+
+                <Link
+                  href={`/courses/${courseSlug}/quiz/final`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                >
+                  Continue to Final Quiz
                   <ArrowRight size={18} />
                 </Link>
               </div>

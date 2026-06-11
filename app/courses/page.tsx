@@ -89,12 +89,6 @@ export default async function CoursesPage() {
     0
   );
 
-  const totalCertificates = courses.reduce(
-    (total: number, course: CourseRecord) =>
-      total + course.certificates.length,
-    0
-  );
-
   return (
     <>
       <Navbar />
@@ -192,14 +186,16 @@ export default async function CoursesPage() {
               </div>
             </ScrollReveal>
           ) : (
-            <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid items-stretch gap-8 md:grid-cols-2 xl:grid-cols-3">
               {courses.map((course: CourseRecord) => {
                 const previewLessons = course.lessons.filter(
-                  (lesson) => lesson.accessType === "PREVIEW"
+                  (lesson: { id: string; accessType: "PREVIEW" | "PREMIUM" }) =>
+                    lesson.accessType === "PREVIEW"
                 ).length;
 
                 const premiumLessons = course.lessons.filter(
-                  (lesson) => lesson.accessType === "PREMIUM"
+                  (lesson: { id: string; accessType: "PREVIEW" | "PREMIUM" }) =>
+                    lesson.accessType === "PREMIUM"
                 ).length;
 
                 const imageSource =
@@ -208,12 +204,12 @@ export default async function CoursesPage() {
                     : "/images/course-placeholder.jpg";
 
                 return (
-                  <ScrollReveal key={course.id}>
+                  <ScrollReveal key={course.id} className="h-full">
                     <Link
                       href={`/courses/${course.slug}`}
-                      className="group block h-full overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                      className="group flex h-full min-h-[650px] flex-col overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                     >
-                      <div className="relative h-56 overflow-hidden bg-[#07122E]">
+                      <div className="relative h-56 shrink-0 overflow-hidden bg-[#07122E]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={imageSource}
@@ -248,17 +244,17 @@ export default async function CoursesPage() {
                         </div>
                       </div>
 
-                      <div className="p-7">
-                        <h3 className="text-2xl font-extrabold leading-tight group-hover:text-[#007F73]">
+                      <div className="flex flex-1 flex-col p-7">
+                        <h3 className="min-h-[72px] text-2xl font-extrabold leading-tight group-hover:text-[#007F73]">
                           {course.title}
                         </h3>
 
-                        <p className="mt-4 line-clamp-4 leading-7 text-gray-600">
+                        <p className="mt-4 line-clamp-4 min-h-[112px] leading-7 text-gray-600">
                           {course.description ||
                             "A practical conservation learning course designed for conservancy teams and community-based conservation leaders."}
                         </p>
 
-                        <div className="mt-6 grid grid-cols-3 gap-3">
+                        <div className="mt-auto grid grid-cols-3 gap-3 pt-6">
                           <MiniStat
                             icon={<BookOpen size={17} />}
                             value={course.lessons.length.toString()}

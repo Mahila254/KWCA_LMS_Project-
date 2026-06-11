@@ -5,6 +5,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import MarkLessonCompleteButton from "@/components/MarkLessonCompleteButton";
 import PremiumLessonGate from "@/components/PremiumLessonGate";
+import ScrollReveal from "@/components/ScrollReveal";
 import {
   ArrowLeft,
   BookOpen,
@@ -16,6 +17,8 @@ import {
   CheckCircle,
   HelpCircle,
   ArrowRight,
+  ShieldCheck,
+  ClipboardList,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -80,6 +83,46 @@ function getYoutubeEmbedUrl(videoUrl: string | null) {
   }
 
   return videoUrl;
+}
+
+function renderTextBlocks(content: string) {
+  const blocks = content
+    .split(/\n\s*\n/)
+    .map((block: string) => block.trim())
+    .filter((block: string) => block.length > 0);
+
+  return blocks.map((block: string, index: number) => {
+    const headingTitles = [
+      "Lesson Objective",
+      "Key Notes",
+      "Important Ideas",
+      "Practical Example",
+      "Summary",
+      "Key Takeaway",
+      "Reflection",
+      "Activity",
+    ];
+
+    const isHeading = headingTitles.some(
+      (heading: string) =>
+        block === heading ||
+        block.toLowerCase().startsWith(`${heading.toLowerCase()}:`)
+    );
+
+    if (isHeading && block.length < 80) {
+      return (
+        <h3 key={index} className="text-2xl font-extrabold text-[#07122E]">
+          {block.replace(":", "")}
+        </h3>
+      );
+    }
+
+    return (
+      <p key={index} className="whitespace-pre-line text-lg leading-9">
+        {block}
+      </p>
+    );
+  });
 }
 
 export default async function LessonPage({ params, searchParams }: PageProps) {
@@ -178,6 +221,11 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
   const videoEmbedUrl = getYoutubeEmbedUrl(currentLesson.videoUrl);
 
+  const imageSource =
+    course.imageUrl && course.imageUrl.trim() !== ""
+      ? course.imageUrl
+      : "/images/course-placeholder.jpg";
+
   const lessonHref = (lessonSlug: string) =>
     isAdminPreview
       ? `/courses/${course.slug}/${lessonSlug}?adminPreview=true`
@@ -196,6 +244,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
               <p className="text-sm font-bold text-white/70">
                 Admin Preview Mode
               </p>
+
               <p className="font-bold">
                 You are viewing this lesson as an administrator.
               </p>
@@ -211,62 +260,103 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         </section>
       )}
 
-      <section className="bg-[#F2FBF8] px-6 py-12">
-        <div className="mx-auto max-w-7xl">
+      <section className="relative overflow-hidden px-6 py-14">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('${imageSource}')`,
+          }}
+        />
+
+        <div className="absolute inset-0 bg-white/72" />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F2FBF8]/90 via-white/80 to-gray-50" />
+
+        <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#007F73]/20 blur-3xl" />
+        <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#D94A00]/20 blur-3xl" />
+
+        <ScrollReveal className="relative mx-auto max-w-7xl">
           <Link
             href={backToCourseHref}
-            className="mb-6 inline-flex items-center gap-2 font-bold text-[#007F73]"
+            className="mb-8 inline-flex items-center gap-2 font-bold text-[#007F73]"
           >
             <ArrowLeft size={18} />
             {isAdminPreview ? "Back to Admin Lessons" : "Back to Course"}
           </Link>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <p className="font-bold text-[#007F73]">
-              Lesson {lessonNumber} of {course.lessons.length}
-            </p>
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#007F73] shadow-sm">
+                  Lesson {lessonNumber} of {course.lessons.length}
+                </span>
 
-            {isPreview ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm font-bold text-green-700">
-                <Eye size={14} />
-                Free Preview
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-sm font-bold text-[#D94A00]">
-                <Lock size={14} />
-                Premium Lesson
-              </span>
-            )}
+                {isPreview ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-4 py-2 text-sm font-extrabold text-green-700">
+                    <Eye size={14} />
+                    Free Preview
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-4 py-2 text-sm font-extrabold text-[#D94A00]">
+                    <Lock size={14} />
+                    Premium Lesson
+                  </span>
+                )}
 
-            {isAdminPreview && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#07122E] px-3 py-1 text-sm font-bold text-white">
-                Admin Preview
-              </span>
-            )}
-          </div>
+                {isAdminPreview && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#07122E] px-4 py-2 text-sm font-extrabold text-white">
+                    Admin Preview
+                  </span>
+                )}
+              </div>
 
-          <h1 className="mt-4 max-w-5xl text-5xl font-extrabold">
-            {currentLesson.title}
-          </h1>
+              <h1 className="mt-5 max-w-5xl text-5xl font-extrabold leading-tight md:text-6xl">
+                {currentLesson.title}
+              </h1>
 
-          <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
-            {course.title}
-          </p>
+              <p className="mt-5 max-w-3xl text-xl leading-8 text-gray-700">
+                {course.title}
+              </p>
 
-          <div className="mt-8 max-w-3xl">
-            <div className="mb-2 flex justify-between text-sm font-bold text-gray-600">
-              <span>Lesson Position</span>
-              <span>{progressPercent}%</span>
+              <div className="mt-8 max-w-3xl">
+                <div className="mb-2 flex justify-between text-sm font-bold text-gray-600">
+                  <span>Lesson Position</span>
+                  <span>{progressPercent}%</span>
+                </div>
+
+                <div className="h-3 rounded-full bg-white shadow-sm">
+                  <div
+                    className="h-3 rounded-full bg-[#007F73]"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="h-3 rounded-full bg-white">
-              <div
-                className="h-3 rounded-full bg-[#007F73]"
-                style={{ width: `${progressPercent}%` }}
-              />
+            <div className="rounded-3xl bg-white p-4 shadow-sm">
+              <div className="relative h-[320px] overflow-hidden rounded-3xl bg-[#07122E]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imageSource}
+                  alt={course.title}
+                  className="h-full w-full object-cover"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07122E]/80 via-[#07122E]/10 to-transparent" />
+
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-sm font-bold text-white/75">
+                    KWCA LMS Lesson
+                  </p>
+
+                  <h2 className="mt-2 text-3xl font-extrabold">
+                    {currentLesson.title}
+                  </h2>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-4">
@@ -365,213 +455,215 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         </aside>
 
         <section className="space-y-8 lg:col-span-3">
-          <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="flex aspect-video items-center justify-center rounded-3xl bg-[#07122E] text-white">
-              {videoEmbedUrl ? (
-                <iframe
-                  src={videoEmbedUrl}
-                  title={currentLesson.title}
-                  className="h-full w-full rounded-3xl"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              ) : (
-                <div className="text-center">
-                  <PlayCircle className="mx-auto mb-4" size={72} />
+          <ScrollReveal>
+            <div className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
+              <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-[#07122E] text-white">
+                {videoEmbedUrl ? (
+                  <iframe
+                    src={videoEmbedUrl}
+                    title={currentLesson.title}
+                    className="h-full w-full rounded-3xl"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                ) : (
+                  <div className="px-6 text-center">
+                    <PlayCircle className="mx-auto mb-4" size={72} />
 
-                  <p className="text-3xl font-bold">Lesson Video</p>
+                    <p className="text-3xl font-bold">Lesson Video</p>
 
-                  <p className="mt-2 text-white/70">
-                    Video content will be embedded here.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              {isPreview ? (
-                <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
-                  <Eye size={15} />
-                  Free Preview Lesson
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
-                  <Lock size={15} />
-                  Premium Lesson
-                </span>
-              )}
-
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
-                <BookOpen size={15} />
-                Reading Included
-              </span>
-
-              <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
-                <HelpCircle size={15} />
-                Quiz at End
-              </span>
-            </div>
-          </div>
-
-          <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="mb-6 flex items-center gap-3">
-              <BookOpen className="text-[#007F73]" size={26} />
-
-              <h2 className="text-3xl font-bold">Lesson Notes</h2>
-            </div>
-
-            {currentLesson.content ? (
-              <div className="space-y-6 text-lg leading-9 text-gray-600">
-                {currentLesson.content
-                  .split(/\n\s*\n/)
-                  .filter((paragraph: string) => paragraph.trim().length > 0)
-                  .map((paragraph: string, index: number) => (
-                    <p key={index} className="whitespace-pre-line">
-                      {paragraph.trim()}
+                    <p className="mt-2 text-white/70">
+                      Video content will be embedded here once added.
                     </p>
-                  ))}
+                  </div>
+                )}
               </div>
-            ) : (
-              <p className="text-lg leading-8 text-gray-600">
-                Lesson content will appear here once added by the admin.
-              </p>
-            )}
 
-            {currentLesson.notes && (
-              <div className="mt-8 rounded-2xl bg-gray-50 p-6">
-                <h3 className="text-xl font-bold">Key Takeaway</h3>
+              <div className="mt-8 flex flex-wrap gap-4">
+                {isPreview ? (
+                  <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
+                    <Eye size={15} />
+                    Free Preview Lesson
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+                    <Lock size={15} />
+                    Premium Lesson
+                  </span>
+                )}
 
-                <div className="mt-3 space-y-4 text-gray-600">
-                  {currentLesson.notes
-                    .split(/\n\s*\n/)
-                    .filter((paragraph: string) => paragraph.trim().length > 0)
-                    .map((paragraph: string, index: number) => (
-                      <p key={index} className="whitespace-pre-line leading-8">
-                        {paragraph.trim()}
-                      </p>
-                    ))}
+                <span className="inline-flex items-center gap-2 rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
+                  <BookOpen size={15} />
+                  Reading Included
+                </span>
+
+                <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+                  <HelpCircle size={15} />
+                  Quiz at End
+                </span>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal>
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="mb-6 flex items-center gap-3">
+                <BookOpen className="text-[#007F73]" size={30} />
+
+                <h2 className="text-3xl font-bold">Lesson Notes</h2>
+              </div>
+
+              {currentLesson.content ? (
+                <div className="space-y-6 text-gray-600">
+                  {renderTextBlocks(currentLesson.content)}
                 </div>
-              </div>
-            )}
-          </div>
+              ) : (
+                <p className="text-lg leading-8 text-gray-600">
+                  Lesson content will appear here once added by the admin.
+                </p>
+              )}
+
+              {currentLesson.notes && (
+                <div className="mt-8 rounded-2xl bg-gray-50 p-6">
+                  <div className="mb-4 flex items-center gap-3">
+                    <ShieldCheck className="text-[#007F73]" size={24} />
+
+                    <h3 className="text-xl font-bold">Key Takeaway</h3>
+                  </div>
+
+                  <div className="space-y-4 text-gray-600">
+                    {renderTextBlocks(currentLesson.notes)}
+                  </div>
+                </div>
+              )}
+            </div>
+          </ScrollReveal>
 
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <FileText className="text-[#007F73]" size={26} />
+            <ScrollReveal>
+              <div className="h-full rounded-3xl bg-white p-8 shadow-sm">
+                <div className="mb-4 flex items-center gap-3">
+                  <FileText className="text-[#007F73]" size={26} />
 
-                <h2 className="text-2xl font-bold">Required Reading</h2>
+                  <h2 className="text-2xl font-bold">Required Reading</h2>
+                </div>
+
+                <p className="leading-8 text-gray-600">
+                  Read the supporting material and reflect on how this lesson
+                  connects to conservancy governance and management.
+                </p>
+
+                {currentLesson.readingUrl ? (
+                  <Link
+                    href={currentLesson.readingUrl}
+                    className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold hover:bg-gray-50"
+                  >
+                    <Download size={18} />
+                    Download Reading
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold text-gray-400"
+                  >
+                    <Download size={18} />
+                    Reading Coming Soon
+                  </button>
+                )}
               </div>
+            </ScrollReveal>
 
-              <p className="leading-8 text-gray-600">
-                Read the introductory material and reflect on how this lesson
-                connects to conservancy governance and management.
-              </p>
+            <ScrollReveal>
+              <div className="h-full rounded-3xl bg-white p-8 shadow-sm">
+                <div className="mb-4 flex items-center gap-3">
+                  <ClipboardList className="text-[#D94A00]" size={26} />
 
-              {currentLesson.readingUrl ? (
+                  <h2 className="text-2xl font-bold">Practice Activity</h2>
+                </div>
+
+                <p className="leading-8 text-gray-600">
+                  Reflect on this lesson and check your understanding before
+                  moving to the final graded quiz.
+                </p>
+
                 <Link
-                  href={currentLesson.readingUrl}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold hover:bg-gray-50"
+                  href={`/courses/${slug}/quiz/practice`}
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
                 >
-                  <Download size={18} />
-                  Download Reading
+                  Start Practice Quiz
+                  <ArrowRight size={18} />
                 </Link>
-              ) : (
-                <button
-                  type="button"
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold text-gray-400"
-                >
-                  <Download size={18} />
-                  Reading Coming Soon
-                </button>
-              )}
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <HelpCircle className="text-[#D94A00]" size={26} />
-
-                <h2 className="text-2xl font-bold">Practice Activity</h2>
               </div>
-
-              <p className="leading-8 text-gray-600">
-                Reflect on this lesson and check your understanding before
-                moving to the final graded quiz.
-              </p>
-
-              <Link
-                href={`/courses/${slug}/quiz/practice`}
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
-              >
-                Start Practice Quiz
-                <ArrowRight size={18} />
-              </Link>
-            </div>
+            </ScrollReveal>
           </div>
 
           {!isAdminPreview && (
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-2xl font-bold">Lesson Progress</h2>
+            <ScrollReveal>
+              <div className="rounded-3xl bg-white p-8 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold">Lesson Progress</h2>
 
-                  <p className="mt-2 text-gray-600">
-                    Mark this lesson as complete to update your course progress
-                    on your learner profile.
-                  </p>
+                    <p className="mt-2 text-gray-600">
+                      Mark this lesson as complete to update your learner
+                      progress.
+                    </p>
+                  </div>
+
+                  <MarkLessonCompleteButton
+                    courseSlug={course.slug}
+                    lessonSlug={currentLesson.slug}
+                  />
                 </div>
-
-                <MarkLessonCompleteButton
-                  courseSlug={course.slug}
-                  lessonSlug={currentLesson.slug}
-                />
               </div>
-            </div>
+            </ScrollReveal>
           )}
 
-          <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              {previousLesson ? (
-                <Link
-                  href={lessonHref(previousLesson.slug)}
-                  className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
-                >
-                  <ArrowLeft size={18} />
-                  Previous Lesson
-                </Link>
-              ) : (
-                <Link
-                  href={backToCourseHref}
-                  className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
-                >
-                  <ArrowLeft size={18} />
-                  {isAdminPreview ? "Back to Admin Lessons" : "Back to Course"}
-                </Link>
-              )}
+          <ScrollReveal>
+            <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                {previousLesson ? (
+                  <Link
+                    href={lessonHref(previousLesson.slug)}
+                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                  >
+                    <ArrowLeft size={18} />
+                    Previous Lesson
+                  </Link>
+                ) : (
+                  <Link
+                    href={backToCourseHref}
+                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                  >
+                    <ArrowLeft size={18} />
+                    {isAdminPreview ? "Back to Admin Lessons" : "Back to Course"}
+                  </Link>
+                )}
 
-              {nextLesson ? (
-                <Link
-                  href={lessonHref(nextLesson.slug)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-                >
-                  Next Lesson
-                  <ArrowRight size={18} />
-                </Link>
-              ) : (
-                <Link
-                  href={
-                    isAdminPreview
-                      ? `/admin/courses/${course.slug}/lessons`
-                      : `/courses/${slug}/quiz/practice`
-                  }
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
-                >
-                  {isAdminPreview ? "Back to Admin Lessons" : "Continue to Quiz"}
-                  <ArrowRight size={18} />
-                </Link>
-              )}
+                {nextLesson ? (
+                  <Link
+                    href={lessonHref(nextLesson.slug)}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    Next Lesson
+                    <ArrowRight size={18} />
+                  </Link>
+                ) : (
+                  <Link
+                    href={
+                      isAdminPreview
+                        ? `/admin/courses/${course.slug}/lessons`
+                        : `/courses/${slug}/quiz/practice`
+                    }
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  >
+                    {isAdminPreview ? "Back to Admin Lessons" : "Continue to Quiz"}
+                    <ArrowRight size={18} />
+                  </Link>
+                )}
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </section>
       </section>
     </main>

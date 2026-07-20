@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -45,63 +46,63 @@ enum QuizType {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  name          String?
-  email         String        @unique
-  role          UserRole      @default(STUDENT)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id           String   @id @default(cuid())
+  name         String?
+  email        String   @unique
+  role         UserRole @default(STUDENT)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  enrollments   Enrollment[]
-  quizResults   QuizResult[]
-  certificates  Certificate[]
-  payments      Payment[]
+  enrollments  Enrollment[]
+  quizResults  QuizResult[]
+  certificates Certificate[]
+  payments     Payment[]
 }
 
 model Course {
-  id               String            @id @default(cuid())
+  id               String           @id @default(cuid())
   title            String
-  slug             String            @unique
+  slug             String           @unique
   description      String?
   category         String?
   imageUrl         String?
   introVideoUrl    String?
   learningOutcomes String?
-  numberOfLessons  Int               @default(0)
-  status           CourseStatus      @default(DRAFT)
-  accessType       CourseAccessType  @default(FREE_PREVIEW)
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  numberOfLessons  Int              @default(0)
+  status           CourseStatus     @default(DRAFT)
+  accessType       CourseAccessType @default(FREE_PREVIEW)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
-  lessons          Lesson[]
-  enrollments      Enrollment[]
-  quizResults      QuizResult[]
-  certificates     Certificate[]
-  payments         Payment[]
-  quizQuestions    QuizQuestion[]
+  lessons       Lesson[]
+  enrollments   Enrollment[]
+  quizResults   QuizResult[]
+  certificates  Certificate[]
+  payments      Payment[]
+  quizQuestions QuizQuestion[]
 }
 
 model Lesson {
-  id          String            @id @default(cuid())
-  courseId    String
-  title       String
-  slug        String
-  content     String?
-  videoUrl    String?
-  readingUrl  String?
-  notes       String?
-  order       Int
-  accessType  LessonAccessType  @default(PREVIEW)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  id         String           @id @default(cuid())
+  courseId   String
+  title      String
+  slug       String
+  content    String?
+  videoUrl   String?
+  readingUrl String?
+  notes      String?
+  order      Int
+  accessType LessonAccessType @default(PREVIEW)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 
-  course      Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([courseId, slug])
 }
 
 model QuizQuestion {
-  id            String    @id @default(cuid())
+  id            String   @id @default(cuid())
   courseId      String
   quizType      QuizType
   question      String
@@ -112,49 +113,49 @@ model QuizQuestion {
   correctAnswer String
   explanation   String?
   order         Int
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
 
 model Enrollment {
-  id          String    @id @default(cuid())
-  userId      String
-  courseId    String
-  progress    Int       @default(0)
-  completed   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  progress  Int      @default(0)
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
 }
 
 model QuizResult {
-  id          String    @id @default(cuid())
-  userId      String
-  courseId    String
-  quizType    String
-  score       Int
-  passed      Boolean   @default(false)
-  createdAt   DateTime  @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  quizType   String
+  score      Int
+  passed     Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
 
 model Certificate {
-  id              String    @id @default(cuid())
+  id              String   @id @default(cuid())
   userId          String
   courseId        String
-  certificateCode String    @unique
-  issuedAt        DateTime  @default(now())
+  certificateCode String   @unique
+  issuedAt        DateTime @default(now())
 
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
 }
@@ -172,6 +173,6 @@ model Payment {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course      Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
 }

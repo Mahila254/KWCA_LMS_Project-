@@ -15,55 +15,33 @@ import {
 export default function AdminLoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
+  const [email, setEmail] = useState("admin@kwca.org");
+  const [password, setPassword] = useState("admin123");
   const [error, setError] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
-  async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+  function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    try {
-      setLoggingIn(true);
-      setError("");
+    setLoggingIn(true);
+    setError("");
 
-      if (!email.trim()) {
-        setError("Please enter your admin email.");
-        return;
-      }
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedPassword = password.trim();
 
-      if (!password) {
-        setError("Please enter your admin password.");
-        return;
-      }
-
-      const response = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.trim(),
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Admin login failed.");
-        return;
-      }
+    if (
+      normalizedEmail === "admin@kwca.org" &&
+      normalizedPassword === "admin123"
+    ) {
+      localStorage.setItem("kwca-admin-login", "true");
 
       router.push("/admin");
       router.refresh();
-    } catch (error) {
-      console.error(error);
-      setError("Something went wrong while logging in.");
-    } finally {
-      setLoggingIn(false);
+      return;
     }
+
+    setError("Invalid email or password.");
+    setLoggingIn(false);
   }
 
   return (
@@ -92,7 +70,7 @@ export default function AdminLoginPage() {
 
               <p className="mt-5 max-w-xl text-lg leading-8 text-white/70">
                 This area is reserved for approved KWCA LMS administrators.
-                Only users with the ADMIN role can access the control centre.
+                Sign in to access the administration dashboard.
               </p>
             </div>
           </section>
@@ -106,7 +84,7 @@ export default function AdminLoginPage() {
               <h2 className="text-4xl font-bold">Admin Login</h2>
 
               <p className="mt-3 leading-7 text-gray-600">
-                Sign in with your approved admin email and password.
+                Use the demo admin credentials below.
               </p>
 
               <form onSubmit={handleLogin} className="mt-8 space-y-5">
@@ -126,7 +104,6 @@ export default function AdminLoginPage() {
                       type="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
-                      placeholder="admin@example.com"
                       className="w-full rounded-xl border px-12 py-4 outline-none focus:border-[#007F73]"
                     />
                   </div>
@@ -148,7 +125,6 @@ export default function AdminLoginPage() {
                       type="password"
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
-                      placeholder="Enter password"
                       className="w-full rounded-xl border px-12 py-4 outline-none focus:border-[#007F73]"
                     />
                   </div>
@@ -158,7 +134,6 @@ export default function AdminLoginPage() {
                   <div className="rounded-2xl bg-red-50 p-4 text-red-700">
                     <div className="flex gap-3">
                       <AlertCircle className="mt-1 shrink-0" size={20} />
-
                       <p className="text-sm font-semibold">{error}</p>
                     </div>
                   </div>
@@ -169,14 +144,15 @@ export default function AdminLoginPage() {
                   disabled={loggingIn}
                   className="w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {loggingIn ? "Checking Admin Access..." : "Login as Admin"}
+                  {loggingIn ? "Opening Admin Dashboard..." : "Login as Admin"}
                 </button>
               </form>
 
-              <p className="mt-6 text-sm leading-6 text-gray-500">
-                Your account must exist in Supabase and must also have the ADMIN
-                role inside the LMS database.
-              </p>
+              <div className="mt-6 rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">
+                <p className="font-bold text-[#07122E]">Demo credentials</p>
+                <p>Email: admin@kwca.org</p>
+                <p>Password: admin123</p>
+              </div>
             </div>
           </section>
         </div>

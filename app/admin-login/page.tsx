@@ -1,34 +1,34 @@
 "use client";
 
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useState } from "react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("admin@kwca.org");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  function loginAdmin(e: React.FormEvent) {
-    e.preventDefault();
+  function loginAdmin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+
+    const normalizedEmail = email.trim().toLowerCase();
 
     if (
-      email === "admin@kwca.org" &&
+      normalizedEmail === "admin@kwca.org" &&
       password === "admin123"
     ) {
-      localStorage.setItem(
-        "kwca-admin-login",
-        "true"
-      );
-
-      alert("✅ Admin login successful");
-
+      localStorage.setItem("kwca-admin-login", "true");
       router.push("/admin");
-    } else {
-      alert("❌ Invalid email or password");
+      router.refresh();
+      return;
     }
+
+    setError("Invalid email or password.");
   }
 
   return (
@@ -51,52 +51,66 @@ export default function AdminLoginPage() {
         <section className="mx-auto max-w-md px-6 py-12">
           <form
             onSubmit={loginAdmin}
-            className="rounded-3xl bg-white p-8 shadow-sm space-y-6"
+            className="space-y-6 rounded-3xl bg-white p-8 shadow-sm"
           >
             <div>
-              <label className="mb-2 block font-bold">
+              <label
+                htmlFor="admin-email"
+                className="mb-2 block font-bold"
+              >
                 Email
               </label>
 
               <input
+                id="admin-email"
                 type="email"
                 value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
+                onChange={(event) => setEmail(event.target.value)}
                 placeholder="admin@kwca.org"
+                autoComplete="email"
+                required
                 className="w-full rounded-xl border px-4 py-3"
               />
             </div>
 
             <div>
-              <label className="mb-2 block font-bold">
+              <label
+                htmlFor="admin-password"
+                className="mb-2 block font-bold"
+              >
                 Password
               </label>
 
               <input
+                id="admin-password"
                 type="password"
                 value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
-                placeholder="********"
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Enter admin password"
+                autoComplete="current-password"
+                required
                 className="w-full rounded-xl border px-4 py-3"
               />
             </div>
 
+            {error && (
+              <div
+                role="alert"
+                className="rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
+              >
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white"
+              className="w-full rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white transition hover:bg-[#006c62]"
             >
-              Login
+              Login as Admin
             </button>
 
             <div className="rounded-xl bg-gray-50 p-4 text-sm">
-              <p className="font-bold">
-                Demo credentials:
-              </p>
-
+              <p className="font-bold">Demo credentials</p>
               <p>Email: admin@kwca.org</p>
               <p>Password: admin123</p>
             </div>

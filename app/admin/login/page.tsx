@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Lock,
@@ -13,8 +12,6 @@ import {
 } from "lucide-react";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
-
   const [email, setEmail] = useState("admin@kwca.org");
   const [password, setPassword] = useState("admin123");
   const [error, setError] = useState("");
@@ -23,25 +20,31 @@ export default function AdminLoginPage() {
   function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setLoggingIn(true);
     setError("");
 
     const normalizedEmail = email.trim().toLowerCase();
     const normalizedPassword = password.trim();
 
     if (
-      normalizedEmail === "admin@kwca.org" &&
-      normalizedPassword === "admin123"
+      normalizedEmail !== "admin@kwca.org" ||
+      normalizedPassword !== "admin123"
     ) {
-      localStorage.setItem("kwca-admin-login", "true");
-
-      router.push("/admin");
-      router.refresh();
+      setError("Invalid email or password.");
+      setLoggingIn(false);
       return;
     }
 
-    setError("Invalid email or password.");
-    setLoggingIn(false);
+    setLoggingIn(true);
+
+    // Browser-side access value used by app/admin/page.tsx
+    window.localStorage.setItem("kwca-admin-login", "true");
+
+    // Cookie can also be read by middleware/proxy if needed.
+    document.cookie =
+      "kwca-admin-login=true; Path=/; Max-Age=28800; SameSite=Lax";
+
+    // Force a complete page load instead of client-side navigation.
+    window.location.assign("/admin");
   }
 
   return (
@@ -51,7 +54,7 @@ export default function AdminLoginPage() {
           <section className="bg-[#07122E] p-10 text-white">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 font-bold text-white/80 hover:text-white"
+              className="inline-flex items-center gap-2 font-bold text-white/80 transition hover:text-white"
             >
               <ArrowLeft size={18} />
               Back to Public Site
@@ -62,7 +65,9 @@ export default function AdminLoginPage() {
                 <ShieldCheck size={34} />
               </div>
 
-              <p className="font-bold text-[#8BE0D4]">KWCA LMS Admin</p>
+              <p className="font-bold text-[#8BE0D4]">
+                KWCA LMS Admin
+              </p>
 
               <h1 className="mt-4 text-5xl font-extrabold leading-tight">
                 Secure Admin Login
@@ -81,15 +86,23 @@ export default function AdminLoginPage() {
                 <Lock size={34} />
               </div>
 
-              <h2 className="text-4xl font-bold">Admin Login</h2>
+              <h2 className="text-4xl font-bold">
+                Admin Login
+              </h2>
 
               <p className="mt-3 leading-7 text-gray-600">
                 Use the demo admin credentials below.
               </p>
 
-              <form onSubmit={handleLogin} className="mt-8 space-y-5">
+              <form
+                onSubmit={handleLogin}
+                className="mt-8 space-y-5"
+              >
                 <div>
-                  <label htmlFor="email" className="mb-2 block font-bold">
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block font-bold"
+                  >
                     Admin Email
                   </label>
 
@@ -103,14 +116,22 @@ export default function AdminLoginPage() {
                       id="email"
                       type="email"
                       value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                      className="w-full rounded-xl border px-12 py-4 outline-none focus:border-[#007F73]"
+                      onChange={(event) =>
+                        setEmail(event.target.value)
+                      }
+                      autoComplete="email"
+                      required
+                      disabled={loggingIn}
+                      className="w-full rounded-xl border px-12 py-4 outline-none transition focus:border-[#007F73] disabled:bg-gray-100"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="mb-2 block font-bold">
+                  <label
+                    htmlFor="password"
+                    className="mb-2 block font-bold"
+                  >
                     Password
                   </label>
 
@@ -124,17 +145,31 @@ export default function AdminLoginPage() {
                       id="password"
                       type="password"
                       value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      className="w-full rounded-xl border px-12 py-4 outline-none focus:border-[#007F73]"
+                      onChange={(event) =>
+                        setPassword(event.target.value)
+                      }
+                      autoComplete="current-password"
+                      required
+                      disabled={loggingIn}
+                      className="w-full rounded-xl border px-12 py-4 outline-none transition focus:border-[#007F73] disabled:bg-gray-100"
                     />
                   </div>
                 </div>
 
                 {error && (
-                  <div className="rounded-2xl bg-red-50 p-4 text-red-700">
+                  <div
+                    role="alert"
+                    className="rounded-2xl bg-red-50 p-4 text-red-700"
+                  >
                     <div className="flex gap-3">
-                      <AlertCircle className="mt-1 shrink-0" size={20} />
-                      <p className="text-sm font-semibold">{error}</p>
+                      <AlertCircle
+                        className="mt-0.5 shrink-0"
+                        size={20}
+                      />
+
+                      <p className="text-sm font-semibold">
+                        {error}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -142,14 +177,19 @@ export default function AdminLoginPage() {
                 <button
                   type="submit"
                   disabled={loggingIn}
-                  className="w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white transition hover:bg-[#00665d] disabled:cursor-wait disabled:opacity-60"
                 >
-                  {loggingIn ? "Opening Admin Dashboard..." : "Login as Admin"}
+                  {loggingIn
+                    ? "Opening Admin Dashboard..."
+                    : "Login as Admin"}
                 </button>
               </form>
 
               <div className="mt-6 rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">
-                <p className="font-bold text-[#07122E]">Demo credentials</p>
+                <p className="font-bold text-[#07122E]">
+                  Demo credentials
+                </p>
+
                 <p>Email: admin@kwca.org</p>
                 <p>Password: admin123</p>
               </div>

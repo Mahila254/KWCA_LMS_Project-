@@ -13,7 +13,7 @@ import {
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("admin@kwca.org");
-  const [password, setPassword] = useState("admin123");
+  const [password, setPassword] = useState("KWCA-LMS-Demo-2026!");
   const [error, setError] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
 
     if (
       normalizedEmail !== "admin@kwca.org" ||
-      normalizedPassword !== "admin123"
+      normalizedPassword !== "KWCA-LMS-Demo-2026!"
     ) {
       setError("Invalid email or password.");
       setLoggingIn(false);
@@ -191,7 +191,7 @@ export default function AdminLoginPage() {
                 </p>
 
                 <p>Email: admin@kwca.org</p>
-                <p>Password: admin123</p>
+             <p>Password: KWCA-LMS-Demo-2026!</p>
               </div>
             </div>
           </section>

@@ -140,7 +140,7 @@ export default function Home() {
           </h1>
 
           <p className="mb-8 text-xl text-gray-600 md:text-2xl">
-            Empowering Wildlife Conservation Through Education
+            Empowering communities through E-learning and innovation.
           </p>
 
           <div className="mx-auto mb-10 grid max-w-3xl gap-4 md:grid-cols-2">

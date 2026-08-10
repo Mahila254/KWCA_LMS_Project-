@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import {
   ArrowLeft,
   ArrowRight,
@@ -21,6 +22,8 @@ import {
   XCircle,
 } from "lucide-react";
 
+// Note: no correctAnswer field here — the final quiz is graded server-side,
+// so the browser never receives the answers before submitting.
 type QuizQuestion = {
   id: string;
   quizType: "PRACTICE" | "FINAL";
@@ -29,8 +32,6 @@ type QuizQuestion = {
   optionB: string;
   optionC: string;
   optionD: string;
-  correctAnswer: string;
-  explanation?: string;
   order: number;
 };
 
@@ -40,14 +41,6 @@ type Course = {
   slug: string;
   description?: string | null;
   imageUrl?: string | null;
-};
-
-type SupabaseLearner = {
-  id: string;
-  email?: string;
-  user_metadata?: {
-    full_name?: string;
-  };
 };
 
 export default function FinalQuizPage() {
@@ -74,7 +67,7 @@ export default function FinalQuizPage() {
     async function fetchFinalQuestions() {
       try {
         const response = await fetch(
-          `/api/admin/courses/${courseSlug}/quiz-questions`
+          `/api/courses/${courseSlug}/quiz-questions?type=FINAL`
         );
 
         const data = await response.json();
@@ -104,7 +97,11 @@ export default function FinalQuizPage() {
     }
   }, [courseSlug]);
 
-  async function saveQuizResult(score: number, passedStatus: boolean) {
+  // Submits the learner's picked answers (never the score) and lets the
+  // server grade the quiz and decide pass/fail. This is the only source
+  // of truth for the saved result — nothing computed in the browser is
+  // trusted.
+  async function submitFinalQuiz(finalAnswers: string[]) {
     try {
       setSavingResult(true);
 
@@ -118,29 +115,17 @@ export default function FinalQuizPage() {
         return;
       }
 
-      const learner = user as SupabaseLearner;
+      const payload = {
+        quizType: "FINAL",
+        answers: questions.map((question, index) => ({
+          questionId: question.id,
+          selectedAnswer: finalAnswers[index] || null,
+        })),
+      };
 
-      if (!learner.email) {
-        alert("Your account email could not be found. Please login again.");
-        return;
-      }
-
-      const learnerName =
-        learner.user_metadata?.full_name || learner.email || "Learner";
-
-      const response = await fetch(`/api/courses/${courseSlug}/quiz-results`, {
+      const response = await authFetch(`/api/courses/${courseSlug}/quiz-results`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: learner.id,
-          email: learner.email,
-          name: learnerName,
-          quizType: "FINAL",
-          score,
-          passed: passedStatus,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -150,6 +135,10 @@ export default function FinalQuizPage() {
         return;
       }
 
+      setFinalScore(data.correctCount ?? 0);
+      setFinalPercentage(data.score ?? 0);
+      setPassed(Boolean(data.passed));
+      setCompleted(true);
       setResultSaved(true);
     } catch (error) {
       console.error(error);
@@ -157,17 +146,6 @@ export default function FinalQuizPage() {
     } finally {
       setSavingResult(false);
     }
-  }
-
-  function calculateScore(finalAnswers: string[]) {
-    return questions.reduce(
-      (total: number, question: QuizQuestion, index: number) => {
-        return finalAnswers[index] === question.correctAnswer
-          ? total + 1
-          : total;
-      },
-      0
-    );
   }
 
   async function handleNextQuestion() {
@@ -187,16 +165,7 @@ export default function FinalQuizPage() {
       return;
     }
 
-    const score = calculateScore(updatedAnswers);
-    const percentage = Math.round((score / questions.length) * 100);
-    const passedStatus = percentage >= 70;
-
-    setFinalScore(score);
-    setFinalPercentage(percentage);
-    setPassed(passedStatus);
-    setCompleted(true);
-
-    await saveQuizResult(percentage, passedStatus);
+    await submitFinalQuiz(updatedAnswers);
   }
 
   function handlePreviousQuestion() {
@@ -228,9 +197,9 @@ export default function FinalQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-20 text-center text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 px-6 py-20 text-center text-[#1E1D59]">
           <div className="mx-auto max-w-2xl rounded-3xl bg-white p-10 shadow-sm">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-[#D94A00]">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5DCE6] text-[#632854]">
               <ClipboardList size={32} />
             </div>
 
@@ -252,7 +221,7 @@ export default function FinalQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -262,7 +231,7 @@ export default function FinalQuizPage() {
 
           <section className="mx-auto max-w-3xl px-6 py-10">
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-[#D94A00]">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5DCE6] text-[#632854]">
                 <ClipboardList size={32} />
               </div>
 
@@ -274,7 +243,7 @@ export default function FinalQuizPage() {
 
               <Link
                 href={`/courses/${courseSlug}`}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 Back to Course
                 <ArrowRight size={18} />
@@ -293,7 +262,7 @@ export default function FinalQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -305,7 +274,7 @@ export default function FinalQuizPage() {
             <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
               <div
                 className={`px-8 py-12 text-center text-white ${
-                  passed ? "bg-[#07122E]" : "bg-[#3B0A0A]"
+                  passed ? "bg-[#1E1D59]" : "bg-[#5C1A2E]"
                 }`}
               >
                 <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
@@ -322,7 +291,7 @@ export default function FinalQuizPage() {
 
                 <p
                   className={`mt-6 text-7xl font-extrabold ${
-                    passed ? "text-[#9DE0D2]" : "text-red-200"
+                    passed ? "text-[#D9D3EC]" : "text-red-200"
                   }`}
                 >
                   {finalPercentage}%
@@ -340,7 +309,7 @@ export default function FinalQuizPage() {
                 )}
 
                 {!savingResult && resultSaved && (
-                  <p className="mt-4 font-bold text-[#9DE0D2]">
+                  <p className="mt-4 font-bold text-[#D9D3EC]">
                     Your result has been saved to your learner profile.
                   </p>
                 )}
@@ -408,7 +377,7 @@ export default function FinalQuizPage() {
                   {passed && (
                     <Link
                       href={`/courses/${courseSlug}/certificate`}
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                     >
                       Generate Certificate
                       <Award size={18} />
@@ -442,7 +411,7 @@ export default function FinalQuizPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
         <QuizHero
           courseTitle={course?.title || "Course"}
           courseSlug={courseSlug}
@@ -482,14 +451,14 @@ export default function FinalQuizPage() {
 
               <div className="h-3 rounded-full bg-gray-100">
                 <div
-                  className="h-3 rounded-full bg-[#007F73]"
+                  className="h-3 rounded-full bg-[#1E1D59]"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
             </div>
 
-            <div className="rounded-3xl bg-[#F2FBF8] p-8">
-              <p className="mb-3 inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-[#007F73]">
+            <div className="rounded-3xl bg-[#F1F0FA] p-8">
+              <p className="mb-3 inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-[#1E1D59]">
                 <Lock size={15} />
                 Final Graded Question
               </p>
@@ -510,15 +479,15 @@ export default function FinalQuizPage() {
                     onClick={() => setSelectedAnswer(option.label)}
                     className={`flex items-start gap-4 rounded-2xl border p-5 text-left transition ${
                       selected
-                        ? "border-[#007F73] bg-[#F2FBF8]"
-                        : "border-gray-200 bg-white hover:border-[#007F73] hover:bg-[#F2FBF8]"
+                        ? "border-[#1E1D59] bg-[#F1F0FA]"
+                        : "border-gray-200 bg-white hover:border-[#1E1D59] hover:bg-[#F1F0FA]"
                     }`}
                   >
                     <span
                       className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-extrabold ${
                         selected
-                          ? "bg-[#007F73] text-white"
-                          : "bg-[#F2FBF8] text-[#007F73]"
+                          ? "bg-[#1E1D59] text-white"
+                          : "bg-[#F1F0FA] text-[#1E1D59]"
                       }`}
                     >
                       {option.label}
@@ -530,7 +499,7 @@ export default function FinalQuizPage() {
 
                     {selected && (
                       <CheckCircle
-                        className="ml-auto mt-2 shrink-0 text-[#007F73]"
+                        className="ml-auto mt-2 shrink-0 text-[#1E1D59]"
                         size={24}
                       />
                     )}
@@ -539,12 +508,12 @@ export default function FinalQuizPage() {
               })}
             </div>
 
-            <div className="mt-8 rounded-3xl bg-orange-50 p-6">
+            <div className="mt-8 rounded-3xl bg-[#FBEFF4] p-6">
               <div className="flex items-start gap-3">
-                <ShieldCheck className="mt-1 text-[#D94A00]" size={26} />
+                <ShieldCheck className="mt-1 text-[#632854]" size={26} />
 
                 <div>
-                  <h3 className="text-xl font-bold text-[#D94A00]">
+                  <h3 className="text-xl font-bold text-[#632854]">
                     Final quiz reminder
                   </h3>
 
@@ -577,7 +546,7 @@ export default function FinalQuizPage() {
                 disabled={!selectedAnswer || savingResult}
                 className={`inline-flex items-center gap-2 rounded-xl px-6 py-3 font-bold ${
                   selectedAnswer && !savingResult
-                    ? "bg-[#007F73] text-white hover:bg-[#00665d]"
+                    ? "bg-[#1E1D59] text-white hover:bg-[#14123D]"
                     : "cursor-not-allowed bg-gray-200 text-gray-500"
                 }`}
               >
@@ -620,19 +589,19 @@ function QuizHero({
 
       <div className="absolute inset-0 bg-white/70" />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F2FBF8]/90 via-white/80 to-gray-50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/90 via-white/80 to-gray-50" />
 
       <div className="relative mx-auto max-w-5xl">
         <Link
           href={`/courses/${courseSlug}`}
-          className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+          className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
         >
           <ArrowLeft size={18} />
           Back to Course
         </Link>
 
         <div className="mt-5">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#007F73] shadow-sm">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
             <BookOpen size={15} />
             {courseTitle}
           </span>
@@ -661,7 +630,7 @@ function QuizStat({
 }) {
   return (
     <div className="rounded-3xl bg-white p-6 shadow-sm">
-      <div className="mb-4 flex items-center gap-3 text-[#007F73]">
+      <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
         {icon}
         <p className="text-sm font-bold text-gray-500">{label}</p>
       </div>
@@ -684,7 +653,7 @@ function ResultStat({
     <div className="rounded-2xl bg-gray-50 p-6 text-center">
       <p className="text-sm font-bold text-gray-500">{label}</p>
 
-      <p className="mt-2 text-4xl font-extrabold text-[#007F73]">
+      <p className="mt-2 text-4xl font-extrabold text-[#1E1D59]">
         {value}
         {suffix}
       </p>

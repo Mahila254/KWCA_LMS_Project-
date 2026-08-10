@@ -24,7 +24,7 @@ export default function AdminCourseActions({
 
       <Link
         href="/admin/courses/edit"
-        className="rounded-xl border border-gray-300 px-5 py-2 font-bold text-[#101828] hover:bg-gray-100 transition"
+        className="rounded-xl border border-gray-300 px-5 py-2 font-bold text-[#1E1D59] hover:bg-gray-100 transition"
       >
         Edit
       </Link>

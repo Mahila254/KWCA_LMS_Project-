@@ -5,12 +5,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import { UserPlus, Mail, Lock, User } from "lucide-react";
+import { UserPlus, Mail, Lock, User, Users } from "lucide-react";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [gender, setGender] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -39,6 +40,7 @@ export default function RegisterPage() {
         options: {
           data: {
             full_name: name,
+            gender: gender || null,
           },
         },
       });
@@ -55,6 +57,7 @@ export default function RegisterPage() {
       setName("");
       setEmail("");
       setPassword("");
+      setGender("");
     } catch (error) {
       console.error(error);
       alert("Something went wrong while creating your account.");
@@ -67,10 +70,10 @@ export default function RegisterPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#F2FBF8] px-6 py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F1F0FA] px-6 py-16">
           <div className="mx-auto max-w-5xl">
-            <p className="font-bold text-[#007F73]">Learner Registration</p>
+            <p className="font-bold text-[#1E1D59]">Learner Registration</p>
 
             <h1 className="mt-4 text-5xl font-extrabold">
               Create Your KWCA LMS Account
@@ -85,7 +88,7 @@ export default function RegisterPage() {
 
         <section className="mx-auto grid max-w-6xl gap-8 px-6 py-12 lg:grid-cols-2">
           <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
               <UserPlus size={34} />
             </div>
 
@@ -129,6 +132,27 @@ export default function RegisterPage() {
               </div>
 
               <div>
+                <label className="mb-2 block font-bold">
+                  Gender <span className="font-normal text-gray-400">(optional)</span>
+                </label>
+
+                <div className="flex items-center rounded-xl border bg-white px-4">
+                  <Users size={19} className="text-gray-400" />
+
+                  <select
+                    value={gender}
+                    onChange={(event) => setGender(event.target.value)}
+                    className="w-full appearance-none bg-transparent px-3 py-3 outline-none"
+                  >
+                    <option value="">Select gender</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="MALE">Male</option>
+                    <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
                 <label className="mb-2 block font-bold">Password</label>
 
                 <div className="flex items-center rounded-xl border bg-white px-4">
@@ -152,21 +176,21 @@ export default function RegisterPage() {
                 type="button"
                 onClick={handleRegister}
                 disabled={loading}
-                className="w-full rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Creating Account..." : "Create Account"}
               </button>
 
               <p className="text-center text-gray-600">
                 Already have an account?{" "}
-                <Link href="/login" className="font-bold text-[#007F73]">
+                <Link href="/login" className="font-bold text-[#1E1D59]">
                   Login here
                 </Link>
               </p>
             </div>
           </div>
 
-          <div className="rounded-3xl bg-[#07122E] p-8 text-white">
+          <div className="rounded-3xl bg-[#1E1D59] p-8 text-white">
             <h2 className="text-3xl font-bold">Why create an account?</h2>
 
             <div className="mt-8 space-y-6">

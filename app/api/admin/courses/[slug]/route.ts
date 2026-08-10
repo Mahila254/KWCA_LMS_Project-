@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/adminAuth";
 
 function createSlug(title: string) {
   return title
@@ -15,7 +17,13 @@ type RouteProps = {
   }>;
 };
 
-export async function GET(_request: Request, { params }: RouteProps) {
+export async function GET(request: NextRequest, { params }: RouteProps) {
+  const admin = await requireAdmin(request);
+
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
 
@@ -50,7 +58,13 @@ export async function GET(_request: Request, { params }: RouteProps) {
   }
 }
 
-export async function PATCH(request: Request, { params }: RouteProps) {
+export async function PATCH(request: NextRequest, { params }: RouteProps) {
+  const admin = await requireAdmin(request);
+
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
     const body = await request.json();
@@ -137,7 +151,13 @@ export async function PATCH(request: Request, { params }: RouteProps) {
   }
 }
 
-export async function DELETE(_request: Request, { params }: RouteProps) {
+export async function DELETE(request: NextRequest, { params }: RouteProps) {
+  const admin = await requireAdmin(request);
+
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
 

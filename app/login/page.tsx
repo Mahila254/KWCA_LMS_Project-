@@ -55,10 +55,10 @@ export default function LoginPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#F2FBF8] px-6 py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F1F0FA] px-6 py-16">
           <div className="mx-auto max-w-5xl">
-            <p className="font-bold text-[#007F73]">Learner Login</p>
+            <p className="font-bold text-[#1E1D59]">Learner Login</p>
 
             <h1 className="mt-4 text-5xl font-extrabold">
               Login to Your KWCA LMS Account
@@ -73,7 +73,7 @@ export default function LoginPage() {
 
         <section className="mx-auto grid max-w-6xl gap-8 px-6 py-12 lg:grid-cols-2">
           <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
               <LogIn size={34} />
             </div>
 
@@ -120,26 +120,26 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleLogin}
                 disabled={loading}
-                className="w-full rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Logging In..." : "Login"}
               </button>
 
               <p className="text-center text-gray-600">
                 Do not have an account?{" "}
-                <Link href="/register" className="font-bold text-[#007F73]">
+                <Link href="/register" className="font-bold text-[#1E1D59]">
                   Register here
                 </Link>
               </p>
             </div>
           </div>
 
-          <div className="rounded-3xl bg-[#07122E] p-8 text-white">
+          <div className="rounded-3xl bg-[#1E1D59] p-8 text-white">
             <h2 className="text-3xl font-bold">Your learner account helps you</h2>
 
             <div className="mt-8 space-y-6">
               <div className="flex gap-4">
-                <CheckCircle className="mt-1 shrink-0 text-[#00B894]" />
+                <CheckCircle className="mt-1 shrink-0 text-[#632854]" />
                 <div>
                   <h3 className="text-xl font-bold">Continue learning</h3>
                   <p className="mt-2 leading-7 text-white/70">
@@ -149,7 +149,7 @@ export default function LoginPage() {
               </div>
 
               <div className="flex gap-4">
-                <CheckCircle className="mt-1 shrink-0 text-[#00B894]" />
+                <CheckCircle className="mt-1 shrink-0 text-[#632854]" />
                 <div>
                   <h3 className="text-xl font-bold">Track quiz results</h3>
                   <p className="mt-2 leading-7 text-white/70">
@@ -160,7 +160,7 @@ export default function LoginPage() {
               </div>
 
               <div className="flex gap-4">
-                <CheckCircle className="mt-1 shrink-0 text-[#00B894]" />
+                <CheckCircle className="mt-1 shrink-0 text-[#632854]" />
                 <div>
                   <h3 className="text-xl font-bold">Access certificates</h3>
                   <p className="mt-2 leading-7 text-white/70">

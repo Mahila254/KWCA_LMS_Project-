@@ -1,23 +1,25 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/requireUser";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
+// Always returns the caller's OWN profile, verified via their session
+// token. This used to trust a ?email= query param, which let anyone read
+// any learner's enrollments, quiz results, certificates, and full payment
+// history just by knowing their email address.
+export async function GET(request: NextRequest) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
-    const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email");
-
-    if (!email) {
-      return NextResponse.json(
-        { error: "Learner email is required." },
-        { status: 400 }
-      );
-    }
-
     const learner = await prisma.user.findUnique({
       where: {
-        email,
+        email: verifiedUser.email,
       },
       include: {
         enrollments: {

@@ -134,19 +134,19 @@ export default async function AdminLearnersPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#EDF5F3] py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
             >
               <ArrowLeft size={18} />
               Back to Admin Dashboard
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#007F73]">Learner Management</p>
+              <p className="font-bold text-[#1E1D59]">Learner Management</p>
 
               <h1 className="mt-3 text-5xl font-bold">Registered Learners</h1>
 
@@ -162,7 +162,7 @@ export default async function AdminLearnersPage() {
           <div className="mb-8 grid gap-6 md:grid-cols-4">
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <User className="text-[#007F73]" size={28} />
+                <User className="text-[#1E1D59]" size={28} />
 
                 <p className="text-sm font-bold text-gray-500">
                   Total Learners
@@ -174,7 +174,7 @@ export default async function AdminLearnersPage() {
 
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <BookOpen className="text-[#007F73]" size={28} />
+                <BookOpen className="text-[#1E1D59]" size={28} />
 
                 <p className="text-sm font-bold text-gray-500">
                   Total Enrollments
@@ -186,7 +186,7 @@ export default async function AdminLearnersPage() {
 
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <ClipboardList className="text-[#D94A00]" size={28} />
+                <ClipboardList className="text-[#632854]" size={28} />
 
                 <p className="text-sm font-bold text-gray-500">
                   Quiz Results
@@ -198,7 +198,7 @@ export default async function AdminLearnersPage() {
 
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <Award className="text-[#007F73]" size={28} />
+                <Award className="text-[#1E1D59]" size={28} />
 
                 <p className="text-sm font-bold text-gray-500">
                   Certificates
@@ -211,7 +211,7 @@ export default async function AdminLearnersPage() {
 
           {learners.length === 0 ? (
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                 <User size={32} />
               </div>
 
@@ -245,7 +245,7 @@ export default async function AdminLearnersPage() {
                     <div className="border-b px-6 py-6">
                       <div className="flex flex-wrap items-start justify-between gap-6">
                         <div className="flex gap-4">
-                          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                             <User size={34} />
                           </div>
 
@@ -313,7 +313,7 @@ export default async function AdminLearnersPage() {
                     <div className="grid gap-8 p-6 lg:grid-cols-3">
                       <div>
                         <div className="mb-4 flex items-center gap-2">
-                          <BookOpen className="text-[#007F73]" size={22} />
+                          <BookOpen className="text-[#1E1D59]" size={22} />
 
                           <h3 className="text-xl font-bold">Enrollments</h3>
                         </div>
@@ -346,7 +346,7 @@ export default async function AdminLearnersPage() {
 
                                   <div className="h-2 rounded-full bg-gray-100">
                                     <div
-                                      className="h-2 rounded-full bg-[#007F73]"
+                                      className="h-2 rounded-full bg-[#1E1D59]"
                                       style={{
                                         width: `${enrollment.progress}%`,
                                       }}
@@ -358,7 +358,7 @@ export default async function AdminLearnersPage() {
                                   className={`mt-2 text-sm font-bold ${
                                     enrollment.completed
                                       ? "text-green-700"
-                                      : "text-[#D94A00]"
+                                      : "text-[#632854]"
                                   }`}
                                 >
                                   {enrollment.completed
@@ -374,7 +374,7 @@ export default async function AdminLearnersPage() {
                       <div>
                         <div className="mb-4 flex items-center gap-2">
                           <ClipboardList
-                            className="text-[#D94A00]"
+                            className="text-[#632854]"
                             size={22}
                           />
 
@@ -428,7 +428,7 @@ export default async function AdminLearnersPage() {
                                   <p
                                     className={`mt-3 text-2xl font-extrabold ${
                                       result.passed
-                                        ? "text-[#007F73]"
+                                        ? "text-[#1E1D59]"
                                         : "text-red-600"
                                     }`}
                                   >
@@ -453,7 +453,7 @@ export default async function AdminLearnersPage() {
 
                       <div>
                         <div className="mb-4 flex items-center gap-2">
-                          <Award className="text-[#007F73]" size={22} />
+                          <Award className="text-[#1E1D59]" size={22} />
 
                           <h3 className="text-xl font-bold">Certificates</h3>
                         </div>
@@ -482,7 +482,7 @@ export default async function AdminLearnersPage() {
                                     {certificate.course.title}
                                   </p>
 
-                                  <p className="mt-2 text-sm font-bold text-[#007F73]">
+                                  <p className="mt-2 text-sm font-bold text-[#1E1D59]">
                                     {certificate.certificateCode}
                                   </p>
 
@@ -492,7 +492,7 @@ export default async function AdminLearnersPage() {
 
                                   <Link
                                     href={`/courses/${certificate.course.slug}/certificate`}
-                                    className="mt-4 inline-flex rounded-xl bg-[#007F73] px-4 py-2 text-sm font-bold text-white hover:bg-[#00665d]"
+                                    className="mt-4 inline-flex rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
                                   >
                                     View Certificate
                                   </Link>

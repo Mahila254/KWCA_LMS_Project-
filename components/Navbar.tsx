@@ -1,44 +1,59 @@
 import Link from "next/link";
+import { User } from "lucide-react";
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#1E1D59]">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+        <Link href="/" className="flex items-center gap-3">
           <img
-            src="/logo.png"
-            alt="KWCA Logo"
-            className="h-16 w-auto object-contain"
+            src="/logo-white.png"
+            alt="Kenya Wildlife Conservancies Foundation"
+            className="h-11 w-auto object-contain"
           />
+
+          <span className="hidden text-base font-extrabold text-white sm:block">
+            Conservancies Learning Hub
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
+          <Link
+            href="/#about"
+            className="text-sm font-bold text-white/80 transition hover:text-white"
+          >
+            About
+          </Link>
+
           <Link
             href="/courses"
-            className="font-bold text-gray-700 hover:text-[#007F73]"
+            className="text-sm font-bold text-white/80 transition hover:text-white"
           >
             Courses
           </Link>
 
           <Link
-            href="/verify-certificate"
-            className="font-bold text-gray-700 hover:text-[#007F73]"
+            href="/#why-platform"
+            className="text-sm font-bold text-white/80 transition hover:text-white"
           >
-            Verify Certificate
+            Resources
           </Link>
+
+          <span className="h-6 w-px bg-white/15" />
 
           <Link
             href="/profile"
-            className="font-bold text-gray-700 hover:text-[#007F73]"
+            className="flex items-center gap-2 text-sm font-bold text-white/80 transition hover:text-white"
           >
-            Profile
+            <User size={17} />
+            My Profile
           </Link>
 
           <Link
             href="/login"
-            className="rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+            className="rounded-full bg-[#632854] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#4F2043]"
           >
-            Learner Login
+            Enrol Now
           </Link>
         </nav>
       </div>

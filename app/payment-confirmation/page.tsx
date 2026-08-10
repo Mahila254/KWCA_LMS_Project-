@@ -42,19 +42,19 @@ export default async function PaymentConfirmationPage({
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#EDF5F3] py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
             >
               <ArrowLeft size={18} />
               Back to Pricing
             </Link>
 
             <div className="mt-8 max-w-4xl">
-              <p className="font-bold text-[#007F73]">Payment Confirmation</p>
+              <p className="font-bold text-[#1E1D59]">Payment Confirmation</p>
 
               <h1 className="mt-3 text-5xl font-bold">
                 Payment Record Created
@@ -83,7 +83,7 @@ export default async function PaymentConfirmationPage({
 
               <Link
                 href="/pricing"
-                className="mt-6 inline-flex rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 Back to Pricing
               </Link>
@@ -93,10 +93,10 @@ export default async function PaymentConfirmationPage({
               <div
                 className={`p-8 text-white ${
                   payment.status === "PAID"
-                    ? "bg-[#007F73]"
+                    ? "bg-[#1E1D59]"
                     : payment.status === "FAILED"
                     ? "bg-red-700"
-                    : "bg-[#07122E]"
+                    : "bg-[#1E1D59]"
                 }`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-6">
@@ -179,9 +179,9 @@ export default async function PaymentConfirmationPage({
               </div>
 
               <div className="border-t p-8">
-                <div className="rounded-2xl bg-orange-50 p-6">
+                <div className="rounded-2xl bg-[#FBEFF4] p-6">
                   <div className="flex gap-3">
-                    <Smartphone className="mt-1 text-[#D94A00]" size={24} />
+                    <Smartphone className="mt-1 text-[#632854]" size={24} />
 
                     <div>
                       <h3 className="text-xl font-bold">
@@ -221,7 +221,7 @@ export default async function PaymentConfirmationPage({
 
                   <Link
                     href="/profile"
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#07122E] px-6 py-3 font-bold text-white hover:bg-[#101b3d]"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                   >
                     <CheckCircle size={18} />
                     View Profile

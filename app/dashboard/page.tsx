@@ -11,10 +11,10 @@ export default function DashboardPage() {
 
         {/* Hero */}
 
-        <section className="bg-[#edf6f3] py-16">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
 
-            <p className="font-semibold text-[#007F73]">
+            <p className="font-semibold text-[#1E1D59]">
               Learner Dashboard
             </p>
 
@@ -42,7 +42,7 @@ export default function DashboardPage() {
 
               <div className="flex items-center gap-4">
 
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#007F73] text-2xl font-bold text-white">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#1E1D59] text-2xl font-bold text-white">
                   T
                 </div>
 
@@ -132,7 +132,7 @@ export default function DashboardPage() {
 
             <div className="rounded-3xl bg-white p-8 shadow-sm">
 
-              <p className="font-bold text-[#007F73]">
+              <p className="font-bold text-[#1E1D59]">
                 Module 1
               </p>
 
@@ -141,7 +141,7 @@ export default function DashboardPage() {
               </h3>
 
               <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-full rounded-full bg-[#007F73]"></div>
+                <div className="h-3 w-full rounded-full bg-[#1E1D59]"></div>
               </div>
 
               <p className="mt-4 text-gray-500">
@@ -155,7 +155,7 @@ export default function DashboardPage() {
 
             <div className="rounded-3xl bg-white p-8 shadow-sm">
 
-              <p className="font-bold text-[#007F73]">
+              <p className="font-bold text-[#1E1D59]">
                 Module 2
               </p>
 
@@ -164,7 +164,7 @@ export default function DashboardPage() {
               </h3>
 
               <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[25%] rounded-full bg-[#007F73]"></div>
+                <div className="h-3 w-[25%] rounded-full bg-[#1E1D59]"></div>
               </div>
 
               <p className="mt-4 text-gray-500">
@@ -178,7 +178,7 @@ export default function DashboardPage() {
 
             <div className="rounded-3xl bg-white p-8 shadow-sm">
 
-              <p className="font-bold text-[#007F73]">
+              <p className="font-bold text-[#1E1D59]">
                 Module 3
               </p>
 
@@ -187,7 +187,7 @@ export default function DashboardPage() {
               </h3>
 
               <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[10%] rounded-full bg-[#007F73]"></div>
+                <div className="h-3 w-[10%] rounded-full bg-[#1E1D59]"></div>
               </div>
 
               <p className="mt-4 text-gray-500">

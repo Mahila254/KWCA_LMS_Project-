@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import {
   Award,
   Download,
@@ -32,14 +33,6 @@ type User = {
 type Certificate = {
   certificateCode: string;
   issuedAt: string;
-};
-
-type SupabaseLearner = {
-  id: string;
-  email?: string;
-  user_metadata?: {
-    full_name?: string;
-  };
 };
 
 export default function CertificatePage() {
@@ -69,21 +62,8 @@ export default function CertificatePage() {
         return;
       }
 
-      const learner = supabaseUser as SupabaseLearner;
-
-      const learnerName =
-        learner.user_metadata?.full_name || learner.email || "Learner";
-
-      if (!learner.email) {
-        alert("Your account email could not be found. Please login again.");
-        router.push("/login");
-        return;
-      }
-
-      const checkResponse = await fetch(
-        `/api/courses/${courseSlug}/certificate?email=${encodeURIComponent(
-          learner.email
-        )}`
+      const checkResponse = await authFetch(
+        `/api/courses/${courseSlug}/certificate`
       );
 
       const checkData = await checkResponse.json();
@@ -97,22 +77,23 @@ export default function CertificatePage() {
 
       setIssuing(true);
 
-      const issueResponse = await fetch(
+      const issueResponse = await authFetch(
         `/api/courses/${courseSlug}/certificate`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: learner.id,
-            email: learner.email,
-            name: learnerName,
-          }),
         }
       );
 
       const issueData = await issueResponse.json();
+
+      if (issueResponse.status === 403) {
+        alert(
+          issueData.error ||
+            "You need to pass the final quiz before a certificate can be issued."
+        );
+        router.push(`/courses/${courseSlug}/quiz/final`);
+        return;
+      }
 
       if (!issueResponse.ok) {
         alert(
@@ -166,9 +147,9 @@ export default function CertificatePage() {
           <Navbar />
         </div>
 
-        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#1E1D59]">
           <div className="mx-auto max-w-2xl rounded-3xl bg-white p-10 shadow-sm">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
               <Loader2 className="animate-spin" size={32} />
             </div>
 
@@ -347,7 +328,7 @@ export default function CertificatePage() {
         <Navbar />
       </div>
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E] print:min-h-0 print:bg-white">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59] print:min-h-0 print:bg-white">
         <section className="certificate-page-hero relative overflow-hidden px-6 py-14 print:hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -358,22 +339,22 @@ export default function CertificatePage() {
 
           <div className="absolute inset-0 bg-white/72" />
 
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F2FBF8]/90 via-white/85 to-gray-50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/90 via-white/85 to-gray-50" />
 
-          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#007F73]/20 blur-3xl" />
-          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#D94A00]/20 blur-3xl" />
+          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#1E1D59]/20 blur-3xl" />
+          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#632854]/20 blur-3xl" />
 
           <div className="relative mx-auto max-w-6xl">
             <Link
               href={`/courses/${courseSlug}`}
-              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
             >
               <ArrowLeft size={18} />
               Back to Course
             </Link>
 
             <div className="mt-8 max-w-4xl">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#007F73] shadow-sm">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
                 <Award size={16} />
                 KWCA LMS Certificate
               </span>
@@ -421,7 +402,7 @@ export default function CertificatePage() {
               <button
                 type="button"
                 onClick={handlePrintCertificate}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 <Download size={18} />
                 Download PDF
@@ -432,20 +413,20 @@ export default function CertificatePage() {
 
         <section className="certificate-print-area mx-auto max-w-6xl px-6 pb-12 print:px-0 print:py-0">
           <div className="rounded-3xl bg-white p-6 shadow-sm print:rounded-none print:p-0 print:shadow-none">
-            <div className="certificate-print-box relative overflow-hidden rounded-[2rem] border-[10px] border-[#007F73] bg-white p-8 print:rounded-none">
-              <div className="absolute left-0 top-0 h-40 w-40 rounded-br-full bg-[#F2FBF8]" />
-              <div className="absolute bottom-0 right-0 h-40 w-40 rounded-tl-full bg-orange-50" />
+            <div className="certificate-print-box relative overflow-hidden rounded-[2rem] border-[10px] border-[#1E1D59] bg-white p-8 print:rounded-none">
+              <div className="absolute left-0 top-0 h-40 w-40 rounded-br-full bg-[#F1F0FA]" />
+              <div className="absolute bottom-0 right-0 h-40 w-40 rounded-tl-full bg-[#FBEFF4]" />
 
-              <div className="certificate-inner-box relative border-2 border-[#D94A00] px-8 py-14 text-center">
-                <div className="certificate-icon mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+              <div className="certificate-inner-box relative border-2 border-[#632854] px-8 py-14 text-center">
+                <div className="certificate-icon mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                   <Award size={52} />
                 </div>
 
-                <p className="certificate-kicker tracking-[0.45em] text-sm font-extrabold text-[#8B2F00]">
+                <p className="certificate-kicker tracking-[0.45em] text-sm font-extrabold text-[#4F2043]">
                   KWCA LEARNING HUB
                 </p>
 
-                <h2 className="certificate-title mt-8 text-5xl font-extrabold text-[#07122E]">
+                <h2 className="certificate-title mt-8 text-5xl font-extrabold text-[#1E1D59]">
                   Certificate of Completion
                 </h2>
 
@@ -453,7 +434,7 @@ export default function CertificatePage() {
                   This certificate is proudly presented to
                 </p>
 
-                <h3 className="certificate-name mx-auto mt-6 max-w-4xl border-b-2 border-[#007F73]/20 pb-4 text-5xl font-extrabold text-[#007F73]">
+                <h3 className="certificate-name mx-auto mt-6 max-w-4xl border-b-2 border-[#1E1D59]/20 pb-4 text-5xl font-extrabold text-[#1E1D59]">
                   {learnerName}
                 </h3>
 
@@ -461,11 +442,11 @@ export default function CertificatePage() {
                   For successfully completing the course
                 </p>
 
-                <h4 className="certificate-course-title mx-auto mt-4 max-w-4xl text-3xl font-extrabold text-[#07122E]">
+                <h4 className="certificate-course-title mx-auto mt-4 max-w-4xl text-3xl font-extrabold text-[#1E1D59]">
                   {course?.title || "Course Title"}
                 </h4>
 
-                <div className="certificate-status mx-auto mt-8 flex max-w-xl items-center justify-center gap-3 rounded-2xl bg-[#F2FBF8] px-6 py-4 text-[#007F73]">
+                <div className="certificate-status mx-auto mt-8 flex max-w-xl items-center justify-center gap-3 rounded-2xl bg-[#F1F0FA] px-6 py-4 text-[#1E1D59]">
                   <CheckCircle size={24} />
 
                   <p className="font-bold">
@@ -568,7 +549,7 @@ function InfoCard({
 }) {
   return (
     <div className="rounded-3xl bg-white p-6 shadow-sm">
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#F2FBF8] text-[#007F73]">
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#F1F0FA] text-[#1E1D59]">
         {icon}
       </div>
 

@@ -81,14 +81,14 @@ export default async function AdminCoursesPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#EDF5F3] py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <div className="flex flex-wrap items-start justify-between gap-6">
               <div>
                 <Link
                   href="/admin"
-                  className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+                  className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
                 >
                   <ArrowLeft size={18} />
                   Back to Admin Dashboard
@@ -105,7 +105,7 @@ export default async function AdminCoursesPage() {
 
               <Link
                 href="/admin/courses/create"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 <Plus size={18} />
                 Add New Course
@@ -126,7 +126,7 @@ export default async function AdminCoursesPage() {
 
             {courses.length === 0 ? (
               <div className="p-10 text-center">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                   <BookOpen size={34} />
                 </div>
 
@@ -138,7 +138,7 @@ export default async function AdminCoursesPage() {
 
                 <Link
                   href="/admin/courses/create"
-                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                 >
                   <Plus size={18} />
                   Add New Course
@@ -152,7 +152,7 @@ export default async function AdminCoursesPage() {
                     className="grid gap-6 border-b p-6 last:border-b-0 lg:grid-cols-[280px_190px_190px_1fr]"
                   >
                     <div className="flex gap-4">
-                      <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+                      <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
                         {course.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -205,7 +205,7 @@ export default async function AdminCoursesPage() {
                         className={`mt-2 inline-flex rounded-full px-3 py-1 text-sm font-bold ${
                           course.status === "PUBLISHED"
                             ? "bg-green-100 text-green-700"
-                            : "bg-orange-100 text-[#D94A00]"
+                            : "bg-[#F5DCE6] text-[#632854]"
                         }`}
                       >
                         {course.status === "PUBLISHED"
@@ -237,7 +237,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/lessons`}
-                        className="inline-flex items-center gap-2 rounded-xl border border-[#007F73] px-5 py-3 font-bold text-[#007F73] hover:bg-[#F2FBF8]"
+                        className="inline-flex items-center gap-2 rounded-xl border border-[#1E1D59] px-5 py-3 font-bold text-[#1E1D59] hover:bg-[#F1F0FA]"
                       >
                         <ListChecks size={17} />
                         Lessons
@@ -245,7 +245,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/quiz-questions`}
-                        className="inline-flex items-center gap-2 rounded-xl border border-[#D94A00] px-5 py-3 font-bold text-[#D94A00] hover:bg-orange-50"
+                        className="inline-flex items-center gap-2 rounded-xl border border-[#632854] px-5 py-3 font-bold text-[#632854] hover:bg-[#FBEFF4]"
                       >
                         <HelpCircle size={17} />
                         Quiz
@@ -253,7 +253,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/edit`}
-                        className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                       >
                         <Pencil size={17} />
                         Edit

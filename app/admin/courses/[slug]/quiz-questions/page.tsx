@@ -236,7 +236,7 @@ export default function AdminQuizQuestionsPage() {
       <>
         <AdminNavbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#1E1D59]">
           <h1 className="text-3xl font-bold">Loading quiz questions...</h1>
         </main>
 
@@ -249,19 +249,19 @@ export default function AdminQuizQuestionsPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#EDF5F3] py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin/courses"
-              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
             >
               <ArrowLeft size={18} />
               Back to Course Management
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#007F73]">Quiz Management</p>
+              <p className="font-bold text-[#1E1D59]">Quiz Management</p>
 
               <h1 className="mt-3 text-5xl font-bold">
                 {course?.title || "Course Quiz"}
@@ -280,7 +280,7 @@ export default function AdminQuizQuestionsPage() {
             <div className="grid gap-6 md:grid-cols-2">
               <div className="rounded-3xl bg-white p-6 shadow-sm">
                 <div className="mb-4 flex items-center gap-3">
-                  <HelpCircle className="text-[#007F73]" size={28} />
+                  <HelpCircle className="text-[#1E1D59]" size={28} />
                   <p className="text-sm font-bold text-gray-500">
                     Practice Questions
                   </p>
@@ -293,7 +293,7 @@ export default function AdminQuizQuestionsPage() {
 
               <div className="rounded-3xl bg-white p-6 shadow-sm">
                 <div className="mb-4 flex items-center gap-3">
-                  <ClipboardList className="text-[#D94A00]" size={28} />
+                  <ClipboardList className="text-[#632854]" size={28} />
                   <p className="text-sm font-bold text-gray-500">
                     Final Quiz Questions
                   </p>
@@ -314,7 +314,7 @@ export default function AdminQuizQuestionsPage() {
 
               {quizQuestions.length === 0 ? (
                 <div className="p-10 text-center">
-                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                     <HelpCircle size={32} />
                   </div>
 
@@ -332,7 +332,7 @@ export default function AdminQuizQuestionsPage() {
                       key={item.id}
                       className="grid gap-6 px-6 py-6 md:grid-cols-[70px_1fr]"
                     >
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-xl font-bold text-[#007F73]">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-xl font-bold text-[#1E1D59]">
                         {item.order}
                       </div>
 
@@ -342,7 +342,7 @@ export default function AdminQuizQuestionsPage() {
                             className={`rounded-full px-3 py-1 text-xs font-bold ${
                               item.quizType === "PRACTICE"
                                 ? "bg-green-100 text-green-700"
-                                : "bg-orange-100 text-[#D94A00]"
+                                : "bg-[#F5DCE6] text-[#632854]"
                             }`}
                           >
                             {item.quizType === "PRACTICE"
@@ -374,7 +374,7 @@ export default function AdminQuizQuestionsPage() {
                         </div>
 
                         {item.explanation && (
-                          <p className="mt-4 rounded-xl bg-[#F2FBF8] p-4 text-sm leading-6 text-gray-700">
+                          <p className="mt-4 rounded-xl bg-[#F1F0FA] p-4 text-sm leading-6 text-gray-700">
                             <strong>Explanation:</strong> {item.explanation}
                           </p>
                         )}
@@ -383,7 +383,7 @@ export default function AdminQuizQuestionsPage() {
                           <button
                             type="button"
                             onClick={() => handleEditQuestion(item)}
-                            className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-4 py-3 font-bold text-white hover:bg-[#00665d]"
+                            className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-4 py-3 font-bold text-white hover:bg-[#14123D]"
                           >
                             <Pencil size={17} />
                             Edit
@@ -418,7 +418,7 @@ export default function AdminQuizQuestionsPage() {
             </p>
 
             {editingQuestionId && (
-              <div className="mt-5 rounded-2xl bg-orange-50 p-4 text-sm font-semibold text-[#D94A00]">
+              <div className="mt-5 rounded-2xl bg-[#FBEFF4] p-4 text-sm font-semibold text-[#632854]">
                 You are currently editing a saved quiz question.
               </div>
             )}
@@ -534,7 +534,7 @@ export default function AdminQuizQuestionsPage() {
                 type="button"
                 onClick={handleSaveQuestion}
                 disabled={saving}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {editingQuestionId ? <Save size={18} /> : <Plus size={18} />}
                 {saving

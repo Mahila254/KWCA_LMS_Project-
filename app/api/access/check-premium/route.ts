@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/requireUser";
 
 export const dynamic = "force-dynamic";
 
@@ -13,19 +15,17 @@ type PaymentRecord = {
   status: "PENDING" | "PAID" | "FAILED";
 };
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
 
-    const email = body.email as string | undefined;
     const courseId = body.courseId as string | undefined;
-
-    if (!email) {
-      return NextResponse.json(
-        { error: "Learner email is required." },
-        { status: 400 }
-      );
-    }
 
     if (!courseId) {
       return NextResponse.json(
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.findUnique({
       where: {
-        email,
+        email: verifiedUser.email,
       },
       include: {
         payments: {

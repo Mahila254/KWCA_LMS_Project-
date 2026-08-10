@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/requireUser";
 
 export const dynamic = "force-dynamic";
 
@@ -10,9 +12,6 @@ type RouteProps = {
 };
 
 type ProgressRequestBody = {
-  id?: string;
-  email?: string;
-  name?: string;
   lessonSlug?: string;
 };
 
@@ -48,26 +47,18 @@ type CourseWithLessons = {
   lessons: LessonRecord[];
 };
 
-export async function POST(request: Request, { params }: RouteProps) {
+export async function POST(request: NextRequest, { params }: RouteProps) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
     const body = (await request.json()) as ProgressRequestBody;
 
-    const { id, email, name, lessonSlug } = body;
-
-    if (!id) {
-      return NextResponse.json(
-        { error: "Learner ID is required." },
-        { status: 400 }
-      );
-    }
-
-    if (!email) {
-      return NextResponse.json(
-        { error: "Learner email is required." },
-        { status: 400 }
-      );
-    }
+    const { lessonSlug } = body;
 
     if (!lessonSlug) {
       return NextResponse.json(
@@ -98,15 +89,15 @@ export async function POST(request: Request, { params }: RouteProps) {
 
     const user = await prisma.user.upsert({
       where: {
-        email,
+        email: verifiedUser.email,
       },
       update: {
-        name: name || null,
+        name: verifiedUser.name || undefined,
       },
       create: {
-        id,
-        email,
-        name: name || null,
+        id: verifiedUser.id,
+        email: verifiedUser.email,
+        name: verifiedUser.name,
         role: "STUDENT",
       },
     });

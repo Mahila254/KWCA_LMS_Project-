@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/requireUser";
 
 type RouteProps = {
   params: Promise<{
@@ -7,30 +9,37 @@ type RouteProps = {
   }>;
 };
 
-export async function POST(request: Request, { params }: RouteProps) {
+const PASS_THRESHOLD = 70;
+
+type SubmittedAnswer = {
+  questionId?: string;
+  selectedAnswer?: string | null;
+};
+
+// Grades the quiz server-side instead of trusting a client-reported
+// score/passed value. The browser only ever sends which option it picked
+// per question; the correct answers never leave the server for a FINAL
+// quiz (see quiz-questions/route.ts), and the score/pass result computed
+// here is the one that gets saved and that gates certificate issuance.
+export async function POST(request: NextRequest, { params }: RouteProps) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
     const body = await request.json();
 
-    const { id, email, name, quizType, score, passed } = body;
+    const quizType = body?.quizType === "PRACTICE" ? "PRACTICE" : "FINAL";
+    const submittedAnswers = Array.isArray(body?.answers)
+      ? (body.answers as SubmittedAnswer[])
+      : null;
 
-    if (!id) {
+    if (!submittedAnswers || submittedAnswers.length === 0) {
       return NextResponse.json(
-        { error: "Learner ID is required." },
-        { status: 400 }
-      );
-    }
-
-    if (!email) {
-      return NextResponse.json(
-        { error: "Learner email is required." },
-        { status: 400 }
-      );
-    }
-
-    if (typeof score !== "number") {
-      return NextResponse.json(
-        { error: "Quiz score is required." },
+        { error: "Quiz answers are required." },
         { status: 400 }
       );
     }
@@ -48,17 +57,63 @@ export async function POST(request: Request, { params }: RouteProps) {
       );
     }
 
+    const questions = await prisma.quizQuestion.findMany({
+      where: {
+        courseId: course.id,
+        quizType,
+      },
+      orderBy: {
+        order: "asc",
+      },
+    });
+
+    if (questions.length === 0) {
+      return NextResponse.json(
+        { error: "This course has no quiz questions to grade against." },
+        { status: 400 }
+      );
+    }
+
+    const answerByQuestionId = new Map(
+      submittedAnswers
+        .filter((answer) => typeof answer?.questionId === "string")
+        .map((answer) => [answer.questionId as string, answer.selectedAnswer ?? null])
+    );
+
+    let correctCount = 0;
+
+    const results = questions.map((question) => {
+      const selectedAnswer = answerByQuestionId.get(question.id) ?? null;
+      const isCorrect = selectedAnswer === question.correctAnswer;
+
+      if (isCorrect) {
+        correctCount += 1;
+      }
+
+      return {
+        questionId: question.id,
+        question: question.question,
+        selectedAnswer,
+        correctAnswer: question.correctAnswer,
+        explanation: question.explanation,
+        isCorrect,
+      };
+    });
+
+    const percentage = Math.round((correctCount / questions.length) * 100);
+    const passed = percentage >= PASS_THRESHOLD;
+
     const user = await prisma.user.upsert({
       where: {
-        email,
+        email: verifiedUser.email,
       },
       update: {
-        name: name || null,
+        name: verifiedUser.name || undefined,
       },
       create: {
-        id,
-        email,
-        name: name || null,
+        id: verifiedUser.id,
+        email: verifiedUser.email,
+        name: verifiedUser.name,
         role: "STUDENT",
       },
     });
@@ -67,9 +122,9 @@ export async function POST(request: Request, { params }: RouteProps) {
       data: {
         userId: user.id,
         courseId: course.id,
-        quizType: quizType || "FINAL",
-        score,
-        passed: Boolean(passed),
+        quizType,
+        score: percentage,
+        passed,
       },
     });
 
@@ -79,6 +134,11 @@ export async function POST(request: Request, { params }: RouteProps) {
         course,
         user,
         quizResult,
+        score: percentage,
+        passed,
+        correctCount,
+        totalQuestions: questions.length,
+        results,
       },
       { status: 201 }
     );

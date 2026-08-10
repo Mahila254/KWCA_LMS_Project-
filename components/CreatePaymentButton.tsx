@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import { CreditCard } from "lucide-react";
 
 type PaymentType =
@@ -15,14 +16,6 @@ type CreatePaymentButtonProps = {
   amount: number;
   label: string;
   courseId?: string | null;
-};
-
-type SupabaseLearner = {
-  id: string;
-  email?: string;
-  user_metadata?: {
-    full_name?: string;
-  };
 };
 
 export default function CreatePaymentButton({
@@ -49,26 +42,9 @@ export default function CreatePaymentButton({
         return;
       }
 
-      const learner = user as SupabaseLearner;
-
-      if (!learner.email) {
-        alert("Your account email could not be found. Please login again.");
-        router.push("/login");
-        return;
-      }
-
-      const learnerName =
-        learner.user_metadata?.full_name || learner.email || "Learner";
-
-      const response = await fetch("/api/payments/create", {
+      const response = await authFetch("/api/payments/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
-          id: learner.id,
-          email: learner.email,
-          name: learnerName,
           paymentType,
           amount,
           courseId,
@@ -97,7 +73,7 @@ export default function CreatePaymentButton({
       type="button"
       onClick={handleCreatePayment}
       disabled={creatingPayment}
-      className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#007F73] px-6 py-4 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+      className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-4 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <CreditCard size={18} />
       {creatingPayment ? "Creating Payment..." : label}

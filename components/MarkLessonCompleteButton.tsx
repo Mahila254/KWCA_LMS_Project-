@@ -3,19 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import { CheckCircle } from "lucide-react";
 
 type MarkLessonCompleteButtonProps = {
   courseSlug: string;
   lessonSlug: string;
-};
-
-type SupabaseLearner = {
-  id: string;
-  email?: string;
-  user_metadata?: {
-    full_name?: string;
-  };
 };
 
 export default function MarkLessonCompleteButton({
@@ -40,26 +33,9 @@ export default function MarkLessonCompleteButton({
         return;
       }
 
-      const learner = user as SupabaseLearner;
-
-      if (!learner.email) {
-        alert("Your account email could not be found. Please login again.");
-        router.push("/login");
-        return;
-      }
-
-      const learnerName =
-        learner.user_metadata?.full_name || learner.email || "Learner";
-
-      const response = await fetch(`/api/courses/${courseSlug}/progress`, {
+      const response = await authFetch(`/api/courses/${courseSlug}/progress`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
-          id: learner.id,
-          email: learner.email,
-          name: learnerName,
           lessonSlug,
         }),
       });
@@ -86,7 +62,7 @@ export default function MarkLessonCompleteButton({
       type="button"
       onClick={handleMarkComplete}
       disabled={saving}
-      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <CheckCircle size={18} />
       {saving ? "Saving Progress..." : "Mark Lesson Complete"}

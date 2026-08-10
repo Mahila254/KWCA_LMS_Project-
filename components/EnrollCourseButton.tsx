@@ -3,18 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import { BookOpenCheck } from "lucide-react";
 
 type EnrollCourseButtonProps = {
   courseSlug: string;
-};
-
-type SupabaseLearner = {
-  id: string;
-  email?: string;
-  user_metadata?: {
-    full_name?: string;
-  };
 };
 
 export default function EnrollCourseButton({
@@ -38,27 +31,8 @@ export default function EnrollCourseButton({
         return;
       }
 
-      const learner = user as SupabaseLearner;
-
-      if (!learner.email) {
-        alert("Your account email could not be found. Please login again.");
-        router.push("/login");
-        return;
-      }
-
-      const learnerName =
-        learner.user_metadata?.full_name || learner.email || "Learner";
-
-      const response = await fetch(`/api/courses/${courseSlug}/enroll`, {
+      const response = await authFetch(`/api/courses/${courseSlug}/enroll`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: learner.id,
-          email: learner.email,
-          name: learnerName,
-        }),
       });
 
       const data = await response.json();
@@ -84,7 +58,7 @@ export default function EnrollCourseButton({
       type="button"
       onClick={handleEnroll}
       disabled={enrolling}
-      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <BookOpenCheck size={18} />
       {enrolling ? "Enrolling..." : "Enroll in Course"}

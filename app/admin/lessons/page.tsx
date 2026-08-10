@@ -28,9 +28,9 @@ export default function LessonsAdminPage() {
       <Navbar />
 
       <main className="min-h-screen bg-gray-50">
-        <section className="bg-[#EDF5F3] py-16">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-6xl px-6">
-            <h1 className="text-6xl font-bold text-[#07122E]">
+            <h1 className="text-6xl font-bold text-[#1E1D59]">
               Lesson Management
             </h1>
 
@@ -46,7 +46,7 @@ export default function LessonsAdminPage() {
 
             <a
               href="/admin/lessons/create"
-              className="rounded-xl bg-[#007F73] px-8 py-4 font-bold text-white hover:opacity-90"
+              className="rounded-xl bg-[#1E1D59] px-8 py-4 font-bold text-white hover:opacity-90"
             >
               + Add Lesson
             </a>

@@ -11,6 +11,12 @@ enum UserRole {
   STUDENT
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  PREFER_NOT_TO_SAY
+}
+
 enum CourseStatus {
   DRAFT
   PUBLISHED
@@ -48,6 +54,7 @@ model User {
   id            String        @id @default(cuid())
   name          String?
   email         String        @unique
+  gender        Gender?
   role          UserRole      @default(STUDENT)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt

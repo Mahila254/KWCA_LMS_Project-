@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { authFetch } from "@/lib/authFetch";
 import { CheckCircle, RefreshCw } from "lucide-react";
 
 type CheckPaymentStatusButtonProps = {
@@ -20,7 +21,7 @@ export default function CheckPaymentStatusButton({
     try {
       setChecking(true);
 
-      const response = await fetch(`/api/payments/status?paymentId=${paymentId}`);
+      const response = await authFetch(`/api/payments/status?paymentId=${paymentId}`);
 
       const data = await response.json();
 
@@ -59,7 +60,7 @@ export default function CheckPaymentStatusButton({
       type="button"
       onClick={handleCheckStatus}
       disabled={checking}
-      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {checking ? <RefreshCw className="animate-spin" size={18} /> : <CheckCircle size={18} />}
       {checking ? "Checking Payment..." : "Check Payment Status & Continue"}

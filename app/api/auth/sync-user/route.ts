@@ -1,37 +1,41 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/requireUser";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
-    const body = await request.json();
+    const body = await request.json().catch(() => ({}));
 
-    const { id, email, name } = body;
+    const allowedGenders = ["MALE", "FEMALE", "PREFER_NOT_TO_SAY"];
+    const requestedGender = body?.gender;
+    const normalizedGender = allowedGenders.includes(requestedGender)
+      ? requestedGender
+      : verifiedUser.gender && allowedGenders.includes(verifiedUser.gender)
+      ? verifiedUser.gender
+      : undefined;
 
-    if (!id) {
-      return NextResponse.json(
-        { error: "User ID is required." },
-        { status: 400 }
-      );
-    }
-
-    if (!email) {
-      return NextResponse.json(
-        { error: "User email is required." },
-        { status: 400 }
-      );
-    }
+    const name = verifiedUser.name || body?.name || null;
 
     const user = await prisma.user.upsert({
       where: {
-        email,
+        email: verifiedUser.email,
       },
       update: {
-        name: name || null,
+        name,
+        ...(normalizedGender ? { gender: normalizedGender } : {}),
       },
       create: {
-        id,
-        email,
-        name: name || null,
+        id: verifiedUser.id,
+        email: verifiedUser.email,
+        name,
+        gender: normalizedGender ?? null,
         role: "STUDENT",
       },
     });

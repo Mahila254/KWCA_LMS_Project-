@@ -36,7 +36,7 @@ export default function AdminLogoutButton() {
       type="button"
       onClick={handleLogout}
       disabled={loggingOut}
-      className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 font-bold text-[#07122E] hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 font-bold text-[#1E1D59] hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-60"
     >
       <LogOut size={18} />
       {loggingOut ? "Logging Out..." : "Logout"}

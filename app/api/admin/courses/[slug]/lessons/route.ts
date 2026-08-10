@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/adminAuth";
 
 function createSlug(title: string) {
   return title
@@ -15,7 +17,13 @@ type RouteProps = {
   }>;
 };
 
-export async function POST(request: Request, { params }: RouteProps) {
+export async function POST(request: NextRequest, { params }: RouteProps) {
+  const admin = await requireAdmin(request);
+
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
     const body = await request.json();

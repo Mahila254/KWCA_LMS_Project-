@@ -46,14 +46,14 @@ export default function ProgressButton({
   return (
     <div className="mt-6">
       <div className="mb-4">
-        <div className="flex justify-between text-sm font-bold text-[#101828] mb-2">
+        <div className="flex justify-between text-sm font-bold text-[#1E1D59] mb-2">
           <span>Course Progress</span>
           <span>{progressPercent}%</span>
         </div>
 
         <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#007F73] rounded-full transition-all"
+            className="h-full bg-[#1E1D59] rounded-full transition-all"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -64,7 +64,7 @@ export default function ProgressButton({
         className={`w-full py-3 rounded-xl font-bold transition ${
           isCompleted
             ? "bg-green-600 text-white"
-            : "bg-[#8B2F0B] text-white"
+            : "bg-[#4F2043] text-white"
         }`}
       >
         {isCompleted ? "Completed ✓" : "Mark Complete"}

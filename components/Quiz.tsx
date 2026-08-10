@@ -31,7 +31,7 @@ export default function Quiz({ questions }: { questions: QuizQuestion[] }) {
 
   return (
     <div className="border rounded-3xl p-8">
-      <h2 className="text-2xl font-bold mb-6 text-[#101828]">
+      <h2 className="text-2xl font-bold mb-6 text-[#1E1D59]">
         Lesson Quiz
       </h2>
 
@@ -42,7 +42,7 @@ export default function Quiz({ questions }: { questions: QuizQuestion[] }) {
 
           return (
             <div key={quiz.question} className="border-b pb-6">
-              <h3 className="font-bold mb-4 text-[#101828]">
+              <h3 className="font-bold mb-4 text-[#1E1D59]">
                 {index + 1}. {quiz.question}
               </h3>
 
@@ -109,13 +109,13 @@ export default function Quiz({ questions }: { questions: QuizQuestion[] }) {
       {!submitted ? (
         <button
           onClick={handleSubmit}
-          className="mt-6 bg-[#007F73] text-white px-6 py-3 rounded-xl font-bold"
+          className="mt-6 bg-[#1E1D59] text-white px-6 py-3 rounded-xl font-bold"
         >
           Submit Quiz
         </button>
       ) : (
-        <div className="mt-6 rounded-xl bg-[#F2FBF8] p-5">
-          <p className="font-bold text-[#101828]">
+        <div className="mt-6 rounded-xl bg-[#F1F0FA] p-5">
+          <p className="font-bold text-[#1E1D59]">
             Your Score: {score} / {questions.length}
           </p>
         </div>

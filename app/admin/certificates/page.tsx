@@ -64,19 +64,19 @@ export default async function AdminCertificatesPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#EDF5F3] py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
             >
               <ArrowLeft size={18} />
               Back to Admin Dashboard
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#007F73]">Certificates</p>
+              <p className="font-bold text-[#1E1D59]">Certificates</p>
 
               <h1 className="mt-3 text-5xl font-bold">Issued Certificates</h1>
 
@@ -92,7 +92,7 @@ export default async function AdminCertificatesPage() {
           <div className="mb-8 grid gap-6 md:grid-cols-3">
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <Award className="text-[#007F73]" size={28} />
+                <Award className="text-[#1E1D59]" size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Total Certificates
                 </p>
@@ -103,7 +103,7 @@ export default async function AdminCertificatesPage() {
 
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <BookOpen className="text-[#D94A00]" size={28} />
+                <BookOpen className="text-[#632854]" size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Courses Certified
                 </p>
@@ -114,7 +114,7 @@ export default async function AdminCertificatesPage() {
 
             <div className="rounded-3xl bg-white p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <Mail className="text-[#007F73]" size={28} />
+                <Mail className="text-[#1E1D59]" size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Learners Certified
                 </p>
@@ -126,7 +126,7 @@ export default async function AdminCertificatesPage() {
 
           {certificates.length === 0 ? (
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                 <Award size={32} />
               </div>
 
@@ -198,7 +198,7 @@ export default async function AdminCertificatesPage() {
                           Certificate ID
                         </p>
 
-                        <p className="mt-1 font-bold text-[#007F73]">
+                        <p className="mt-1 font-bold text-[#1E1D59]">
                           {certificate.certificateCode}
                         </p>
 
@@ -211,7 +211,7 @@ export default async function AdminCertificatesPage() {
                       <div className="flex items-start">
                         <Link
                           href={`/courses/${certificate.course.slug}/certificate`}
-                          className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+                          className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                         >
                           <Eye size={17} />
                           View

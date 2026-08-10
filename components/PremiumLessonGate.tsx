@@ -3,16 +3,13 @@
 import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import { CheckCircle, Loader2, Lock } from "lucide-react";
 
 type PremiumLessonGateProps = {
   courseId: string;
   courseSlug: string;
   children: ReactNode;
-};
-
-type SupabaseLearner = {
-  email?: string;
 };
 
 export default function PremiumLessonGate({
@@ -36,20 +33,9 @@ export default function PremiumLessonGate({
           return;
         }
 
-        const learner = user as SupabaseLearner;
-
-        if (!learner.email) {
-          setHasAccess(false);
-          return;
-        }
-
-        const response = await fetch("/api/access/check-premium", {
+        const response = await authFetch("/api/access/check-premium", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({
-            email: learner.email,
             courseId,
           }),
         });
@@ -77,11 +63,11 @@ export default function PremiumLessonGate({
     return (
       <main className="min-h-screen bg-gray-50 px-6 py-24">
         <section className="mx-auto max-w-3xl rounded-3xl bg-white p-10 text-center shadow-sm">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
             <Loader2 className="animate-spin" size={34} />
           </div>
 
-          <h1 className="text-4xl font-bold text-[#07122E]">
+          <h1 className="text-4xl font-bold text-[#1E1D59]">
             Checking Premium Access
           </h1>
 
@@ -97,11 +83,11 @@ export default function PremiumLessonGate({
     return (
       <main className="min-h-screen bg-gray-50 px-6 py-24">
         <section className="mx-auto max-w-3xl rounded-3xl bg-white p-10 text-center shadow-sm">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-[#D94A00]">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5DCE6] text-[#632854]">
             <Lock size={32} />
           </div>
 
-          <h1 className="text-4xl font-bold text-[#07122E]">
+          <h1 className="text-4xl font-bold text-[#1E1D59]">
             Premium Lesson Locked
           </h1>
 
@@ -113,7 +99,7 @@ export default function PremiumLessonGate({
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               href={`/pricing?courseId=${courseId}&courseSlug=${courseSlug}`}
-              className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+              className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
             >
               Unlock Course
             </Link>

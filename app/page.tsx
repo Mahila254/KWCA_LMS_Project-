@@ -1,447 +1,432 @@
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
+import { modules } from "@/data/modules";
 import {
-  BookOpen,
-  Users,
-  ShieldCheck,
-  Leaf,
-  DollarSign,
-  FileText,
-  Award,
-  Video,
-  Download,
-  MessageCircle,
   ArrowRight,
-  UserRound,
+  Award,
+  Clock,
+  Download,
+  GraduationCap,
+  MessageCircle,
+  PlayCircle,
+  Target,
+  Users,
+  Video,
 } from "lucide-react";
 
-const modules = [
+const stats = [
+  { value: `${modules.length}+`, label: "Learning Modules" },
+  { value: "400+", label: "Conservancies in Kenya" },
+  { value: "1", label: "Movement" },
+];
+
+const aboutPoints = [
   {
-    title: "What is a conservancy?",
-    icon: BookOpen,
-    module: "Module 1",
-    href: "/courses/what-is-a-conservancy/lesson-1",
+    icon: Target,
+    title: "Our Mission",
+    text: "Empower conservancy leaders with the knowledge and tools to build sustainable, community centred conservation initiatives.",
+    tone: "pink",
   },
   {
-    title: "How to establish a strong Conservancy",
-    icon: FileText,
-    module: "Module 2",
-    href: "/courses",
-  },
-  {
-    title: "Managing a Conservancy effectively",
-    icon: ShieldCheck,
-    module: "Module 3",
-    href: "/courses",
-  },
-  {
-    title: "Creating sustainable revenue",
-    icon: DollarSign,
-    module: "Module 4",
-    href: "/courses",
-  },
-  {
-    title: "Holding a good Annual General Meeting",
     icon: Users,
-    module: "Module 5",
-    href: "/courses",
+    title: "Community First",
+    text: "Place women and youth at the centre of conservation leadership, creating lasting intergenerational impact in conservancy communities.",
+    tone: "lavender",
   },
   {
-    title: "Creating a credible Carbon Project",
-    icon: Leaf,
-    module: "Module 6",
-    href: "/courses",
-  },
-  {
-    title: "Writing a Conservancy Management Plan",
-    icon: FileText,
-    module: "Module 7",
-    href: "/courses",
-  },
-  {
-    title: "Women and youth in conservation",
-    icon: Users,
-    module: "Module 8",
-    href: "/courses",
-  },
-  {
-    title: "How to make your conservancy Greenlisted",
     icon: Award,
-    module: "Module 9",
-    href: "/courses",
+    title: "World-Class Standards",
+    text: "Meet international Greenlisting criteria and build credible carbon projects that position Kenya as a global conservation leader.",
+    tone: "lavender",
+  },
+];
+
+const platformFeatures = [
+  {
+    icon: GraduationCap,
+    title: "Expert-Led Content",
+    text: "Learn from experienced conservancy managers and wildlife conservation professionals.",
+    tone: "navy",
+  },
+  {
+    icon: Video,
+    title: "Interactive Learning",
+    text: "Video tutorials, case studies, and real-world examples from Kenya's conservancies.",
+    tone: "burgundy",
+  },
+  {
+    icon: Download,
+    title: "Downloadable Resources",
+    text: "Templates, guides, and tools ready to implement in your conservancy immediately.",
+    tone: "navy",
+  },
+  {
+    icon: MessageCircle,
+    title: "Community Network",
+    text: "Connect with fellow conservancy leaders and share experiences across Kenya.",
+    tone: "burgundy",
   },
 ];
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white text-[#101828]">
-      <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center">
-            <img
-              src="/logo.png"
-              alt="KWCA Logo"
-              className="h-16 w-auto object-contain"
-            />
-          </Link>
+    <>
+      <Navbar />
 
-          <div className="hidden items-center gap-8 font-medium text-gray-700 md:flex">
-            <a href="#about" className="hover:text-[#007F73]">
-              About Us
-            </a>
+      <main className="min-h-screen bg-white text-[#1E1D59]">
+        {/* HERO */}
+        <section className="relative overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/images/hero-background.jpg')" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1E1D59]/10 to-[#1E1D59]/55" />
 
-            <a href="#courses" className="hover:text-[#007F73]">
-              Courses
-            </a>
+          <ScrollReveal className="relative mx-auto max-w-5xl px-6 py-28 text-center">
+            <div className="mb-8">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white/90 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#F0A8C4]" />
+                KWCF Learning Platform
+              </span>
+            </div>
 
-            <Link href="/courses" className="hover:text-[#007F73]">
-              Dashboard
-            </Link>
-
-            <a href="#resources" className="hover:text-[#007F73]">
-              Resources
-            </a>
-
-            <Link
-              href="/courses"
-              className="rounded-xl bg-[#007F73] px-6 py-3 text-white transition hover:-translate-y-1 hover:bg-[#00665d]"
+            <h1
+              className="mb-6 text-5xl font-extrabold leading-[1.05] tracking-tight text-white md:text-7xl"
+              style={{ textShadow: "0 4px 28px rgba(0,0,0,0.55)" }}
             >
-              Get Started
-            </Link>
+              Conservancies
+              <br />
+              <span className="text-[#C9C4EE]">Learning Hub</span>
+            </h1>
 
-            <Link
-              href="/profile"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-[#101828] transition hover:-translate-y-1 hover:bg-gray-200"
+            <p
+              className="mx-auto mb-10 max-w-2xl text-lg leading-8 text-white/90 md:text-xl"
+              style={{ textShadow: "0 2px 16px rgba(0,0,0,0.55)" }}
             >
-              <UserRound size={22} />
-            </Link>
+              Empowering wildlife conservation leaders with expert led
+              training in conservancy management, governance, and
+              sustainable development.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/courses"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#632854] px-8 py-4 text-lg font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#4F2043]"
+              >
+                Start Learning
+                <ArrowRight size={20} />
+              </Link>
+
+              <Link
+                href="/#about"
+                className="inline-flex items-center gap-2 rounded-xl border border-white bg-black/10 px-8 py-4 text-lg font-bold text-white backdrop-blur-sm transition hover:bg-white/10"
+              >
+                <PlayCircle size={20} />
+                Watch Overview
+              </Link>
+            </div>
+          </ScrollReveal>
+        </section>
+
+        {/* STATS BAR */}
+        <section className="bg-gradient-to-r from-[#1E1D59] to-[#302A57]">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-white/10 px-6 py-10 text-center sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            {stats.map((stat) => (
+              <div key={stat.label} className="px-4 py-4 sm:py-0">
+                <p className="text-4xl font-extrabold text-white md:text-5xl">
+                  {stat.value}
+                </p>
+                <p className="mt-1 text-sm font-semibold text-white/70">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
-      </nav>
+        </section>
 
-      <section className="relative overflow-hidden px-6 py-28 text-center">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/images/hero-background.jpg')",
-          }}
-        />
+        {/* ABOUT */}
+        <section id="about" className="bg-white px-6 py-24">
+          <div className="mx-auto grid max-w-7xl items-center gap-14 md:grid-cols-2">
+            <ScrollReveal>
+              <span className="mb-5 inline-block rounded-full bg-[#FBE4EA] px-4 py-2 text-xs font-extrabold uppercase tracking-wide text-[#632854]">
+                About the Hub
+              </span>
 
-        <div className="absolute inset-0 bg-white/45" />
+              <h2 className="mb-6 text-4xl font-extrabold leading-tight md:text-5xl">
+                Building Stronger{" "}
+                <span className="text-[#632854]">
+                  Conservancies Across Kenya
+                </span>
+              </h2>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F2FBF8]/45 via-white/35 to-white/70" />
-
-        <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#007F73]/20 blur-3xl" />
-        <div className="absolute bottom-10 right-10 h-52 w-52 rounded-full bg-[#D94A00]/20 blur-3xl" />
-
-        <ScrollReveal className="relative mx-auto max-w-5xl">
-          <h1 className="mb-6 text-5xl font-extrabold tracking-tight md:text-7xl">
-            Kenya Conservancies Learning HUB
-          </h1>
-
-          <p className="mb-8 text-xl text-gray-600 md:text-2xl">
-            Empowering Wildlife Conservation Through Education
-          </p>
-
-          <div className="mx-auto mb-10 grid max-w-3xl gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-emerald-200 bg-white/90 p-5 shadow-sm backdrop-blur-md transition hover:-translate-y-1 hover:shadow-lg">
-              <p className="text-sm font-semibold text-[#007F73]">
-                Host Organization
+              <p className="mb-8 text-lg leading-8 text-gray-600">
+                The Kenya Conservancies Learning Hub is your comprehensive
+                platform for establishing, managing, and growing successful
+                wildlife conservancies that benefit both nature and
+                communities. Hosted by the Kenya Wildlife Conservancies
+                Foundation in partnership with KWCA.
               </p>
 
-              <h3 className="mt-2 text-xl font-bold">
-                Kenya Wildlife Conservancies Foundation
-              </h3>
-            </div>
+              <div className="space-y-6">
+                {aboutPoints.map((point) => (
+                  <div key={point.title} className="flex gap-4">
+                    <div
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${
+                        point.tone === "pink"
+                          ? "bg-[#F5DCE6] text-[#632854]"
+                          : "bg-[#E4E1F5] text-[#1E1D59]"
+                      }`}
+                    >
+                      <point.icon size={22} />
+                    </div>
 
-            <div className="rounded-2xl border border-emerald-200 bg-white/90 p-5 shadow-sm backdrop-blur-md transition hover:-translate-y-1 hover:shadow-lg">
-              <p className="text-sm font-semibold text-[#007F73]">Partner</p>
+                    <div>
+                      <h3 className="text-lg font-bold">{point.title}</h3>
+                      <p className="leading-7 text-gray-600">{point.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-              <h3 className="mt-2 text-xl font-bold">
-                Kenya Wildlife Conservancies Association
-              </h3>
-            </div>
+              <Link
+                href="/courses"
+                className="mt-8 inline-flex items-center gap-2 font-bold text-[#632854] hover:gap-3"
+              >
+                Learn more about KWCF
+                <ArrowRight size={18} />
+              </Link>
+            </ScrollReveal>
+
+            <ScrollReveal className="relative">
+              <div className="overflow-hidden rounded-3xl shadow-sm">
+                <img
+                  src="/images/hero-conservancy.jpg"
+                  alt="Conservancy landscape"
+                  className="h-[440px] w-full object-cover"
+                />
+              </div>
+
+              <div className="absolute -bottom-6 left-6 rounded-2xl bg-[#1E1D59] px-6 py-4 text-white shadow-xl">
+                <p className="text-3xl font-extrabold">{modules.length}+</p>
+                <p className="text-sm font-semibold text-white/70">
+                  Learning Modules
+                </p>
+              </div>
+            </ScrollReveal>
           </div>
+        </section>
 
-          <Link
-            href="/courses"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-8 py-4 text-lg font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#00665d]"
-          >
-            Start Learning
-            <ArrowRight size={20} />
-          </Link>
-        </ScrollReveal>
-      </section>
+        {/* KEY LEARNING TOPICS */}
+        <section id="courses" className="bg-gray-50 px-6 py-24">
+          <div className="mx-auto max-w-7xl">
+            <ScrollReveal className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+              <h2 className="text-4xl font-extrabold leading-tight md:text-5xl">
+                Key Learning
+                <br />
+                <span className="text-[#632854]">Topics</span>
+              </h2>
 
-      <section id="about" className="bg-white px-6 py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 md:grid-cols-2">
-          <ScrollReveal>
-            <h2 className="mb-6 text-4xl font-extrabold">
-              Building Stronger Conservancies Across Kenya
-            </h2>
+              <p className="max-w-md text-lg text-gray-600">
+                Comprehensive, expert-led modules designed to equip you with
+                the skills to excel in wildlife conservation management.
+              </p>
+            </ScrollReveal>
 
-            <p className="mb-8 text-lg leading-8 text-gray-600">
-              The Kenya Conservancies Learning HUB is a practical learning
-              platform for conservancy leaders, managers, board members, and
-              community stakeholders.
-            </p>
-
-            <div className="space-y-6">
-              <InfoItem
-                icon={ShieldCheck}
-                title="Our Mission"
-                text="Empower conservancy leaders with tools to build sustainable and community-centered conservation initiatives."
-              />
-
-              <InfoItem
-                icon={Users}
-                title="Community Focus"
-                text="Support women, youth, and local communities to participate meaningfully in conservation leadership."
-              />
-
-              <InfoItem
-                icon={Award}
-                title="Excellence Standards"
-                text="Help conservancies meet governance, management, finance, and Greenlisting standards."
-              />
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal>
-            <div className="overflow-hidden rounded-3xl bg-[#F4F7F5] shadow-sm">
-              <img
-                src="/images/hero-conservancy.jpg"
-                alt="Conservancy landscape"
-                className="h-[420px] w-full object-cover transition duration-700 hover:scale-105"
-              />
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      <section id="courses" className="bg-gray-50 px-6 py-24">
-        <div className="mx-auto max-w-7xl">
-          <ScrollReveal className="mb-14 text-center">
-            <h2 className="mb-4 text-4xl font-extrabold">
-              Explore Learning Modules
-            </h2>
-
-            <p className="text-lg text-gray-600">
-              Practical courses designed for conservancy establishment,
-              governance, management, and sustainability.
-            </p>
-          </ScrollReveal>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {modules.map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <ScrollReveal key={item.title}>
+            <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+              {modules.map((item, index) => (
+                <ScrollReveal key={item.slug}>
                   <Link
-                    href={item.href}
-                    className="group block rounded-2xl border border-gray-200 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-[#D94A00] hover:shadow-xl"
+                    href="/courses"
+                    className="group flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex gap-5">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#D94A00] text-white transition group-hover:scale-110">
-                          <Icon size={28} />
-                        </div>
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
-                        <div>
-                          <h3 className="mb-3 text-xl font-bold">
-                            {item.title}
-                          </h3>
+                      <span className="absolute left-4 top-4 rounded-full bg-[#1E1D59] px-3 py-1 text-xs font-extrabold text-white">
+                        {item.category}
+                      </span>
 
-                          <p className="flex items-center gap-2 text-gray-500">
-                            <BookOpen size={16} />
-                            {item.module}
-                          </p>
-                        </div>
+                      <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#632854] text-xs font-extrabold text-white">
+                        {index + 1}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-1 flex-col p-6">
+                      <h3 className="mb-3 text-xl font-bold leading-snug group-hover:text-[#632854]">
+                        {item.title}
+                      </h3>
+
+                      <p className="mb-6 flex-1 leading-7 text-gray-600">
+                        {item.description}
+                      </p>
+
+                      <div className="mt-auto flex items-center justify-between border-t pt-4 text-sm">
+                        <span className="flex items-center gap-2 text-gray-500">
+                          <Clock size={15} />
+                          Self-paced
+                        </span>
+
+                        <span className="flex items-center gap-1 font-bold text-[#632854]">
+                          Start module
+                          <ArrowRight
+                            size={15}
+                            className="transition group-hover:translate-x-1"
+                          />
+                        </span>
                       </div>
-
-                      <ArrowRight className="text-gray-400 transition group-hover:translate-x-1 group-hover:text-[#D94A00]" />
                     </div>
                   </Link>
                 </ScrollReveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section id="resources" className="bg-[#FFF8E8] px-6 py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 md:grid-cols-2">
-          <div className="grid gap-6 sm:grid-cols-2">
-            <ScrollReveal>
-              <Feature
-                icon={BookOpen}
-                title="Expert-Led Content"
-                text="Learn from conservation professionals and practical field examples."
-              />
-            </ScrollReveal>
-
-            <ScrollReveal>
-              <Feature
-                icon={Video}
-                title="Interactive Learning"
-                text="Use videos, case studies, and quizzes to strengthen learning."
-              />
-            </ScrollReveal>
-
-            <ScrollReveal>
-              <Feature
-                icon={Download}
-                title="Downloadable Resources"
-                text="Access templates, guides, tools, and reference materials."
-              />
-            </ScrollReveal>
-
-            <ScrollReveal>
-              <Feature
-                icon={MessageCircle}
-                title="Community Support"
-                text="Connect learning to real conservancy challenges and peer practice."
-              />
-            </ScrollReveal>
-          </div>
-
-          <ScrollReveal>
-            <h2 className="mb-6 text-4xl font-extrabold">
-              Why Choose Our Learning Platform?
-            </h2>
-
-            <p className="mb-8 text-lg leading-8 text-gray-700">
-              This platform is designed for Kenya’s conservation landscape,
-              offering practical and actionable knowledge that can be applied
-              directly to conservancy work.
-            </p>
-
-            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-              <img
-                src="/images/conservancy-training.jpg"
-                alt="Conservancy training"
-                className="h-[320px] w-full object-cover transition duration-700 hover:scale-105"
-              />
+              ))}
             </div>
-          </ScrollReveal>
-        </div>
-      </section>
 
-      <section className="bg-white px-6 py-20">
-        <ScrollReveal>
-          <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-[#8B2F0B] text-white md:grid md:grid-cols-2">
-            <div className="p-12 md:p-16">
-              <h2 className="mb-4 text-4xl font-extrabold">
-                Ready to Transform Your Conservancy?
-              </h2>
-
-              <p className="mb-8 max-w-2xl text-lg leading-8 text-white/85">
-                Join conservancy leaders building stronger, more sustainable
-                conservation institutions across Kenya.
-              </p>
-
-              <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/courses"
-                  className="rounded-xl bg-white px-7 py-4 font-bold text-[#8B2F0B] transition hover:-translate-y-1 hover:shadow-lg"
-                >
-                  Enroll Now
-                </Link>
+            <ScrollReveal className="mt-8">
+              <div className="flex flex-col items-center justify-between gap-6 rounded-3xl bg-[#1E1D59] px-8 py-8 text-white sm:flex-row">
+                <div>
+                  <h3 className="text-2xl font-extrabold">
+                    More Modules Coming Soon
+                  </h3>
+                  <p className="mt-1 text-white/70">
+                    We&apos;re expanding the curriculum with new modules, case
+                    studies, and resources every quarter.
+                  </p>
+                </div>
 
                 <Link
                   href="/courses"
-                  className="rounded-xl border border-white px-7 py-4 font-bold transition hover:bg-white hover:text-[#8B2F0B]"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#632854] px-6 py-4 font-bold text-white transition hover:bg-[#4F2043]"
                 >
-                  Explore Courses
+                  Explore All Modules
+                  <ArrowRight size={18} />
                 </Link>
               </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* WHY THIS PLATFORM */}
+        <section id="why-platform" className="bg-[#F8F4F4] px-6 py-24">
+          <div className="mx-auto grid max-w-7xl items-start gap-14 md:grid-cols-2">
+            <ScrollReveal>
+              <span className="mb-5 inline-block rounded-full bg-[#E4E1F5] px-4 py-2 text-xs font-extrabold uppercase tracking-wide text-[#1E1D59]">
+                Why This Platform
+              </span>
+
+              <h2 className="mb-6 text-4xl font-extrabold leading-tight md:text-5xl">
+                Built for Kenya&apos;s{" "}
+                <span className="text-[#632854]">
+                  Conservation Landscape
+                </span>
+              </h2>
+
+              <p className="mb-10 text-lg leading-8 text-gray-600">
+                Our platform is specifically designed for Kenya&apos;s
+                unique conservation context — offering practical, actionable
+                knowledge you can apply directly to your conservancy.
+              </p>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                {platformFeatures.map((feature) => (
+                  <div key={feature.title}>
+                    <div
+                      className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-white ${
+                        feature.tone === "navy"
+                          ? "bg-[#1E1D59]"
+                          : "bg-[#632854]"
+                      }`}
+                    >
+                      <feature.icon size={22} />
+                    </div>
+
+                    <h3 className="mb-2 font-bold">{feature.title}</h3>
+                    <p className="text-sm leading-6 text-gray-600">
+                      {feature.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal>
+              <div className="overflow-hidden rounded-3xl shadow-sm">
+                <img
+                  src="/images/learning-dashboard.jpg"
+                  alt="Kenya conservation landscape"
+                  className="h-[340px] w-full object-cover"
+                />
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-4">
+                <Link
+                  href="/courses"
+                  className="rounded-xl bg-[#1E1D59] px-7 py-4 font-bold text-white transition hover:-translate-y-1 hover:bg-[#14123D]"
+                >
+                  Get Started
+                </Link>
+
+                <Link
+                  href="/#about"
+                  className="rounded-xl border border-[#1E1D59] px-7 py-4 font-bold text-[#1E1D59] transition hover:bg-[#1E1D59] hover:text-white"
+                >
+                  Learn More
+                </Link>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="bg-white px-6 py-20">
+          <ScrollReveal>
+            <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-to-br from-[#1E1D59] to-[#632854] p-12 text-white shadow-xl md:p-16">
+              <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-white/10" />
+              <div className="pointer-events-none absolute -bottom-16 left-1/3 h-48 w-48 rounded-full bg-white/10" />
+
+              <div className="relative max-w-2xl">
+                <span className="mb-5 inline-block rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-extrabold uppercase tracking-wide">
+                  Join the Movement
+                </span>
+
+                <h2 className="mb-4 text-4xl font-extrabold leading-tight md:text-5xl">
+                  Ready to Transform Your Conservancy?
+                </h2>
+
+                <p className="mb-8 max-w-xl text-lg leading-8 text-white/85">
+                  Join hundreds of conservancy leaders across Kenya who are
+                  building a sustainable future for wildlife and communities.
+                </p>
+
+                <div className="flex flex-wrap gap-4">
+                  <Link
+                    href="/courses"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#632854] px-7 py-4 font-bold text-white transition hover:-translate-y-1 hover:bg-[#4F2043]"
+                  >
+                    Enrol Now
+                    <ArrowRight size={18} />
+                  </Link>
+
+                  <button
+                    type="button"
+                    className="inline-flex items-center gap-2 rounded-xl border border-white px-7 py-4 font-bold transition hover:bg-white hover:text-[#1E1D59]"
+                  >
+                    <Download size={18} />
+                    Download Brochure
+                  </button>
+                </div>
+              </div>
             </div>
+          </ScrollReveal>
+        </section>
+      </main>
 
-            <img
-              src="/images/learning-dashboard.jpg"
-              alt="Learning dashboard"
-              className="h-full min-h-[320px] w-full object-cover"
-            />
-          </div>
-        </ScrollReveal>
-      </section>
-
-      <footer className="bg-[#8B2F0B] px-6 py-12 text-white">
-        <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3">
-          <div>
-            <img
-              src="/logo.png"
-              alt="KWCA Logo"
-              className="mb-4 h-16 w-auto rounded bg-white p-2"
-            />
-
-            <p className="text-white/80">
-              Empowering wildlife conservation through education and community
-              engagement.
-            </p>
-          </div>
-
-          <div>
-            <h4 className="mb-3 font-bold">Quick Links</h4>
-            <p>About Us</p>
-            <p>All Courses</p>
-            <p>Resources</p>
-            <p>Contact</p>
-          </div>
-
-          <div>
-            <h4 className="mb-3 font-bold">Get in Touch</h4>
-            <p>info@kwcakenya.com</p>
-            <p>Nairobi, Kenya</p>
-          </div>
-        </div>
-      </footer>
-    </main>
-  );
-}
-
-function InfoItem({
-  icon: Icon,
-  title,
-  text,
-}: {
-  icon: React.ElementType;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="flex gap-4">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-[#D94A00]">
-        <Icon size={24} />
-      </div>
-
-      <div>
-        <h3 className="text-lg font-bold">{title}</h3>
-        <p className="leading-7 text-gray-600">{text}</p>
-      </div>
-    </div>
-  );
-}
-
-function Feature({
-  icon: Icon,
-  title,
-  text,
-}: {
-  icon: React.ElementType;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="h-full rounded-2xl bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-      <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-[#D94A00] text-white">
-        <Icon size={24} />
-      </div>
-
-      <h3 className="mb-3 text-xl font-bold">{title}</h3>
-
-      <p className="leading-7 text-gray-600">{text}</p>
-    </div>
+      <Footer />
+    </>
   );
 }

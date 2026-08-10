@@ -48,9 +48,9 @@ export default function QuizzesAdminPage() {
       <Navbar />
 
       <main className="min-h-screen bg-gray-50">
-        <section className="bg-[#EDF5F3] py-16">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-6xl px-6">
-            <h1 className="text-6xl font-bold text-[#07122E]">
+            <h1 className="text-6xl font-bold text-[#1E1D59]">
               Quiz Management
             </h1>
 
@@ -111,7 +111,7 @@ export default function QuizzesAdminPage() {
             <button
               type="button"
               onClick={createQuiz}
-              className="mt-6 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white"
+              className="mt-6 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white"
             >
               Create Quiz
             </button>

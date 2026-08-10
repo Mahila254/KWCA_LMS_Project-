@@ -148,7 +148,7 @@ export default function EditCoursePage() {
       <>
         <AdminNavbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#1E1D59]">
           <h1 className="text-3xl font-bold">Loading course...</h1>
         </main>
 
@@ -161,10 +161,10 @@ export default function EditCoursePage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#EDF5F3] py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-5xl px-6">
-            <Link href="/admin/courses" className="font-bold text-[#007F73]">
+            <Link href="/admin/courses" className="font-bold text-[#1E1D59]">
               ← Back to Course Management
             </Link>
 
@@ -302,7 +302,7 @@ export default function EditCoursePage() {
                   type="button"
                   onClick={handleUpdateCourse}
                   disabled={saving}
-                  className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </button>

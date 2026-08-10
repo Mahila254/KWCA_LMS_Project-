@@ -1,27 +1,21 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/requireUser";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
 
-    const { id, email, name, paymentType, amount, courseId } = body;
-
-    if (!id) {
-      return NextResponse.json(
-        { error: "Learner ID is required." },
-        { status: 400 }
-      );
-    }
-
-    if (!email) {
-      return NextResponse.json(
-        { error: "Learner email is required." },
-        { status: 400 }
-      );
-    }
+    const { paymentType, amount, courseId } = body;
 
     if (!paymentType) {
       return NextResponse.json(
@@ -39,15 +33,15 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.upsert({
       where: {
-        email,
+        email: verifiedUser.email,
       },
       update: {
-        name: name || null,
+        name: verifiedUser.name || undefined,
       },
       create: {
-        id,
-        email,
-        name: name || null,
+        id: verifiedUser.id,
+        email: verifiedUser.email,
+        name: verifiedUser.name,
         role: "STUDENT",
       },
     });

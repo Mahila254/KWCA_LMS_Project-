@@ -93,7 +93,7 @@ export default async function CoursesPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
         <section className="relative overflow-hidden px-6 py-24">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -104,14 +104,14 @@ export default async function CoursesPage() {
 
           <div className="absolute inset-0 bg-white/55" />
 
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F2FBF8]/70 via-white/70 to-gray-50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/70 via-white/70 to-gray-50" />
 
-          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#007F73]/20 blur-3xl" />
-          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#D94A00]/20 blur-3xl" />
+          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#1E1D59]/20 blur-3xl" />
+          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#632854]/20 blur-3xl" />
 
           <ScrollReveal className="relative mx-auto max-w-7xl">
             <div className="max-w-4xl">
-              <p className="font-bold text-[#007F73]">KWCA Learning Courses</p>
+              <p className="font-bold text-[#1E1D59]">KWCA Learning Courses</p>
 
               <h1 className="mt-4 text-5xl font-extrabold leading-tight md:text-7xl">
                 Explore Conservation Learning Courses
@@ -149,7 +149,7 @@ export default async function CoursesPage() {
         <section className="mx-auto max-w-7xl px-6 py-14">
           <ScrollReveal className="mb-10 flex flex-wrap items-end justify-between gap-6">
             <div>
-              <p className="font-bold text-[#D94A00]">Course Catalogue</p>
+              <p className="font-bold text-[#632854]">Course Catalogue</p>
 
               <h2 className="mt-3 text-4xl font-extrabold">
                 Available Courses
@@ -173,7 +173,7 @@ export default async function CoursesPage() {
           {courses.length === 0 ? (
             <ScrollReveal>
               <div className="rounded-3xl bg-white p-12 text-center shadow-sm">
-                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                   <BookOpen size={40} />
                 </div>
 
@@ -209,7 +209,7 @@ export default async function CoursesPage() {
                       href={`/courses/${course.slug}`}
                       className="group flex h-full min-h-[650px] flex-col overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                     >
-                      <div className="relative h-56 shrink-0 overflow-hidden bg-[#07122E]">
+                      <div className="relative h-56 shrink-0 overflow-hidden bg-[#1E1D59]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={imageSource}
@@ -217,10 +217,10 @@ export default async function CoursesPage() {
                           className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
                         />
 
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#07122E]/75 via-[#07122E]/15 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#1E1D59]/75 via-[#1E1D59]/15 to-transparent" />
 
                         <div className="absolute left-5 top-5 flex flex-wrap gap-2">
-                          <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold text-[#007F73]">
+                          <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold text-[#1E1D59]">
                             {course.category || "General"}
                           </span>
 
@@ -230,7 +230,7 @@ export default async function CoursesPage() {
                               Free Preview
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-extrabold text-[#D94A00]">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F5DCE6] px-3 py-1 text-xs font-extrabold text-[#632854]">
                               <Lock size={13} />
                               Premium
                             </span>
@@ -245,7 +245,7 @@ export default async function CoursesPage() {
                       </div>
 
                       <div className="flex flex-1 flex-col p-7">
-                        <h3 className="min-h-[72px] text-2xl font-extrabold leading-tight group-hover:text-[#007F73]">
+                        <h3 className="min-h-[72px] text-2xl font-extrabold leading-tight group-hover:text-[#1E1D59]">
                           {course.title}
                         </h3>
 
@@ -280,7 +280,7 @@ export default async function CoursesPage() {
                             {previewLessons} Preview
                           </span>
 
-                          <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-[#D94A00]">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#FBEFF4] px-3 py-1 text-xs font-bold text-[#632854]">
                             <Lock size={13} />
                             {premiumLessons} Premium
                           </span>
@@ -294,7 +294,7 @@ export default async function CoursesPage() {
                         </div>
 
                         <div className="mt-7 flex items-center justify-between border-t pt-5">
-                          <span className="inline-flex items-center gap-2 font-bold text-[#007F73]">
+                          <span className="inline-flex items-center gap-2 font-bold text-[#1E1D59]">
                             View Course
                             <ArrowRight
                               size={18}
@@ -302,7 +302,7 @@ export default async function CoursesPage() {
                             />
                           </span>
 
-                          <span className="inline-flex items-center gap-1 rounded-full bg-[#F2FBF8] px-3 py-1 text-xs font-bold text-[#007F73]">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#F1F0FA] px-3 py-1 text-xs font-bold text-[#1E1D59]">
                             <CheckCircle size={13} />
                             Available
                           </span>
@@ -318,10 +318,10 @@ export default async function CoursesPage() {
 
         <section className="mx-auto max-w-7xl px-6 pb-20">
           <ScrollReveal>
-            <div className="overflow-hidden rounded-3xl bg-[#07122E] p-10 text-white shadow-sm md:p-14">
+            <div className="overflow-hidden rounded-3xl bg-[#1E1D59] p-10 text-white shadow-sm md:p-14">
               <div className="grid gap-8 md:grid-cols-[1.5fr_1fr] md:items-center">
                 <div>
-                  <p className="font-bold text-[#9DE0D2]">Learning Pathway</p>
+                  <p className="font-bold text-[#D9D3EC]">Learning Pathway</p>
 
                   <h2 className="mt-3 text-4xl font-extrabold">
                     Build Skills for Stronger Conservancy Management
@@ -336,7 +336,7 @@ export default async function CoursesPage() {
 
                 <Link
                   href="/profile"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 font-bold text-[#07122E] transition hover:-translate-y-1 hover:bg-gray-100"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 font-bold text-[#1E1D59] transition hover:-translate-y-1 hover:bg-gray-100"
                 >
                   Go to Learner Profile
                   <ArrowRight size={18} />
@@ -363,7 +363,7 @@ function HeroStat({
 }) {
   return (
     <div className="rounded-3xl border border-white/70 bg-white/85 p-6 shadow-sm backdrop-blur-md">
-      <div className="mb-4 flex items-center gap-3 text-[#007F73]">
+      <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
         {icon}
         <p className="text-sm font-bold text-gray-500">{label}</p>
       </div>
@@ -384,7 +384,7 @@ function MiniStat({
 }) {
   return (
     <div className="rounded-2xl bg-gray-50 p-4">
-      <div className="mb-2 text-[#007F73]">{icon}</div>
+      <div className="mb-2 text-[#1E1D59]">{icon}</div>
 
       <p className="text-xl font-extrabold">{value}</p>
 

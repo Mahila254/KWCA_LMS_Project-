@@ -57,7 +57,7 @@ export default function PracticeQuizPage() {
     async function fetchPracticeQuestions() {
       try {
         const response = await fetch(
-          `/api/admin/courses/${courseSlug}/quiz-questions`
+          `/api/courses/${courseSlug}/quiz-questions?type=PRACTICE`
         );
 
         const data = await response.json();
@@ -92,9 +92,9 @@ export default function PracticeQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-20 text-center text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 px-6 py-20 text-center text-[#1E1D59]">
           <div className="mx-auto max-w-2xl rounded-3xl bg-white p-10 shadow-sm">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
               <ClipboardList size={32} />
             </div>
 
@@ -116,7 +116,7 @@ export default function PracticeQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -126,7 +126,7 @@ export default function PracticeQuizPage() {
 
           <section className="mx-auto max-w-3xl px-6 py-10">
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                 <HelpCircle size={32} />
               </div>
 
@@ -138,7 +138,7 @@ export default function PracticeQuizPage() {
 
               <Link
                 href={`/courses/${courseSlug}`}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 Back to Course
                 <ArrowRight size={18} />
@@ -203,7 +203,7 @@ export default function PracticeQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -213,14 +213,14 @@ export default function PracticeQuizPage() {
 
           <section className="mx-auto max-w-4xl px-6 py-10">
             <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-              <div className="bg-[#07122E] px-8 py-10 text-center text-white">
+              <div className="bg-[#1E1D59] px-8 py-10 text-center text-white">
                 <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
                   <Trophy size={42} />
                 </div>
 
                 <h2 className="text-4xl font-extrabold">Your Score</h2>
 
-                <p className="mt-6 text-7xl font-extrabold text-[#9DE0D2]">
+                <p className="mt-6 text-7xl font-extrabold text-[#D9D3EC]">
                   {percentage}%
                 </p>
 
@@ -259,7 +259,7 @@ export default function PracticeQuizPage() {
 
                 <Link
                   href={`/courses/${courseSlug}/quiz/final`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                 >
                   Continue to Final Quiz
                   <ArrowRight size={18} />
@@ -278,7 +278,7 @@ export default function PracticeQuizPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
         <QuizHero
           courseTitle={course?.title || "Course"}
           courseSlug={courseSlug}
@@ -318,14 +318,14 @@ export default function PracticeQuizPage() {
 
               <div className="h-3 rounded-full bg-gray-100">
                 <div
-                  className="h-3 rounded-full bg-[#007F73]"
+                  className="h-3 rounded-full bg-[#1E1D59]"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
             </div>
 
-            <div className="rounded-3xl bg-[#F2FBF8] p-8">
-              <p className="mb-3 text-sm font-extrabold uppercase tracking-wide text-[#007F73]">
+            <div className="rounded-3xl bg-[#F1F0FA] p-8">
+              <p className="mb-3 text-sm font-extrabold uppercase tracking-wide text-[#1E1D59]">
                 Practice Question
               </p>
 
@@ -340,7 +340,7 @@ export default function PracticeQuizPage() {
                 const correct = currentQuestion.correctAnswer === option.label;
 
                 let optionClass =
-                  "border-gray-200 bg-white hover:border-[#007F73] hover:bg-[#F2FBF8]";
+                  "border-gray-200 bg-white hover:border-[#1E1D59] hover:bg-[#F1F0FA]";
 
                 if (showFeedback && correct) {
                   optionClass = "border-green-500 bg-green-50";
@@ -363,7 +363,7 @@ export default function PracticeQuizPage() {
                           ? "bg-green-600 text-white"
                           : showFeedback && selected && !correct
                           ? "bg-red-600 text-white"
-                          : "bg-[#F2FBF8] text-[#007F73]"
+                          : "bg-[#F1F0FA] text-[#1E1D59]"
                       }`}
                     >
                       {option.label}
@@ -439,7 +439,7 @@ export default function PracticeQuizPage() {
                 disabled={!showFeedback}
                 className={`inline-flex items-center gap-2 rounded-xl px-6 py-3 font-bold ${
                   showFeedback
-                    ? "bg-[#007F73] text-white hover:bg-[#00665d]"
+                    ? "bg-[#1E1D59] text-white hover:bg-[#14123D]"
                     : "cursor-not-allowed bg-gray-200 text-gray-500"
                 }`}
               >
@@ -480,19 +480,19 @@ function QuizHero({
 
       <div className="absolute inset-0 bg-white/70" />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F2FBF8]/90 via-white/80 to-gray-50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/90 via-white/80 to-gray-50" />
 
       <div className="relative mx-auto max-w-5xl">
         <Link
           href={`/courses/${courseSlug}`}
-          className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+          className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
         >
           <ArrowLeft size={18} />
           Back to Course
         </Link>
 
         <div className="mt-5">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#007F73] shadow-sm">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
             <BookOpen size={15} />
             {courseTitle}
           </span>
@@ -521,7 +521,7 @@ function QuizStat({
 }) {
   return (
     <div className="rounded-3xl bg-white p-6 shadow-sm">
-      <div className="mb-4 flex items-center gap-3 text-[#007F73]">
+      <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
         {icon}
         <p className="text-sm font-bold text-gray-500">{label}</p>
       </div>
@@ -536,7 +536,7 @@ function ResultStat({ label, value }: { label: string; value: number }) {
     <div className="rounded-2xl bg-gray-50 p-6 text-center">
       <p className="text-sm font-bold text-gray-500">{label}</p>
 
-      <p className="mt-2 text-4xl font-extrabold text-[#007F73]">{value}</p>
+      <p className="mt-2 text-4xl font-extrabold text-[#1E1D59]">{value}</p>
     </div>
   );
 }

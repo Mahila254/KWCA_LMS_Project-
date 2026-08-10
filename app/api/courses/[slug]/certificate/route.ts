@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/requireUser";
 
 type RouteProps = {
   params: Promise<{
@@ -14,19 +16,15 @@ function generateCertificateCode(courseSlug: string) {
   return `KWCA-${courseCode}-${new Date().getFullYear()}-${randomCode}`;
 }
 
-export async function GET(request: Request, { params }: RouteProps) {
+export async function GET(request: NextRequest, { params }: RouteProps) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
-
-    const { searchParams } = new URL(request.url);
-    const email = searchParams.get("email");
-
-    if (!email) {
-      return NextResponse.json(
-        { error: "Learner email is required." },
-        { status: 400 }
-      );
-    }
 
     const course = await prisma.course.findUnique({
       where: {
@@ -43,7 +41,7 @@ export async function GET(request: Request, { params }: RouteProps) {
 
     const user = await prisma.user.findUnique({
       where: {
-        email,
+        email: verifiedUser.email,
       },
     });
 
@@ -78,26 +76,15 @@ export async function GET(request: Request, { params }: RouteProps) {
   }
 }
 
-export async function POST(request: Request, { params }: RouteProps) {
+export async function POST(request: NextRequest, { params }: RouteProps) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { slug } = await params;
-    const body = await request.json();
-
-    const { id, email, name } = body;
-
-    if (!id) {
-      return NextResponse.json(
-        { error: "Learner ID is required." },
-        { status: 400 }
-      );
-    }
-
-    if (!email) {
-      return NextResponse.json(
-        { error: "Learner email is required." },
-        { status: 400 }
-      );
-    }
 
     const course = await prisma.course.findUnique({
       where: {
@@ -114,18 +101,37 @@ export async function POST(request: Request, { params }: RouteProps) {
 
     const user = await prisma.user.upsert({
       where: {
-        email,
+        email: verifiedUser.email,
       },
       update: {
-        name: name || null,
+        name: verifiedUser.name || undefined,
       },
       create: {
-        id,
-        name: name || null,
-        email,
+        id: verifiedUser.id,
+        name: verifiedUser.name,
+        email: verifiedUser.email,
         role: "STUDENT",
       },
     });
+
+    const passedFinalQuiz = await prisma.quizResult.findFirst({
+      where: {
+        userId: user.id,
+        courseId: course.id,
+        quizType: "FINAL",
+        passed: true,
+      },
+    });
+
+    if (!passedFinalQuiz) {
+      return NextResponse.json(
+        {
+          error:
+            "You must pass the final quiz for this course before a certificate can be issued.",
+        },
+        { status: 403 }
+      );
+    }
 
     const existingCertificate = await prisma.certificate.findUnique({
       where: {

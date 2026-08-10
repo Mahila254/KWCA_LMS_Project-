@@ -24,10 +24,10 @@ export default function CourseImageUpload() {
       <label className="mb-2 block font-bold">Course Image</label>
 
       {!preview ? (
-        <label className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 text-center transition hover:border-[#007F73] hover:bg-emerald-50">
-          <ImagePlus className="mb-3 text-[#007F73]" size={42} />
+        <label className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 text-center transition hover:border-[#1E1D59] hover:bg-[#F1EFFA]">
+          <ImagePlus className="mb-3 text-[#1E1D59]" size={42} />
 
-          <p className="font-bold text-[#07122E]">
+          <p className="font-bold text-[#1E1D59]">
             Upload course cover image
           </p>
 

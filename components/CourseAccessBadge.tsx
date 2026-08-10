@@ -2,14 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import { CheckCircle, Lock, LogIn, Loader2 } from "lucide-react";
 
 type CourseAccessBadgeProps = {
   courseId: string;
-};
-
-type SupabaseLearner = {
-  email?: string;
 };
 
 export default function CourseAccessBadge({ courseId }: CourseAccessBadgeProps) {
@@ -33,23 +30,11 @@ export default function CourseAccessBadge({ courseId }: CourseAccessBadgeProps) 
           return;
         }
 
-        const learner = user as SupabaseLearner;
-
-        if (!learner.email) {
-          setLoggedIn(false);
-          setHasAccess(false);
-          return;
-        }
-
         setLoggedIn(true);
 
-        const response = await fetch("/api/access/check-premium", {
+        const response = await authFetch("/api/access/check-premium", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({
-            email: learner.email,
             courseId,
           }),
         });
@@ -84,7 +69,7 @@ export default function CourseAccessBadge({ courseId }: CourseAccessBadgeProps) 
 
   if (!loggedIn) {
     return (
-      <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+      <span className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854]">
         <LogIn size={15} />
         Login to Check Access
       </span>
@@ -101,7 +86,7 @@ export default function CourseAccessBadge({ courseId }: CourseAccessBadgeProps) 
   }
 
   return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+    <span className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854]">
       <Lock size={15} />
       Premium Access Required
     </span>

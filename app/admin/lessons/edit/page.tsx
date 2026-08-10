@@ -30,13 +30,13 @@ export default function EditLessonPage() {
       <Navbar />
 
       <main className="min-h-screen bg-gray-50">
-        <section className="bg-[#EDF5F3] py-16">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-5xl px-6">
-            <Link href="/admin/lessons" className="font-bold text-[#007F73]">
+            <Link href="/admin/lessons" className="font-bold text-[#1E1D59]">
               ← Back to Lesson Management
             </Link>
 
-            <h1 className="mt-6 text-5xl font-bold text-[#07122E]">
+            <h1 className="mt-6 text-5xl font-bold text-[#1E1D59]">
               Edit Lesson
             </h1>
 
@@ -80,7 +80,7 @@ export default function EditLessonPage() {
               <button
                 type="button"
                 onClick={saveLesson}
-                className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white"
+                className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white"
               >
                 Save Lesson
               </button>

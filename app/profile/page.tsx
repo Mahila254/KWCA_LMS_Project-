@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import LearnerLogoutButton from "@/components/LearnerLogoutButton";
 import {
   Award,
@@ -68,6 +69,7 @@ type LearnerProfile = {
   id: string;
   name: string | null;
   email: string;
+  gender: string | null;
   role: string;
   createdAt: string;
   enrollments: Enrollment[];
@@ -81,7 +83,14 @@ type SupabaseLearner = {
   email?: string;
   user_metadata?: {
     full_name?: string;
+    gender?: string;
   };
+};
+
+const GENDER_LABELS: Record<string, string> = {
+  MALE: "Male",
+  FEMALE: "Female",
+  PREFER_NOT_TO_SAY: "Prefer not to say",
 };
 
 export default function ProfilePage() {
@@ -114,26 +123,14 @@ export default function ProfilePage() {
           return;
         }
 
-        const learnerName =
-          supabaseUser.user_metadata?.full_name ||
-          supabaseUser.email ||
-          "Learner";
-
-        await fetch("/api/auth/sync-user", {
+        await authFetch("/api/auth/sync-user", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({
-            id: supabaseUser.id,
-            email: supabaseUser.email,
-            name: learnerName,
+            gender: supabaseUser.user_metadata?.gender || undefined,
           }),
         });
 
-        const response = await fetch(
-          `/api/profile?email=${encodeURIComponent(supabaseUser.email)}`
-        );
+        const response = await authFetch("/api/profile");
 
         const data = await response.json();
 
@@ -172,10 +169,10 @@ export default function ProfilePage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#EDF5F3] py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
-            <p className="font-bold text-[#007F73]">Learner Profile</p>
+            <p className="font-bold text-[#1E1D59]">Learner Profile</p>
 
             <h1 className="mt-3 text-5xl font-bold">My Learning Dashboard</h1>
 
@@ -189,7 +186,7 @@ export default function ProfilePage() {
         <section className="mx-auto max-w-7xl px-6 py-12">
           {loading ? (
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                 <Loader2 className="animate-spin" size={34} />
               </div>
 
@@ -211,7 +208,7 @@ export default function ProfilePage() {
 
               <Link
                 href="/login"
-                className="mt-6 inline-flex rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 Login
               </Link>
@@ -221,7 +218,7 @@ export default function ProfilePage() {
               <div className="rounded-3xl bg-white p-8 shadow-sm">
                 <div className="flex flex-wrap items-start justify-between gap-6">
                   <div className="flex gap-4">
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#F2FBF8] text-[#007F73]">
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                       <User size={42} />
                     </div>
 
@@ -235,16 +232,22 @@ export default function ProfilePage() {
                         {learner.email}
                       </p>
 
-                      <p className="mt-2 text-sm font-bold text-[#007F73]">
+                      <p className="mt-2 text-sm font-bold text-[#1E1D59]">
                         Role: {learner.role}
                       </p>
+
+                      {learner.gender && (
+                        <p className="mt-1 text-sm text-gray-500">
+                          Gender: {GENDER_LABELS[learner.gender] || learner.gender}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-3">
                     <Link
                       href="/courses"
-                      className="rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                      className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                     >
                       Browse Courses
                     </Link>
@@ -302,7 +305,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    <GraduationCap className="text-[#007F73]" size={34} />
+                    <GraduationCap className="text-[#1E1D59]" size={34} />
                   </div>
 
                   {learner.enrollments.length === 0 ? (
@@ -334,7 +337,7 @@ export default function ProfilePage() {
                               className={`rounded-full px-3 py-1 text-sm font-bold ${
                                 enrollment.completed
                                   ? "bg-green-100 text-green-700"
-                                  : "bg-orange-100 text-[#D94A00]"
+                                  : "bg-[#F5DCE6] text-[#632854]"
                               }`}
                             >
                               {enrollment.completed
@@ -351,7 +354,7 @@ export default function ProfilePage() {
 
                             <div className="h-3 rounded-full bg-gray-100">
                               <div
-                                className="h-3 rounded-full bg-[#007F73]"
+                                className="h-3 rounded-full bg-[#1E1D59]"
                                 style={{ width: `${enrollment.progress}%` }}
                               />
                             </div>
@@ -372,26 +375,26 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    <CreditCard className="text-[#007F73]" size={34} />
+                    <CreditCard className="text-[#1E1D59]" size={34} />
                   </div>
 
                   <div className="mb-5 grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-2xl bg-orange-50 p-5">
+                    <div className="rounded-2xl bg-[#FBEFF4] p-5">
                       <p className="text-sm font-bold text-gray-500">
                         Pending Payments
                       </p>
 
-                      <p className="mt-2 text-3xl font-bold text-[#D94A00]">
+                      <p className="mt-2 text-3xl font-bold text-[#632854]">
                         {pendingPayments}
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-[#F2FBF8] p-5">
+                    <div className="rounded-2xl bg-[#F1F0FA] p-5">
                       <p className="text-sm font-bold text-gray-500">
                         Paid Payments
                       </p>
 
-                      <p className="mt-2 text-3xl font-bold text-[#007F73]">
+                      <p className="mt-2 text-3xl font-bold text-[#1E1D59]">
                         {paidPayments}
                       </p>
                     </div>
@@ -442,7 +445,7 @@ export default function ProfilePage() {
                                     ? "bg-green-100 text-green-700"
                                     : payment.status === "FAILED"
                                     ? "bg-red-100 text-red-700"
-                                    : "bg-orange-100 text-[#D94A00]"
+                                    : "bg-[#F5DCE6] text-[#632854]"
                                 }`}
                               >
                                 {payment.status}
@@ -476,7 +479,7 @@ export default function ProfilePage() {
                             <div className="mt-4 flex flex-wrap gap-3">
                               <Link
                                 href={`/payment-confirmation?paymentId=${payment.id}`}
-                                className="rounded-xl bg-[#007F73] px-4 py-2 text-sm font-bold text-white hover:bg-[#00665d]"
+                                className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
                               >
                                 View Payment
                               </Link>
@@ -509,7 +512,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    <ClipboardList className="text-[#D94A00]" size={34} />
+                    <ClipboardList className="text-[#632854]" size={34} />
                   </div>
 
                   {learner.quizResults.length === 0 ? (
@@ -556,7 +559,7 @@ export default function ProfilePage() {
                             <p
                               className={`mt-4 text-4xl font-extrabold ${
                                 result.passed
-                                  ? "text-[#007F73]"
+                                  ? "text-[#1E1D59]"
                                   : "text-red-600"
                               }`}
                             >
@@ -589,7 +592,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    <Award className="text-[#007F73]" size={34} />
+                    <Award className="text-[#1E1D59]" size={34} />
                   </div>
 
                   {learner.certificates.length === 0 ? (
@@ -616,7 +619,7 @@ export default function ProfilePage() {
                               {certificate.course.title}
                             </h3>
 
-                            <p className="mt-2 font-bold text-[#007F73]">
+                            <p className="mt-2 font-bold text-[#1E1D59]">
                               {certificate.certificateCode}
                             </p>
 
@@ -627,7 +630,7 @@ export default function ProfilePage() {
                             <div className="mt-4 flex flex-wrap gap-3">
                               <Link
                                 href={`/courses/${certificate.course.slug}/certificate`}
-                                className="rounded-xl bg-[#007F73] px-4 py-2 text-sm font-bold text-white hover:bg-[#00665d]"
+                                className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
                               >
                                 View Certificate
                               </Link>
@@ -667,7 +670,7 @@ function SummaryCard({
   value: string;
   tone: "green" | "orange";
 }) {
-  const toneClass = tone === "green" ? "text-[#007F73]" : "text-[#D94A00]";
+  const toneClass = tone === "green" ? "text-[#1E1D59]" : "text-[#632854]";
 
   return (
     <div className="rounded-3xl bg-white p-6 shadow-sm">
@@ -696,7 +699,7 @@ function EmptyState({
 
       <Link
         href={href}
-        className="mt-5 inline-flex rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+        className="mt-5 inline-flex rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
       >
         {label}
       </Link>

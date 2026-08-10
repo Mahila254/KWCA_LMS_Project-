@@ -3,16 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { authFetch } from "@/lib/authFetch";
 import { Lock, PlayCircle } from "lucide-react";
 
 type PremiumLessonAccessButtonProps = {
   courseId: string;
   courseSlug: string;
   lessonSlug: string;
-};
-
-type SupabaseLearner = {
-  email?: string;
 };
 
 export default function PremiumLessonAccessButton({
@@ -38,21 +35,9 @@ export default function PremiumLessonAccessButton({
         return;
       }
 
-      const learner = user as SupabaseLearner;
-
-      if (!learner.email) {
-        alert("Your account email could not be found. Please login again.");
-        router.push("/login");
-        return;
-      }
-
-      const response = await fetch("/api/access/check-premium", {
+      const response = await authFetch("/api/access/check-premium", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
-          email: learner.email,
           courseId,
         }),
       });
@@ -87,7 +72,7 @@ export default function PremiumLessonAccessButton({
       type="button"
       onClick={handleAccessPremiumLesson}
       disabled={checking}
-      className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00] hover:bg-orange-200 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854] hover:bg-[#F0C7D8] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {checking ? (
         <>

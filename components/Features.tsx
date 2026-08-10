@@ -8,11 +8,11 @@ import {
 function Feature({ icon: Icon, title, text }: any) {
   return (
     <div className="bg-white rounded-2xl p-7 shadow-sm border border-gray-100">
-      <div className="w-12 h-12 rounded-xl bg-[#D94A00] text-white flex items-center justify-center mb-6">
+      <div className="w-12 h-12 rounded-xl bg-[#632854] text-white flex items-center justify-center mb-6">
         <Icon size={24} />
       </div>
 
-      <h3 className="text-xl font-bold mb-3 text-[#101828]">
+      <h3 className="text-xl font-bold mb-3 text-[#1E1D59]">
         {title}
       </h3>
 
@@ -27,7 +27,7 @@ export default function Features() {
   return (
     <section
       id="resources"
-      className="py-24 px-6 bg-[#FFF8E8]"
+      className="py-24 px-6 bg-[#FBE4EA]"
     >
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-center">
 
@@ -60,7 +60,7 @@ export default function Features() {
         </div>
 
         <div>
-          <h2 className="text-4xl font-extrabold mb-6 text-[#101828]">
+          <h2 className="text-4xl font-extrabold mb-6 text-[#1E1D59]">
             Why Choose Our Learning Platform?
           </h2>
 

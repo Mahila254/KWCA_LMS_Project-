@@ -36,19 +36,19 @@ export default async function PricingPage({ searchParams }: PageProps) {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
-        <section className="bg-[#EDF5F3] py-16">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href={courseSlug ? `/courses/${courseSlug}` : "/courses"}
-              className="inline-flex items-center gap-2 font-bold text-[#007F73]"
+              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
             >
               <ArrowLeft size={18} />
               {courseSlug ? "Back to Course" : "Back to Courses"}
             </Link>
 
             <div className="mt-8 max-w-4xl">
-              <p className="font-bold text-[#007F73]">Premium Access</p>
+              <p className="font-bold text-[#1E1D59]">Premium Access</p>
 
               <h1 className="mt-3 text-5xl font-bold">
                 Unlock KWCA LMS Learning
@@ -60,15 +60,15 @@ export default async function PricingPage({ searchParams }: PageProps) {
               </p>
 
               {hasCourseContext && (
-                <div className="mt-6 rounded-2xl bg-orange-50 p-5">
+                <div className="mt-6 rounded-2xl bg-[#FBEFF4] p-5">
                   <div className="flex gap-3">
                     <AlertCircle
-                      className="mt-1 shrink-0 text-[#D94A00]"
+                      className="mt-1 shrink-0 text-[#632854]"
                       size={22}
                     />
 
                     <div>
-                      <p className="font-bold text-[#D94A00]">
+                      <p className="font-bold text-[#632854]">
                         Unlocking one specific course
                       </p>
 
@@ -88,11 +88,11 @@ export default async function PricingPage({ searchParams }: PageProps) {
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-10 grid gap-6 md:grid-cols-3">
             <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
                 <BookOpen size={34} />
               </div>
 
-              <p className="font-bold text-[#007F73]">Pay Per Course</p>
+              <p className="font-bold text-[#1E1D59]">Pay Per Course</p>
 
               <h2 className="mt-3 text-3xl font-bold">Single Course</h2>
 
@@ -132,16 +132,16 @@ export default async function PricingPage({ searchParams }: PageProps) {
               )}
             </div>
 
-            <div className="relative rounded-3xl border-2 border-[#007F73] bg-white p-8 shadow-sm">
-              <div className="absolute right-6 top-6 rounded-full bg-[#007F73] px-4 py-2 text-sm font-bold text-white">
+            <div className="relative rounded-3xl border-2 border-[#1E1D59] bg-white p-8 shadow-sm">
+              <div className="absolute right-6 top-6 rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white">
                 Recommended
               </div>
 
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
                 <Crown size={34} />
               </div>
 
-              <p className="font-bold text-[#007F73]">Monthly Subscription</p>
+              <p className="font-bold text-[#1E1D59]">Monthly Subscription</p>
 
               <h2 className="mt-3 text-3xl font-bold">Monthly Access</h2>
 
@@ -170,11 +170,11 @@ export default async function PricingPage({ searchParams }: PageProps) {
             </div>
 
             <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
                 <CalendarDays size={34} />
               </div>
 
-              <p className="font-bold text-[#007F73]">Annual Subscription</p>
+              <p className="font-bold text-[#1E1D59]">Annual Subscription</p>
 
               <h2 className="mt-3 text-3xl font-bold">Annual Access</h2>
 
@@ -205,7 +205,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
           <div className="grid gap-8 lg:grid-cols-2">
             <div className="rounded-3xl bg-white p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <CreditCard className="text-[#007F73]" size={30} />
+                <CreditCard className="text-[#1E1D59]" size={30} />
 
                 <div>
                   <h2 className="text-3xl font-bold">Payment Methods</h2>
@@ -236,7 +236,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-[#07122E] p-8 text-white shadow-sm">
+            <div className="rounded-3xl bg-[#1E1D59] p-8 text-white shadow-sm">
               <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-white">
                 <ShieldCheck size={34} />
               </div>
@@ -270,7 +270,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
 function Feature({ text }: { text: string }) {
   return (
     <div className="flex gap-3">
-      <CheckCircle className="mt-1 shrink-0 text-[#007F73]" size={20} />
+      <CheckCircle className="mt-1 shrink-0 text-[#1E1D59]" size={20} />
       <p className="text-gray-600">{text}</p>
     </div>
   );
@@ -288,7 +288,7 @@ function PaymentOption({
   return (
     <div className="rounded-2xl border p-5">
       <div className="flex gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F2FBF8] text-[#007F73]">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
           {icon}
         </div>
 
@@ -296,7 +296,7 @@ function PaymentOption({
           <h3 className="text-xl font-bold">{title}</h3>
           <p className="mt-1 leading-7 text-gray-600">{description}</p>
 
-          <span className="mt-3 inline-flex rounded-full bg-orange-50 px-3 py-1 text-sm font-bold text-[#D94A00]">
+          <span className="mt-3 inline-flex rounded-full bg-[#FBEFF4] px-3 py-1 text-sm font-bold text-[#632854]">
             Coming Soon
           </span>
         </div>

@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/requireUser";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const paymentId = searchParams.get("paymentId");
@@ -21,10 +29,11 @@ export async function GET(request: Request) {
       },
       include: {
         course: true,
+        user: true,
       },
     });
 
-    if (!payment) {
+    if (!payment || payment.user.email !== verifiedUser.email) {
       return NextResponse.json(
         { error: "Payment record not found." },
         { status: 404 }

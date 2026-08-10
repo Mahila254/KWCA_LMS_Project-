@@ -3,6 +3,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { isAdminRequest } from "@/lib/isAdminRequest";
 import MarkLessonCompleteButton from "@/components/MarkLessonCompleteButton";
 import PremiumLessonGate from "@/components/PremiumLessonGate";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -111,7 +112,7 @@ function renderTextBlocks(content: string) {
 
     if (isHeading && block.length < 80) {
       return (
-        <h3 key={index} className="text-2xl font-extrabold text-[#07122E]">
+        <h3 key={index} className="text-2xl font-extrabold text-[#1E1D59]">
           {block.replace(":", "")}
         </h3>
       );
@@ -129,7 +130,12 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
   const { slug, lesson } = await params;
   const query = await searchParams;
 
-  const isAdminPreview = query.adminPreview === "true";
+  // A query param alone proves nothing — anyone can type ?adminPreview=true
+  // into the URL bar. This used to bypass the premium-content gate below
+  // for anyone, admin or not; it's now checked against the real admin
+  // session cookie.
+  const isAdminPreview =
+    query.adminPreview === "true" && (await isAdminRequest());
 
   const course: CourseWithLessons | null = await prisma.course.findUnique({
     where: {
@@ -150,13 +156,13 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
-          <h1 className="text-4xl font-bold text-[#07122E]">
+          <h1 className="text-4xl font-bold text-[#1E1D59]">
             Course not found
           </h1>
 
           <Link
             href={isAdminPreview ? "/admin/courses" : "/courses"}
-            className="mt-6 inline-block font-bold text-[#007F73]"
+            className="mt-6 inline-block font-bold text-[#1E1D59]"
           >
             Back to Courses
           </Link>
@@ -177,7 +183,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
-          <h1 className="text-4xl font-bold text-[#07122E]">
+          <h1 className="text-4xl font-bold text-[#1E1D59]">
             Lesson not found
           </h1>
 
@@ -187,7 +193,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                 ? `/admin/courses/${course.slug}/lessons`
                 : `/courses/${slug}`
             }
-            className="mt-6 inline-block font-bold text-[#007F73]"
+            className="mt-6 inline-block font-bold text-[#1E1D59]"
           >
             Back to Course
           </Link>
@@ -236,9 +242,9 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
     : `/courses/${course.slug}`;
 
   const lessonContent = (
-    <main className="min-h-screen bg-gray-50 text-[#07122E]">
+    <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
       {isAdminPreview && (
-        <section className="border-b bg-[#07122E] px-6 py-4 text-white">
+        <section className="border-b bg-[#1E1D59] px-6 py-4 text-white">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-sm font-bold text-white/70">
@@ -252,7 +258,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
             <Link
               href={`/admin/courses/${course.slug}/lessons`}
-              className="rounded-xl bg-white px-5 py-3 font-bold text-[#07122E] hover:bg-gray-100"
+              className="rounded-xl bg-white px-5 py-3 font-bold text-[#1E1D59] hover:bg-gray-100"
             >
               Back to Admin Lessons
             </Link>
@@ -270,15 +276,15 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
         <div className="absolute inset-0 bg-white/72" />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F2FBF8]/90 via-white/80 to-gray-50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/90 via-white/80 to-gray-50" />
 
-        <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#007F73]/20 blur-3xl" />
-        <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#D94A00]/20 blur-3xl" />
+        <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#1E1D59]/20 blur-3xl" />
+        <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#632854]/20 blur-3xl" />
 
         <ScrollReveal className="relative mx-auto max-w-7xl">
           <Link
             href={backToCourseHref}
-            className="mb-8 inline-flex items-center gap-2 font-bold text-[#007F73]"
+            className="mb-8 inline-flex items-center gap-2 font-bold text-[#1E1D59]"
           >
             <ArrowLeft size={18} />
             {isAdminPreview ? "Back to Admin Lessons" : "Back to Course"}
@@ -287,7 +293,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#007F73] shadow-sm">
+                <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
                   Lesson {lessonNumber} of {course.lessons.length}
                 </span>
 
@@ -297,14 +303,14 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                     Free Preview
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-4 py-2 text-sm font-extrabold text-[#D94A00]">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-extrabold text-[#632854]">
                     <Lock size={14} />
                     Premium Lesson
                   </span>
                 )}
 
                 {isAdminPreview && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#07122E] px-4 py-2 text-sm font-extrabold text-white">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-extrabold text-white">
                     Admin Preview
                   </span>
                 )}
@@ -326,7 +332,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
                 <div className="h-3 rounded-full bg-white shadow-sm">
                   <div
-                    className="h-3 rounded-full bg-[#007F73]"
+                    className="h-3 rounded-full bg-[#1E1D59]"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
@@ -334,7 +340,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
             </div>
 
             <div className="rounded-3xl bg-white p-4 shadow-sm">
-              <div className="relative h-[320px] overflow-hidden rounded-3xl bg-[#07122E]">
+              <div className="relative h-[320px] overflow-hidden rounded-3xl bg-[#1E1D59]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imageSource}
@@ -342,7 +348,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   className="h-full w-full object-cover"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-[#07122E]/80 via-[#07122E]/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1E1D59]/80 via-[#1E1D59]/10 to-transparent" />
 
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <p className="text-sm font-bold text-white/75">
@@ -379,8 +385,8 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   href={lessonHref(item.slug)}
                   className={`block rounded-xl border p-4 transition-all duration-300 hover:shadow-sm ${
                     activeLesson
-                      ? "border-[#007F73] bg-[#F2FBF8]"
-                      : "border-gray-200 bg-white hover:border-[#007F73]"
+                      ? "border-[#1E1D59] bg-[#F1F0FA]"
+                      : "border-gray-200 bg-white hover:border-[#1E1D59]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -413,8 +419,8 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                           </>
                         ) : (
                           <>
-                            <Lock size={14} className="text-[#D94A00]" />
-                            <span className="font-semibold text-[#D94A00]">
+                            <Lock size={14} className="text-[#632854]" />
+                            <span className="font-semibold text-[#632854]">
                               Premium
                             </span>
                           </>
@@ -427,7 +433,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                     ) : itemIsPreview ? (
                       <Eye className="text-green-600" size={18} />
                     ) : (
-                      <Lock className="text-[#D94A00]" size={18} />
+                      <Lock className="text-[#632854]" size={18} />
                     )}
                   </div>
                 </Link>
@@ -446,7 +452,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
               <Link
                 href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
-                className="mt-4 inline-block rounded-xl bg-[#007F73] px-4 py-3 text-sm font-bold text-white hover:bg-[#00665d]"
+                className="mt-4 inline-block rounded-xl bg-[#1E1D59] px-4 py-3 text-sm font-bold text-white hover:bg-[#14123D]"
               >
                 View Pricing
               </Link>
@@ -457,7 +463,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         <section className="space-y-8 lg:col-span-3">
           <ScrollReveal>
             <div className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
-              <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-[#07122E] text-white">
+              <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-[#1E1D59] text-white">
                 {videoEmbedUrl ? (
                   <iframe
                     src={videoEmbedUrl}
@@ -486,18 +492,18 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                     Free Preview Lesson
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854]">
                     <Lock size={15} />
                     Premium Lesson
                   </span>
                 )}
 
-                <span className="inline-flex items-center gap-2 rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-[#F1F0FA] px-4 py-2 text-sm font-bold text-[#1E1D59]">
                   <BookOpen size={15} />
                   Reading Included
                 </span>
 
-                <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-bold text-[#D94A00]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854]">
                   <HelpCircle size={15} />
                   Quiz at End
                 </span>
@@ -508,7 +514,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
           <ScrollReveal>
             <div className="rounded-3xl bg-white p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <BookOpen className="text-[#007F73]" size={30} />
+                <BookOpen className="text-[#1E1D59]" size={30} />
 
                 <h2 className="text-3xl font-bold">Lesson Notes</h2>
               </div>
@@ -526,7 +532,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
               {currentLesson.notes && (
                 <div className="mt-8 rounded-2xl bg-gray-50 p-6">
                   <div className="mb-4 flex items-center gap-3">
-                    <ShieldCheck className="text-[#007F73]" size={24} />
+                    <ShieldCheck className="text-[#1E1D59]" size={24} />
 
                     <h3 className="text-xl font-bold">Key Takeaway</h3>
                   </div>
@@ -543,7 +549,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
             <ScrollReveal>
               <div className="h-full rounded-3xl bg-white p-8 shadow-sm">
                 <div className="mb-4 flex items-center gap-3">
-                  <FileText className="text-[#007F73]" size={26} />
+                  <FileText className="text-[#1E1D59]" size={26} />
 
                   <h2 className="text-2xl font-bold">Required Reading</h2>
                 </div>
@@ -576,7 +582,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
             <ScrollReveal>
               <div className="h-full rounded-3xl bg-white p-8 shadow-sm">
                 <div className="mb-4 flex items-center gap-3">
-                  <ClipboardList className="text-[#D94A00]" size={26} />
+                  <ClipboardList className="text-[#632854]" size={26} />
 
                   <h2 className="text-2xl font-bold">Practice Activity</h2>
                 </div>
@@ -588,7 +594,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
                 <Link
                   href={`/courses/${slug}/quiz/practice`}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                 >
                   Start Practice Quiz
                   <ArrowRight size={18} />
@@ -643,7 +649,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                 {nextLesson ? (
                   <Link
                     href={lessonHref(nextLesson.slug)}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                   >
                     Next Lesson
                     <ArrowRight size={18} />
@@ -655,7 +661,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                         ? `/admin/courses/${course.slug}/lessons`
                         : `/courses/${slug}/quiz/practice`
                     }
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                   >
                     {isAdminPreview ? "Back to Admin Lessons" : "Continue to Quiz"}
                     <ArrowRight size={18} />

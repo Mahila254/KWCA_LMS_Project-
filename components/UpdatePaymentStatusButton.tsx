@@ -65,7 +65,7 @@ export default function UpdatePaymentStatusButton({
       ? "border-green-200 text-green-700 hover:bg-green-50"
       : status === "FAILED"
       ? "border-red-200 text-red-700 hover:bg-red-50"
-      : "border-orange-200 text-[#D94A00] hover:bg-orange-50";
+      : "border-[#EBB8CC] text-[#632854] hover:bg-[#FBEFF4]";
 
   return (
     <button

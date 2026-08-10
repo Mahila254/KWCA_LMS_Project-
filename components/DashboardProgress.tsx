@@ -30,25 +30,25 @@ export default function DashboardProgress() {
     <>
       <div className="rounded-3xl bg-white p-8 shadow-sm">
         <p className="text-gray-500">Courses Enrolled</p>
-        <h2 className="mt-2 text-4xl font-bold text-[#101828]">1</h2>
+        <h2 className="mt-2 text-4xl font-bold text-[#1E1D59]">1</h2>
       </div>
 
       <div className="rounded-3xl bg-white p-8 shadow-sm">
         <p className="text-gray-500">Lessons Completed</p>
-        <h2 className="mt-2 text-4xl font-bold text-[#101828]">
+        <h2 className="mt-2 text-4xl font-bold text-[#1E1D59]">
           {completedLessons.length}
         </h2>
       </div>
 
       <div className="rounded-3xl bg-white p-8 shadow-sm">
         <p className="text-gray-500">Overall Progress</p>
-        <h2 className="mt-2 text-4xl font-bold text-[#101828]">
+        <h2 className="mt-2 text-4xl font-bold text-[#1E1D59]">
           {progressPercent}%
         </h2>
       </div>
 
       <section className="lg:col-span-4 mt-10">
-        <h2 className="mb-6 text-3xl font-bold text-[#101828]">
+        <h2 className="mb-6 text-3xl font-bold text-[#1E1D59]">
           My Courses
         </h2>
 
@@ -79,17 +79,17 @@ export default function DashboardProgress() {
                 href={`/courses/${course.slug}`}
                 className="rounded-3xl bg-white p-7 shadow-sm transition hover:shadow-md"
               >
-                <p className="font-bold text-[#007F73]">
+                <p className="font-bold text-[#1E1D59]">
                   {course.module}
                 </p>
 
-                <h3 className="mt-3 text-xl font-bold text-[#101828]">
+                <h3 className="mt-3 text-xl font-bold text-[#1E1D59]">
                   {course.title}
                 </h3>
 
                 <div className="mt-6 h-3 overflow-hidden rounded-full bg-gray-200">
                   <div
-                    className="h-full rounded-full bg-[#007F73]"
+                    className="h-full rounded-full bg-[#1E1D59]"
                     style={{ width: `${courseProgress}%` }}
                   />
                 </div>

@@ -6,9 +6,9 @@ export default function CourseNavigationPage() {
     <main className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <section className="bg-[#edf6f3] px-6 py-16">
+      <section className="bg-[#F8F4F4] px-6 py-16">
         <div className="mx-auto max-w-7xl">
-          <h1 className="text-5xl font-extrabold text-[#101828]">
+          <h1 className="text-5xl font-extrabold text-[#1E1D59]">
             Course Admin Navigation
           </h1>
 
@@ -24,7 +24,7 @@ export default function CourseNavigationPage() {
             href="/admin/courses/edit"
             className="rounded-3xl bg-white p-8 shadow-sm border hover:shadow-md"
           >
-            <h2 className="text-2xl font-bold text-[#101828]">
+            <h2 className="text-2xl font-bold text-[#1E1D59]">
               Add New Course
             </h2>
 
@@ -37,7 +37,7 @@ export default function CourseNavigationPage() {
             href="/admin/courses/edit"
             className="rounded-3xl bg-white p-8 shadow-sm border hover:shadow-md"
           >
-            <h2 className="text-2xl font-bold text-[#101828]">
+            <h2 className="text-2xl font-bold text-[#1E1D59]">
               Edit Existing Course
             </h2>
 
@@ -50,7 +50,7 @@ export default function CourseNavigationPage() {
             href="/admin/courses"
             className="rounded-3xl bg-white p-8 shadow-sm border hover:shadow-md"
           >
-            <h2 className="text-2xl font-bold text-[#101828]">
+            <h2 className="text-2xl font-bold text-[#1E1D59]">
               Back to Course Management
             </h2>
 
@@ -63,7 +63,7 @@ export default function CourseNavigationPage() {
             href="/admin"
             className="rounded-3xl bg-white p-8 shadow-sm border hover:shadow-md"
           >
-            <h2 className="text-2xl font-bold text-[#101828]">
+            <h2 className="text-2xl font-bold text-[#1E1D59]">
               Back to Admin Dashboard
             </h2>
 

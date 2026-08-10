@@ -3,6 +3,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { isAdminRequest } from "@/lib/isAdminRequest";
 import EnrollCourseButton from "@/components/EnrollCourseButton";
 import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -92,7 +93,7 @@ function getAccessBadgeClass(accessType: CourseRecord["accessType"]) {
     return "bg-blue-100 text-blue-700";
   }
 
-  return "bg-orange-100 text-[#D94A00]";
+  return "bg-[#F5DCE6] text-[#632854]";
 }
 
 export default async function CourseDetailsPage({
@@ -102,7 +103,8 @@ export default async function CourseDetailsPage({
   const { slug } = await params;
   const query = await searchParams;
 
-  const isAdminPreview = query.adminPreview === "true";
+  const isAdminPreview =
+    query.adminPreview === "true" && (await isAdminRequest());
 
   const course: CourseRecord | null = await prisma.course.findUnique({
     where: {
@@ -138,7 +140,7 @@ export default async function CourseDetailsPage({
       <>
         {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
-        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#07122E]">
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#1E1D59]">
           <h1 className="text-4xl font-bold">Course not found</h1>
 
           <p className="mt-4 text-gray-600">
@@ -147,7 +149,7 @@ export default async function CourseDetailsPage({
 
           <Link
             href={isAdminPreview ? "/admin/courses" : "/courses"}
-            className="mt-6 inline-flex rounded-xl bg-[#007F73] px-6 py-3 font-bold text-white hover:bg-[#00665d]"
+            className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
           >
             Back to Courses
           </Link>
@@ -185,9 +187,9 @@ export default async function CourseDetailsPage({
     <>
       {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
-      <main className="min-h-screen bg-gray-50 text-[#07122E]">
+      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
         {isAdminPreview && (
-          <section className="border-b bg-[#07122E] px-6 py-4 text-white">
+          <section className="border-b bg-[#1E1D59] px-6 py-4 text-white">
             <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-bold text-white/70">
@@ -201,7 +203,7 @@ export default async function CourseDetailsPage({
 
               <Link
                 href="/admin/courses"
-                className="rounded-xl bg-white px-5 py-3 font-bold text-[#07122E] hover:bg-gray-100"
+                className="rounded-xl bg-white px-5 py-3 font-bold text-[#1E1D59] hover:bg-gray-100"
               >
                 Back to Admin Courses
               </Link>
@@ -219,15 +221,15 @@ export default async function CourseDetailsPage({
 
           <div className="absolute inset-0 bg-white/70" />
 
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F2FBF8]/85 via-white/80 to-gray-50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/85 via-white/80 to-gray-50" />
 
-          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#007F73]/20 blur-3xl" />
-          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#D94A00]/20 blur-3xl" />
+          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#1E1D59]/20 blur-3xl" />
+          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#632854]/20 blur-3xl" />
 
           <ScrollReveal className="relative mx-auto max-w-7xl">
             <Link
               href={isAdminPreview ? "/admin/courses" : "/courses"}
-              className="mb-8 inline-flex items-center gap-2 font-bold text-[#007F73]"
+              className="mb-8 inline-flex items-center gap-2 font-bold text-[#1E1D59]"
             >
               <ArrowLeft size={18} />
               {isAdminPreview ? "Back to Admin Courses" : "Back to Courses"}
@@ -236,7 +238,7 @@ export default async function CourseDetailsPage({
             <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>
                 <div className="mb-6 flex flex-wrap gap-3">
-                  <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#007F73] shadow-sm">
+                  <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
                     {course.category || "General"}
                   </span>
 
@@ -254,7 +256,7 @@ export default async function CourseDetailsPage({
                     {getAccessLabel(course.accessType)}
                   </span>
 
-                  <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#07122E] shadow-sm">
+                  <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
                     {course.status}
                   </span>
                 </div>
@@ -276,7 +278,7 @@ export default async function CourseDetailsPage({
                           ? `/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`
                           : `/courses/${course.slug}/${firstLesson.slug}`
                       }
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#00665d]"
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
                     >
                       Start Course
                       <ArrowRight size={18} />
@@ -304,7 +306,7 @@ export default async function CourseDetailsPage({
               </div>
 
               <div className="rounded-3xl bg-white p-4 shadow-sm">
-                <div className="relative h-[380px] overflow-hidden rounded-3xl bg-[#07122E]">
+                <div className="relative h-[380px] overflow-hidden rounded-3xl bg-[#1E1D59]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={imageSource}
@@ -312,7 +314,7 @@ export default async function CourseDetailsPage({
                     className="h-full w-full object-cover"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#07122E]/75 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1E1D59]/75 via-transparent to-transparent" />
 
                   <div className="absolute bottom-6 left-6 right-6 text-white">
                     <p className="text-sm font-bold text-white/80">
@@ -361,7 +363,7 @@ export default async function CourseDetailsPage({
           <ScrollReveal>
             <div className="rounded-3xl bg-white p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <ShieldCheck className="text-[#007F73]" size={30} />
+                <ShieldCheck className="text-[#1E1D59]" size={30} />
 
                 <h2 className="text-3xl font-bold">Course Overview</h2>
               </div>
@@ -425,7 +427,7 @@ export default async function CourseDetailsPage({
           </ScrollReveal>
 
           <ScrollReveal>
-            <div className="rounded-3xl bg-[#07122E] p-8 text-white shadow-sm">
+            <div className="rounded-3xl bg-[#1E1D59] p-8 text-white shadow-sm">
               <div className="mb-6 flex items-center gap-3">
                 <PlayCircle size={30} />
 
@@ -445,7 +447,7 @@ export default async function CourseDetailsPage({
                         ? `/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`
                         : `/courses/${course.slug}/${firstLesson.slug}`
                     }
-                    className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 font-bold text-[#07122E] transition hover:-translate-y-1"
+                    className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 font-bold text-[#1E1D59] transition hover:-translate-y-1"
                   >
                     Continue to First Lesson
                     <ArrowRight size={18} />
@@ -459,7 +461,7 @@ export default async function CourseDetailsPage({
                 {!isAdminPreview && (
                   <Link
                     href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
-                    className="flex items-center justify-between rounded-2xl border border-white/30 px-5 py-4 font-bold text-white hover:bg-white hover:text-[#07122E]"
+                    className="flex items-center justify-between rounded-2xl border border-white/30 px-5 py-4 font-bold text-white hover:bg-white hover:text-[#1E1D59]"
                   >
                     View Pricing Options
                     <ArrowRight size={18} />
@@ -469,7 +471,7 @@ export default async function CourseDetailsPage({
                 {isAdminPreview && (
                   <Link
                     href={`/admin/courses/${course.slug}/lessons`}
-                    className="flex items-center justify-between rounded-2xl border border-white/30 px-5 py-4 font-bold text-white hover:bg-white hover:text-[#07122E]"
+                    className="flex items-center justify-between rounded-2xl border border-white/30 px-5 py-4 font-bold text-white hover:bg-white hover:text-[#1E1D59]"
                   >
                     Manage Lessons
                     <ArrowRight size={18} />
@@ -485,7 +487,7 @@ export default async function CourseDetailsPage({
             <div className="rounded-3xl bg-white p-8 shadow-sm">
               <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
                 <div>
-                  <p className="font-bold text-[#D94A00]">Course Lessons</p>
+                  <p className="font-bold text-[#632854]">Course Lessons</p>
 
                   <h2 className="mt-3 text-4xl font-extrabold">
                     Lesson Outline
@@ -497,7 +499,7 @@ export default async function CourseDetailsPage({
                   </p>
                 </div>
 
-                <span className="rounded-full bg-[#F2FBF8] px-4 py-2 text-sm font-bold text-[#007F73]">
+                <span className="rounded-full bg-[#F1F0FA] px-4 py-2 text-sm font-bold text-[#1E1D59]">
                   {course.lessons.length} Lessons
                 </span>
               </div>
@@ -505,7 +507,7 @@ export default async function CourseDetailsPage({
               {course.lessons.length === 0 ? (
                 <div className="rounded-2xl bg-gray-50 p-8 text-center">
                   <BookOpen
-                    className="mx-auto text-[#007F73]"
+                    className="mx-auto text-[#1E1D59]"
                     size={42}
                   />
 
@@ -525,9 +527,9 @@ export default async function CourseDetailsPage({
                     return (
                       <div
                         key={lesson.id}
-                        className="grid gap-5 rounded-2xl border p-5 transition hover:border-[#007F73] hover:bg-gray-50 md:grid-cols-[70px_1fr_auto]"
+                        className="grid gap-5 rounded-2xl border p-5 transition hover:border-[#1E1D59] hover:bg-gray-50 md:grid-cols-[70px_1fr_auto]"
                       >
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F2FBF8] text-xl font-extrabold text-[#007F73]">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-xl font-extrabold text-[#1E1D59]">
                           {index + 1}
                         </div>
 
@@ -539,7 +541,7 @@ export default async function CourseDetailsPage({
                                 Free Preview
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-[#D94A00]">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[#F5DCE6] px-3 py-1 text-xs font-bold text-[#632854]">
                                 <Lock size={13} />
                                 Premium
                               </span>
@@ -553,7 +555,7 @@ export default async function CourseDetailsPage({
                             )}
 
                             {lesson.readingUrl && (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-[#F2FBF8] px-3 py-1 text-xs font-bold text-[#007F73]">
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[#F1F0FA] px-3 py-1 text-xs font-bold text-[#1E1D59]">
                                 <FileText size={13} />
                                 Reading
                               </span>
@@ -572,7 +574,7 @@ export default async function CourseDetailsPage({
                           {isAdminPreview ? (
                             <Link
                               href={`/courses/${course.slug}/${lesson.slug}?adminPreview=true`}
-                              className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+                              className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                             >
                               Preview
                               <ArrowRight size={17} />
@@ -580,7 +582,7 @@ export default async function CourseDetailsPage({
                           ) : isPreview ? (
                             <Link
                               href={`/courses/${course.slug}/${lesson.slug}`}
-                              className="inline-flex items-center gap-2 rounded-xl bg-[#007F73] px-5 py-3 font-bold text-white hover:bg-[#00665d]"
+                              className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                             >
                               Start
                               <ArrowRight size={17} />
@@ -620,7 +622,7 @@ function CourseStat({
   return (
     <ScrollReveal>
       <div className="rounded-3xl bg-white p-6 shadow-sm">
-        <div className="mb-4 flex items-center gap-3 text-[#007F73]">
+        <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
           {icon}
           <p className="text-sm font-bold text-gray-500">{label}</p>
         </div>
@@ -642,7 +644,7 @@ function InfoBox({
 }) {
   return (
     <div className="rounded-2xl bg-gray-50 p-5">
-      <div className="mb-3 text-[#007F73]">{icon}</div>
+      <div className="mb-3 text-[#1E1D59]">{icon}</div>
 
       <p className="text-sm font-bold text-gray-500">{title}</p>
 

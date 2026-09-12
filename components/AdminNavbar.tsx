@@ -37,6 +37,10 @@ export default function AdminNavbar() {
             Reports
           </Link>
 
+          <Link href="/admin/feedback" className="font-bold hover:text-[#D9D3EC]">
+            Feedback
+          </Link>
+
           <Link
             href="/admin/certificates"
             className="font-bold hover:text-[#D9D3EC]"

@@ -67,6 +67,7 @@ model User {
   quizResults  QuizResult[]
   certificates Certificate[]
   payments     Payment[]
+  feedback     CourseFeedback[]
 }
 
 model Course {
@@ -90,6 +91,7 @@ model Course {
   certificates  Certificate[]
   payments      Payment[]
   quizQuestions QuizQuestion[]
+  feedback      CourseFeedback[]
 }
 
 model Lesson {
@@ -185,4 +187,19 @@ model Payment {
 
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+}
+
+model CourseFeedback {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
 }

@@ -16,8 +16,10 @@ import {
   ClipboardList,
   Clock,
   Lock,
+  MessageSquare,
   RotateCcw,
   ShieldCheck,
+  Star,
   Target,
   Trophy,
   XCircle,
@@ -67,6 +69,12 @@ export default function FinalQuizPage() {
   const QUIZ_DURATION_SECONDS = 30 * 60;
   const [timeLeft, setTimeLeft] = useState(QUIZ_DURATION_SECONDS);
   const autoSubmittedRef = useRef(false);
+
+  const [feedbackRating, setFeedbackRating] = useState(0);
+  const [feedbackComment, setFeedbackComment] = useState("");
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [feedbackSkipped, setFeedbackSkipped] = useState(false);
+  const [submittingFeedback, setSubmittingFeedback] = useState(false);
 
   useEffect(() => {
     async function fetchFinalQuestions() {
@@ -180,6 +188,39 @@ export default function FinalQuizPage() {
     }
   }
 
+  async function submitCourseFeedback() {
+    if (feedbackRating < 1) {
+      alert("Please select a star rating before submitting.");
+      return;
+    }
+
+    try {
+      setSubmittingFeedback(true);
+
+      const response = await authFetch(`/api/courses/${courseSlug}/feedback`, {
+        method: "POST",
+        body: JSON.stringify({
+          rating: feedbackRating,
+          comment: feedbackComment,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Something went wrong while saving your feedback.");
+        return;
+      }
+
+      setFeedbackSubmitted(true);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong while saving your feedback.");
+    } finally {
+      setSubmittingFeedback(false);
+    }
+  }
+
   async function handleNextQuestion() {
     if (!selectedAnswer) {
       alert("Please select an answer before continuing.");
@@ -224,6 +265,10 @@ export default function FinalQuizPage() {
     setSavingResult(false);
     setTimeLeft(QUIZ_DURATION_SECONDS);
     autoSubmittedRef.current = false;
+    setFeedbackRating(0);
+    setFeedbackComment("");
+    setFeedbackSubmitted(false);
+    setFeedbackSkipped(false);
   }
 
   function formatTimeLeft(totalSeconds: number) {
@@ -395,6 +440,103 @@ export default function FinalQuizPage() {
                     </div>
                   </div>
                 </div>
+
+                {!feedbackSkipped && (
+                  <div className="mt-8 rounded-3xl bg-gray-50 p-6">
+                    {feedbackSubmitted ? (
+                      <div className="flex items-start gap-4">
+                        <CheckCircle
+                          className="mt-1 shrink-0 text-green-600"
+                          size={28}
+                        />
+                        <div>
+                          <h3 className="text-xl font-bold">
+                            Thanks for your feedback!
+                          </h3>
+                          <p className="mt-2 leading-7 text-gray-600">
+                            It helps KWCA improve this course for future
+                            learners.
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex items-start gap-4">
+                          <MessageSquare
+                            className="mt-1 shrink-0 text-[#632854]"
+                            size={28}
+                          />
+                          <div>
+                            <h3 className="text-xl font-bold">
+                              How was this course?
+                            </h3>
+                            <p className="mt-2 leading-7 text-gray-600">
+                              Rate your experience and, if you&apos;d like,
+                              tell us more. This is optional.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="mt-5 flex items-center justify-center gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setFeedbackRating(star)}
+                              aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                              className="transition hover:scale-110"
+                            >
+                              <Star
+                                size={36}
+                                className={
+                                  star <= feedbackRating
+                                    ? "fill-[#632854] text-[#632854]"
+                                    : "fill-transparent text-gray-300"
+                                }
+                              />
+                            </button>
+                          ))}
+                        </div>
+
+                        <textarea
+                          value={feedbackComment}
+                          onChange={(event) =>
+                            setFeedbackComment(event.target.value)
+                          }
+                          placeholder="Share any feedback about this course (optional)..."
+                          rows={4}
+                          maxLength={2000}
+                          className="mt-5 w-full rounded-2xl border bg-white p-4 outline-none focus:border-[#1E1D59]"
+                        />
+
+                        <div className="mt-4 flex flex-wrap justify-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setFeedbackSkipped(true)}
+                            className="rounded-xl border px-6 py-3 font-bold hover:bg-white"
+                          >
+                            Skip
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={submitCourseFeedback}
+                            disabled={submittingFeedback || feedbackRating < 1}
+                            className={`rounded-xl px-6 py-3 font-bold ${
+                              submittingFeedback || feedbackRating < 1
+                                ? "cursor-not-allowed bg-gray-200 text-gray-500"
+                                : "bg-[#632854] text-white hover:bg-[#4F2043]"
+                            }`}
+                          >
+                            {submittingFeedback
+                              ? "Submitting..."
+                              : "Submit Feedback"}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
 
                 <div className="mt-8 flex flex-wrap justify-center gap-4">
                   <button

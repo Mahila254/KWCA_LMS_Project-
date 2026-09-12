@@ -10,6 +10,7 @@ import {
   Award,
   LayoutDashboard,
   CreditCard,
+  MessageSquare,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -34,7 +35,7 @@ export default function AdminDashboardPage() {
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-12">
-          <div className="mb-10 grid gap-6 md:grid-cols-3 lg:grid-cols-6">
+          <div className="mb-10 grid gap-6 md:grid-cols-3 lg:grid-cols-7">
             <Link
               href="/admin/courses"
               className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
@@ -123,6 +124,21 @@ export default function AdminDashboardPage() {
               </p>
 
               <h2 className="mt-2 text-2xl font-bold">Settings</h2>
+            </Link>
+
+            <Link
+              href="/admin/feedback"
+              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+                <MessageSquare size={26} />
+              </div>
+
+              <p className="text-sm font-bold text-gray-500">
+                Learner Feedback
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold">Feedback</h2>
             </Link>
           </div>
 
@@ -256,6 +272,28 @@ export default function AdminDashboardPage() {
 
               <p className="mt-5 font-bold text-[#1E1D59]">
                 View Reports →
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/feedback"
+              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+                <MessageSquare size={30} />
+              </div>
+
+              <h2 className="text-2xl font-bold text-[#1E1D59]">
+                Feedback
+              </h2>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                View learner star ratings and written feedback left after
+                completing a course&apos;s final quiz.
+              </p>
+
+              <p className="mt-5 font-bold text-[#1E1D59]">
+                View Feedback →
               </p>
             </Link>
 

@@ -8,7 +8,6 @@ import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 import {
-  Award,
   Download,
   Printer,
   ArrowLeft,
@@ -245,15 +244,26 @@ export default function CertificatePage() {
             padding: 8mm !important;
           }
 
-          .certificate-icon {
-            width: 46px !important;
-            height: 46px !important;
-            margin-bottom: 10px !important;
+          .certificate-corner {
+            height: 22px !important;
+            width: 22px !important;
+            border-width: 3px !important;
           }
 
-          .certificate-icon svg {
-            width: 26px !important;
-            height: 26px !important;
+          .certificate-watermark {
+            width: 115mm !important;
+            height: 115mm !important;
+          }
+
+          .certificate-icon {
+            width: 58px !important;
+            height: 58px !important;
+            margin-bottom: 8px !important;
+          }
+
+          .certificate-icon-logo {
+            height: 32px !important;
+            width: 32px !important;
           }
 
           .certificate-kicker {
@@ -261,14 +271,28 @@ export default function CertificatePage() {
             letter-spacing: 0.32em !important;
           }
 
+          .certificate-divider {
+            margin-top: 6px !important;
+            gap: 8px !important;
+          }
+
+          .certificate-divider-line {
+            width: 22px !important;
+          }
+
+          .certificate-divider-dot {
+            height: 4px !important;
+            width: 4px !important;
+          }
+
           .certificate-title {
-            margin-top: 12px !important;
+            margin-top: 10px !important;
             font-size: 30px !important;
             line-height: 1.05 !important;
           }
 
           .certificate-presented {
-            margin-top: 12px !important;
+            margin-top: 10px !important;
             font-size: 12px !important;
           }
 
@@ -280,7 +304,7 @@ export default function CertificatePage() {
           }
 
           .certificate-course-label {
-            margin-top: 12px !important;
+            margin-top: 10px !important;
             font-size: 12px !important;
           }
 
@@ -291,13 +315,13 @@ export default function CertificatePage() {
           }
 
           .certificate-status {
-            margin-top: 12px !important;
+            margin-top: 10px !important;
             padding: 7px 12px !important;
             font-size: 11px !important;
           }
 
           .certificate-details {
-            margin-top: 14px !important;
+            margin-top: 12px !important;
             gap: 10px !important;
           }
 
@@ -305,8 +329,23 @@ export default function CertificatePage() {
             font-size: 10px !important;
           }
 
+          .certificate-seal {
+            margin-top: 10px !important;
+            gap: 3px !important;
+          }
+
+          .certificate-seal > div {
+            height: 42px !important;
+            width: 42px !important;
+          }
+
+          .certificate-seal p {
+            font-size: 7px !important;
+            letter-spacing: 0.18em !important;
+          }
+
           .certificate-signatures {
-            margin-top: 18px !important;
+            margin-top: 14px !important;
             gap: 18px !important;
           }
 
@@ -355,7 +394,11 @@ export default function CertificatePage() {
 
             <div className="mt-8 max-w-4xl">
               <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
-                <Award size={16} />
+                <img
+                  src="/logo.png"
+                  alt=""
+                  className="h-4 w-4 rounded-full object-contain"
+                />
                 KWCA LMS Certificate
               </span>
 
@@ -413,18 +456,44 @@ export default function CertificatePage() {
 
         <section className="certificate-print-area mx-auto max-w-6xl px-6 pb-12 print:px-0 print:py-0">
           <div className="rounded-3xl bg-white p-6 shadow-sm print:rounded-none print:p-0 print:shadow-none">
-            <div className="certificate-print-box relative overflow-hidden rounded-[2rem] border-[10px] border-[#1E1D59] bg-white p-8 print:rounded-none">
+            <div className="certificate-print-box relative overflow-hidden rounded-[2rem] border-[10px] border-[#1E1D59] bg-white p-8 shadow-[inset_0_0_0_4px_rgba(176,141,87,0.5)] print:rounded-none">
               <div className="absolute left-0 top-0 h-40 w-40 rounded-br-full bg-[#F1F0FA]" />
               <div className="absolute bottom-0 right-0 h-40 w-40 rounded-tl-full bg-[#FBEFF4]" />
 
               <div className="certificate-inner-box relative border-2 border-[#632854] px-8 py-14 text-center">
-                <div className="certificate-icon mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
-                  <Award size={52} />
+                <span className="certificate-corner absolute left-3 top-3 h-9 w-9 rounded-tl-2xl border-l-4 border-t-4 border-[#B08D57]/70 md:left-5 md:top-5" />
+                <span className="certificate-corner absolute right-3 top-3 h-9 w-9 rounded-tr-2xl border-r-4 border-t-4 border-[#B08D57]/70 md:right-5 md:top-5" />
+                <span className="certificate-corner absolute bottom-3 left-3 h-9 w-9 rounded-bl-2xl border-b-4 border-l-4 border-[#B08D57]/70 md:bottom-5 md:left-5" />
+                <span className="certificate-corner absolute bottom-3 right-3 h-9 w-9 rounded-br-2xl border-b-4 border-r-4 border-[#B08D57]/70 md:bottom-5 md:right-5" />
+
+                <img
+                  src="/logo.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="certificate-watermark pointer-events-none absolute inset-0 -z-10 m-auto h-72 w-72 object-contain opacity-[0.05] grayscale print:opacity-[0.07]"
+                />
+
+                <div className="certificate-icon relative mx-auto mb-8 flex h-28 w-28 items-center justify-center">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#1E1D59] via-[#632854] to-[#4F2043] shadow-lg" />
+                  <div className="absolute inset-[3px] rounded-full border-2 border-dashed border-[#B08D57]/70" />
+                  <div className="absolute inset-[9px] flex items-center justify-center overflow-hidden rounded-full bg-white">
+                    <img
+                      src="/logo.png"
+                      alt="KWCA Logo"
+                      className="certificate-icon-logo h-16 w-16 object-contain"
+                    />
+                  </div>
                 </div>
 
                 <p className="certificate-kicker tracking-[0.45em] text-sm font-extrabold text-[#4F2043]">
                   KWCA LEARNING HUB
                 </p>
+
+                <div className="certificate-divider mx-auto mt-4 flex items-center justify-center gap-3">
+                  <span className="certificate-divider-line h-px w-10 bg-[#B08D57]" />
+                  <span className="certificate-divider-dot h-1.5 w-1.5 rotate-45 bg-[#B08D57]" />
+                  <span className="certificate-divider-line h-px w-10 bg-[#B08D57]" />
+                </div>
 
                 <h2 className="certificate-title mt-8 text-5xl font-extrabold text-[#1E1D59]">
                   Certificate of Completion
@@ -446,7 +515,7 @@ export default function CertificatePage() {
                   {course?.title || "Course Title"}
                 </h4>
 
-                <div className="certificate-status mx-auto mt-8 flex max-w-xl items-center justify-center gap-3 rounded-2xl bg-[#F1F0FA] px-6 py-4 text-[#1E1D59]">
+                <div className="certificate-status mx-auto mt-8 flex max-w-xl items-center justify-center gap-3 rounded-2xl border border-[#B08D57]/30 bg-[#F1F0FA] px-6 py-4 text-[#1E1D59]">
                   <CheckCircle size={24} />
 
                   <p className="font-bold">
@@ -471,14 +540,28 @@ export default function CertificatePage() {
                   />
                 </div>
 
+                <div className="certificate-seal mx-auto mt-12 flex flex-col items-center gap-2">
+                  <div className="relative flex h-20 w-20 items-center justify-center">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#B08D57] via-[#E4C89A] to-[#8C6A3E] shadow-md" />
+                    <div className="absolute inset-[4px] rounded-full border-2 border-dashed border-white/80" />
+                    <div className="absolute inset-[10px] flex items-center justify-center rounded-full bg-white">
+                      <BadgeCheck size={26} className="text-[#1E1D59]" />
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#8C6A3E]">
+                    Official KWCA Seal
+                  </p>
+                </div>
+
                 <div className="certificate-signatures mx-auto mt-16 grid max-w-4xl gap-12 md:grid-cols-2">
                   <div>
-                    <div className="mx-auto h-px w-64 bg-gray-400" />
+                    <div className="mx-auto h-px w-64 bg-[#B08D57]" />
                     <p className="mt-3 font-bold">Course Coordinator</p>
                   </div>
 
                   <div>
-                    <div className="mx-auto h-px w-64 bg-gray-400" />
+                    <div className="mx-auto h-px w-64 bg-[#B08D57]" />
                     <p className="mt-3 font-bold">KWCA Representative</p>
                   </div>
                 </div>

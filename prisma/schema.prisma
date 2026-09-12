@@ -53,13 +53,15 @@ enum QuizType {
 }
 
 model User {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   name         String?
-  email        String   @unique
+  email        String    @unique
   gender       Gender?
-  role         UserRole @default(STUDENT)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  role         UserRole  @default(STUDENT)
+  consentGiven Boolean   @default(false)
+  consentedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   enrollments  Enrollment[]
   quizResults  QuizResult[]

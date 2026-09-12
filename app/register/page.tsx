@@ -5,13 +5,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import { UserPlus, Mail, Lock, User, Users } from "lucide-react";
+import { UserPlus, Mail, Lock, User, Users, ShieldCheck } from "lucide-react";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
+  const [consent, setConsent] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -36,6 +37,13 @@ export default function RegisterPage() {
       return;
     }
 
+    if (!consent) {
+      alert(
+        "Please agree to the data consent statement before creating your account."
+      );
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -46,6 +54,8 @@ export default function RegisterPage() {
           data: {
             full_name: name,
             gender: gender || null,
+            consent: true,
+            consentedAt: new Date().toISOString(),
           },
         },
       });
@@ -63,6 +73,7 @@ export default function RegisterPage() {
       setEmail("");
       setPassword("");
       setGender("");
+      setConsent(false);
     } catch (error) {
       console.error(error);
       alert("Something went wrong while creating your account.");
@@ -176,6 +187,28 @@ export default function RegisterPage() {
                 <p className="mt-2 text-sm text-gray-500">
                   Use at least 6 characters.
                 </p>
+              </div>
+
+              <div className="flex items-start gap-3 rounded-xl bg-[#F1F0FA] p-4">
+                <input
+                  id="consent"
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(event) => setConsent(event.target.checked)}
+                  required
+                  className="mt-1 h-4 w-4 shrink-0 accent-[#1E1D59]"
+                />
+
+                <label htmlFor="consent" className="text-sm leading-6 text-gray-700">
+                  <span className="mb-1 flex items-center gap-2 font-bold text-[#1E1D59]">
+                    <ShieldCheck size={16} />
+                    Data consent
+                  </span>
+                  I consent to KWCA LMS collecting and processing my
+                  registration details and course activity (progress, quiz
+                  results, and certificates) for the purpose of delivering
+                  this course and reporting on platform usage.
+                </label>
               </div>
 
               <button

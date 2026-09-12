@@ -9,9 +9,9 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
  * trusting whatever id/email/name a request body claims. The client must
  * send the token as `Authorization: Bearer <token>` (see lib/authFetch.ts).
  *
- * Returns the verified learner's id/email/name/gender, or null if the
- * token is missing or invalid. Every route that reads or writes data tied
- * to "the current learner" must use this instead of body-supplied
+ * Returns the verified learner's id/email/name/gender/consent, or null if
+ * the token is missing or invalid. Every route that reads or writes data
+ * tied to "the current learner" must use this instead of body-supplied
  * id/email — those are just claims from the client and can be forged.
  */
 export async function requireUser(request: NextRequest) {
@@ -37,7 +37,12 @@ export async function requireUser(request: NextRequest) {
   }
 
   const metadata = data.user.user_metadata as
-    | { full_name?: string; gender?: string }
+    | {
+        full_name?: string;
+        gender?: string;
+        consent?: boolean;
+        consentedAt?: string;
+      }
     | null;
 
   return {
@@ -45,5 +50,7 @@ export async function requireUser(request: NextRequest) {
     email: data.user.email,
     name: metadata?.full_name || null,
     gender: metadata?.gender || null,
+    consentGiven: Boolean(metadata?.consent),
+    consentedAt: metadata?.consentedAt || null,
   };
 }

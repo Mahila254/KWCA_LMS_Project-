@@ -23,6 +23,13 @@ export async function POST(request: NextRequest) {
 
     const name = verifiedUser.name || body?.name || null;
 
+    // Consent is captured once at registration (see app/register/page.tsx)
+    // and never overwritten on later syncs, so a resync can't accidentally
+    // clear or backdate an existing consent record.
+    const consentedAtDate = verifiedUser.consentedAt
+      ? new Date(verifiedUser.consentedAt)
+      : new Date();
+
     const user = await prisma.user.upsert({
       where: {
         email: verifiedUser.email,
@@ -37,6 +44,8 @@ export async function POST(request: NextRequest) {
         name,
         gender: normalizedGender ?? null,
         role: "STUDENT",
+        consentGiven: verifiedUser.consentGiven,
+        consentedAt: verifiedUser.consentGiven ? consentedAtDate : null,
       },
     });
 

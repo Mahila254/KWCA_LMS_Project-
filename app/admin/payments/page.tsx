@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import UpdatePaymentStatusButton from "@/components/UpdatePaymentStatusButton";
+import AdminSearchBar from "@/components/AdminSearchBar";
 import {
   ArrowLeft,
   CreditCard,
@@ -44,11 +45,28 @@ type PaymentRecord = {
   } | null;
 };
 
-export default async function AdminPaymentsPage() {
+export default async function AdminPaymentsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
+  const query = q?.trim() || "";
+
   const payments: PaymentRecord[] = await prisma.payment.findMany({
     orderBy: {
       createdAt: "desc",
     },
+    where: query
+      ? {
+          OR: [
+            { user: { name: { contains: query, mode: "insensitive" } } },
+            { user: { email: { contains: query, mode: "insensitive" } } },
+            { providerRef: { contains: query, mode: "insensitive" } },
+            { course: { title: { contains: query, mode: "insensitive" } } },
+          ],
+        }
+      : undefined,
     include: {
       user: {
         select: {
@@ -182,25 +200,36 @@ export default async function AdminPaymentsPage() {
             </div>
           </div>
 
+          <AdminSearchBar
+            action="/admin/payments"
+            placeholder="Search by learner name, email, provider reference, or course..."
+            defaultValue={query}
+          />
+
           {payments.length === 0 ? (
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                 <CreditCard size={34} />
               </div>
 
-              <h2 className="text-3xl font-bold">No payments yet</h2>
+              <h2 className="text-3xl font-bold">
+                {query ? "No matching payments" : "No payments yet"}
+              </h2>
 
               <p className="mt-3 text-gray-600">
-                Payment records will appear here when learners choose a pricing
-                plan.
+                {query
+                  ? "Try a different name, email, or reference."
+                  : "Payment records will appear here when learners choose a pricing plan."}
               </p>
 
-              <Link
-                href="/pricing"
-                className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
-              >
-                View Pricing Page
-              </Link>
+              {!query && (
+                <Link
+                  href="/pricing"
+                  className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                >
+                  View Pricing Page
+                </Link>
+              )}
             </div>
           ) : (
             <div className="overflow-hidden rounded-3xl bg-white shadow-sm">

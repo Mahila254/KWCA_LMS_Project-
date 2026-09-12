@@ -31,6 +31,9 @@ type CourseRecord = {
   quizQuestions: {
     id: string;
   }[];
+  enrollments: {
+    id: string;
+  }[];
 };
 
 type LearnerRecord = {
@@ -139,6 +142,11 @@ export default async function AdminReportsPage() {
           },
         },
         quizQuestions: {
+          select: {
+            id: true,
+          },
+        },
+        enrollments: {
           select: {
             id: true,
           },
@@ -406,6 +414,7 @@ export default async function AdminReportsPage() {
               label="Total Learners"
               value={learners.length.toString()}
               tone="green"
+              href="/admin/learners"
             />
 
             <SummaryCard
@@ -561,6 +570,10 @@ export default async function AdminReportsPage() {
                           <span className="rounded-full bg-[#FBEFF4] px-3 py-1 text-sm font-bold text-[#632854]">
                             {course.quizQuestions.length} Questions
                           </span>
+
+                          <span className="rounded-full bg-[#E4E1F5] px-3 py-1 text-sm font-bold text-[#1E1D59]">
+                            {course.enrollments.length} Learners Enrolled
+                          </span>
                         </div>
                       </div>
                     </Link>
@@ -599,11 +612,13 @@ function SummaryCard({
   label,
   value,
   tone,
+  href,
 }: {
   icon: ReactNode;
   label: string;
   value: string;
   tone: "green" | "orange" | "red";
+  href?: string;
 }) {
   const toneClass =
     tone === "green"
@@ -612,15 +627,30 @@ function SummaryCard({
       ? "text-[#632854]"
       : "text-red-600";
 
-  return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+  const cardContent = (
+    <>
       <div className="mb-4 flex items-center gap-3">
         <div className={toneClass}>{icon}</div>
         <p className="text-sm font-bold text-gray-500">{label}</p>
       </div>
 
       <p className="text-4xl font-bold">{value}</p>
-    </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="block rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="rounded-3xl bg-white p-6 shadow-sm">{cardContent}</div>
   );
 }
 
@@ -774,7 +804,16 @@ function RecentQuizResults({
 }) {
   return (
     <div className="rounded-3xl bg-white p-8 shadow-sm">
-      <h2 className="text-3xl font-bold">Recent Quiz Results</h2>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h2 className="text-3xl font-bold">Recent Quiz Results</h2>
+
+        <Link
+          href="/admin/quiz-results"
+          className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+        >
+          View All Quiz Results
+        </Link>
+      </div>
 
       {quizResults.length === 0 ? (
         <p className="mt-6 rounded-2xl bg-gray-50 p-5 text-gray-600">
@@ -841,7 +880,16 @@ function RecentCertificates({
 }) {
   return (
     <div className="rounded-3xl bg-white p-8 shadow-sm">
-      <h2 className="text-3xl font-bold">Recent Certificates</h2>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h2 className="text-3xl font-bold">Recent Certificates</h2>
+
+        <Link
+          href="/admin/certificates"
+          className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+        >
+          View All Certificates
+        </Link>
+      </div>
 
       {certificates.length === 0 ? (
         <p className="mt-6 rounded-2xl bg-gray-50 p-5 text-gray-600">

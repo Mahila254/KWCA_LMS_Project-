@@ -4,22 +4,25 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import AdminSearchBar from "@/components/AdminSearchBar";
 import {
-  Award,
-  Mail,
+  ArrowLeft,
   BookOpen,
   CalendarDays,
-  Eye,
-  ArrowLeft,
+  CheckCircle,
+  ClipboardList,
+  Mail,
+  TrendingUp,
+  User,
+  XCircle,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-type CertificateRecord = {
+type QuizResultRecord = {
   id: string;
-  userId: string;
-  courseId: string;
-  certificateCode: string;
-  issuedAt: Date;
+  quizType: string;
+  score: number;
+  passed: boolean;
+  createdAt: Date;
   user: {
     name: string | null;
     email: string;
@@ -27,11 +30,10 @@ type CertificateRecord = {
   course: {
     title: string;
     slug: string;
-    category: string | null;
   };
 };
 
-export default async function AdminCertificatesPage({
+export default async function AdminQuizResultsPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string }>;
@@ -39,9 +41,9 @@ export default async function AdminCertificatesPage({
   const { q } = await searchParams;
   const query = q?.trim() || "";
 
-  const certificates: CertificateRecord[] = await prisma.certificate.findMany({
+  const quizResults: QuizResultRecord[] = await prisma.quizResult.findMany({
     orderBy: {
-      issuedAt: "desc",
+      createdAt: "desc",
     },
     where: query
       ? {
@@ -49,7 +51,6 @@ export default async function AdminCertificatesPage({
             { user: { name: { contains: query, mode: "insensitive" } } },
             { user: { email: { contains: query, mode: "insensitive" } } },
             { course: { title: { contains: query, mode: "insensitive" } } },
-            { certificateCode: { contains: query, mode: "insensitive" } },
           ],
         }
       : undefined,
@@ -64,19 +65,22 @@ export default async function AdminCertificatesPage({
         select: {
           title: true,
           slug: true,
-          category: true,
         },
       },
     },
   });
 
-  const certifiedCourseCount = new Set(
-    certificates.map((item: CertificateRecord) => item.courseId)
-  ).size;
+  const totalResults = quizResults.length;
 
-  const certifiedLearnerCount = new Set(
-    certificates.map((item: CertificateRecord) => item.userId)
-  ).size;
+  const passedResults = quizResults.filter((item) => item.passed).length;
+
+  const averageScore =
+    totalResults > 0
+      ? Math.round(
+          quizResults.reduce((total, item) => total + item.score, 0) /
+            totalResults
+        )
+      : 0;
 
   return (
     <>
@@ -94,13 +98,14 @@ export default async function AdminCertificatesPage({
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Certificates</p>
+              <p className="font-bold text-[#1E1D59]">Quiz Results</p>
 
-              <h1 className="mt-3 text-5xl font-bold">Issued Certificates</h1>
+              <h1 className="mt-3 text-5xl font-bold">
+                Practice &amp; Final Quiz Results
+              </h1>
 
               <p className="mt-4 max-w-3xl text-xl text-gray-600">
-                View certificates issued to learners after course completion and
-                final quiz passing.
+                Every quiz result submitted by learners, across all courses.
               </p>
             </div>
           </div>
@@ -109,76 +114,70 @@ export default async function AdminCertificatesPage({
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-8 grid gap-6 md:grid-cols-3">
             <div className="rounded-3xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <Award className="text-[#1E1D59]" size={28} />
+              <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
+                <ClipboardList size={28} />
                 <p className="text-sm font-bold text-gray-500">
-                  Total Certificates
+                  Total Results
                 </p>
               </div>
-
-              <p className="text-4xl font-bold">{certificates.length}</p>
+              <p className="text-4xl font-bold">{totalResults}</p>
             </div>
 
             <div className="rounded-3xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <BookOpen className="text-[#632854]" size={28} />
-                <p className="text-sm font-bold text-gray-500">
-                  Courses Certified
-                </p>
+              <div className="mb-4 flex items-center gap-3 text-green-700">
+                <CheckCircle size={28} />
+                <p className="text-sm font-bold text-gray-500">Passed</p>
               </div>
-
-              <p className="text-4xl font-bold">{certifiedCourseCount}</p>
+              <p className="text-4xl font-bold">{passedResults}</p>
             </div>
 
             <div className="rounded-3xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3">
-                <Mail className="text-[#1E1D59]" size={28} />
+              <div className="mb-4 flex items-center gap-3 text-[#632854]">
+                <TrendingUp size={28} />
                 <p className="text-sm font-bold text-gray-500">
-                  Learners Certified
+                  Average Score
                 </p>
               </div>
-
-              <p className="text-4xl font-bold">{certifiedLearnerCount}</p>
+              <p className="text-4xl font-bold">{averageScore}%</p>
             </div>
           </div>
 
           <AdminSearchBar
-            action="/admin/certificates"
-            placeholder="Search by learner name, email, course, or certificate ID..."
+            action="/admin/quiz-results"
+            placeholder="Search by learner name, email, or course..."
             defaultValue={query}
           />
 
-          {certificates.length === 0 ? (
+          {quizResults.length === 0 ? (
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
-                <Award size={32} />
+                <ClipboardList size={32} />
               </div>
 
               <h2 className="text-3xl font-bold">
-                {query ? "No matching certificates" : "No certificates issued yet"}
+                {query ? "No matching quiz results" : "No quiz results yet"}
               </h2>
 
               <p className="mt-3 text-gray-600">
                 {query
-                  ? "Try a different name, email, or certificate ID."
-                  : "Certificates will appear here once learners pass final quizzes and generate certificates."}
+                  ? "Try a different name, email, or course."
+                  : "Quiz results will appear here once learners start taking quizzes."}
               </p>
             </div>
           ) : (
             <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
               <div className="border-b px-6 py-5">
-                <h2 className="text-2xl font-bold">Certificate Records</h2>
+                <h2 className="text-2xl font-bold">Quiz Result Records</h2>
 
                 <p className="mt-1 text-gray-600">
-                  Showing {certificates.length} issued certificates from the
-                  database.
+                  Showing {quizResults.length} quiz results from the database.
                 </p>
               </div>
 
               <div className="divide-y">
-                {certificates.map((certificate: CertificateRecord) => {
-                  const issuedDate = new Date(
-                    certificate.issuedAt
+                {quizResults.map((result) => {
+                  const resultDate = new Date(
+                    result.createdAt
                   ).toLocaleDateString("en-GB", {
                     day: "2-digit",
                     month: "long",
@@ -187,21 +186,22 @@ export default async function AdminCertificatesPage({
 
                   return (
                     <div
-                      key={certificate.id}
-                      className="grid gap-6 px-6 py-6 lg:grid-cols-[1.3fr_1.3fr_1fr_auto]"
+                      key={result.id}
+                      className="grid gap-6 px-6 py-6 lg:grid-cols-[1.3fr_1.3fr_1fr]"
                     >
                       <div>
                         <p className="text-sm font-bold text-gray-500">
                           Learner
                         </p>
 
-                        <h3 className="mt-1 text-xl font-bold">
-                          {certificate.user.name || "Learner Name"}
+                        <h3 className="mt-1 flex items-center gap-2 text-xl font-bold">
+                          <User size={18} className="text-[#1E1D59]" />
+                          {result.user.name || "Unnamed Learner"}
                         </h3>
 
                         <p className="mt-2 flex items-center gap-2 text-sm text-gray-600">
                           <Mail size={15} />
-                          {certificate.user.email}
+                          {result.user.email}
                         </p>
                       </div>
 
@@ -210,39 +210,38 @@ export default async function AdminCertificatesPage({
                           Course
                         </p>
 
-                        <h3 className="mt-1 text-xl font-bold">
-                          {certificate.course.title}
+                        <h3 className="mt-1 flex items-center gap-2 text-xl font-bold">
+                          <BookOpen size={18} className="text-[#632854]" />
+                          {result.course.title}
                         </h3>
 
                         <p className="mt-2 flex items-center gap-2 text-sm text-gray-600">
-                          <BookOpen size={15} />
-                          {certificate.course.category || "General"}
+                          <CalendarDays size={15} />
+                          {resultDate} • {result.quizType} Quiz
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-sm font-bold text-gray-500">
-                          Certificate ID
-                        </p>
-
-                        <p className="mt-1 font-bold text-[#1E1D59]">
-                          {certificate.certificateCode}
-                        </p>
-
-                        <p className="mt-3 flex items-center gap-2 text-sm text-gray-600">
-                          <CalendarDays size={15} />
-                          {issuedDate}
-                        </p>
-                      </div>
-
-                      <div className="flex items-start">
-                        <Link
-                          href={`/courses/${certificate.course.slug}/certificate`}
-                          className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                        <p
+                          className={`text-3xl font-extrabold ${
+                            result.passed ? "text-[#1E1D59]" : "text-red-600"
+                          }`}
                         >
-                          <Eye size={17} />
-                          View
-                        </Link>
+                          {result.score}%
+                        </p>
+
+                        <p
+                          className={`mt-2 flex items-center gap-2 text-sm font-bold ${
+                            result.passed ? "text-green-700" : "text-red-600"
+                          }`}
+                        >
+                          {result.passed ? (
+                            <CheckCircle size={16} />
+                          ) : (
+                            <XCircle size={16} />
+                          )}
+                          {result.passed ? "Passed" : "Not Passed"}
+                        </p>
                       </div>
                     </div>
                   );

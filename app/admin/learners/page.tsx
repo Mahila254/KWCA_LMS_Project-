@@ -2,6 +2,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import AdminSearchBar from "@/components/AdminSearchBar";
 import {
   ArrowLeft,
   User,
@@ -60,11 +61,26 @@ type LearnerRecord = {
   }[];
 };
 
-export default async function AdminLearnersPage() {
+export default async function AdminLearnersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
+  const query = q?.trim() || "";
+
   const learners: LearnerRecord[] = await prisma.user.findMany({
     orderBy: {
       createdAt: "desc",
     },
+    where: query
+      ? {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            { email: { contains: query, mode: "insensitive" } },
+          ],
+        }
+      : undefined,
     include: {
       enrollments: {
         orderBy: {
@@ -209,17 +225,26 @@ export default async function AdminLearnersPage() {
             </div>
           </div>
 
+          <AdminSearchBar
+            action="/admin/learners"
+            placeholder="Search by learner name or email..."
+            defaultValue={query}
+          />
+
           {learners.length === 0 ? (
             <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
                 <User size={32} />
               </div>
 
-              <h2 className="text-3xl font-bold">No learners yet</h2>
+              <h2 className="text-3xl font-bold">
+                {query ? "No matching learners" : "No learners yet"}
+              </h2>
 
               <p className="mt-3 text-gray-600">
-                Learners will appear here after they register and sync with the
-                LMS database.
+                {query
+                  ? "Try a different name or email."
+                  : "Learners will appear here after they register and sync with the LMS database."}
               </p>
             </div>
           ) : (

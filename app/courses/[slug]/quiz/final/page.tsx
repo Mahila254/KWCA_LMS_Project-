@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import {
   BookOpen,
   CheckCircle,
   ClipboardList,
+  Clock,
   Lock,
   RotateCcw,
   ShieldCheck,
@@ -63,6 +64,10 @@ export default function FinalQuizPage() {
   const [resultSaved, setResultSaved] = useState(false);
   const [savingResult, setSavingResult] = useState(false);
 
+  const QUIZ_DURATION_SECONDS = 30 * 60;
+  const [timeLeft, setTimeLeft] = useState(QUIZ_DURATION_SECONDS);
+  const autoSubmittedRef = useRef(false);
+
   useEffect(() => {
     async function fetchFinalQuestions() {
       try {
@@ -96,6 +101,33 @@ export default function FinalQuizPage() {
       fetchFinalQuestions();
     }
   }, [courseSlug]);
+
+  // Ticks the 30-minute quiz timer down once the questions have loaded.
+  // Stops automatically once the quiz is completed (submitted).
+  useEffect(() => {
+    if (loading || questions.length === 0 || completed) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((current) => (current > 0 ? current - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [loading, questions.length, completed]);
+
+  // Auto-submits whatever has been answered so far the moment the timer
+  // hits zero, so a learner who runs out of time still gets a graded
+  // result instead of losing their progress.
+  useEffect(() => {
+    if (timeLeft > 0 || completed || autoSubmittedRef.current) return;
+
+    autoSubmittedRef.current = true;
+
+    const updatedAnswers = [...answers];
+    updatedAnswers[currentQuestionIndex] = selectedAnswer;
+    setAnswers(updatedAnswers);
+
+    submitFinalQuiz(updatedAnswers);
+  }, [timeLeft, completed]);
 
   // Submits the learner's picked answers (never the score) and lets the
   // server grade the quiz and decide pass/fail. This is the only source
@@ -190,6 +222,14 @@ export default function FinalQuizPage() {
     setPassed(false);
     setResultSaved(false);
     setSavingResult(false);
+    setTimeLeft(QUIZ_DURATION_SECONDS);
+    autoSubmittedRef.current = false;
+  }
+
+  function formatTimeLeft(totalSeconds: number) {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
   if (loading) {
@@ -420,7 +460,7 @@ export default function FinalQuizPage() {
         />
 
         <section className="mx-auto max-w-5xl px-6 py-8">
-          <div className="mb-6 grid gap-6 md:grid-cols-3">
+          <div className="mb-6 grid gap-6 md:grid-cols-4">
             <QuizStat
               icon={<ClipboardList size={24} />}
               label="Question"
@@ -437,6 +477,13 @@ export default function FinalQuizPage() {
               icon={<ShieldCheck size={24} />}
               label="Pass Mark"
               value="70%"
+            />
+
+            <QuizStat
+              icon={<Clock size={24} />}
+              label="Time Remaining"
+              value={formatTimeLeft(timeLeft)}
+              warning={timeLeft <= 300}
             />
           </div>
 
@@ -518,8 +565,11 @@ export default function FinalQuizPage() {
                   </h3>
 
                   <p className="mt-2 leading-7 text-gray-700">
-                    This quiz is graded. Your final score will be saved to your
-                    learner profile after submission.
+                    This quiz is graded and timed. You have 30 minutes to
+                    complete it — if time runs out, whatever you&apos;ve
+                    answered so far is submitted automatically. Your final
+                    score will be saved to your learner profile after
+                    submission.
                   </p>
                 </div>
               </div>
@@ -623,19 +673,41 @@ function QuizStat({
   icon,
   label,
   value,
+  warning = false,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  warning?: boolean;
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
-      <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
+    <div
+      className={`rounded-3xl p-6 shadow-sm ${
+        warning ? "bg-red-50" : "bg-white"
+      }`}
+    >
+      <div
+        className={`mb-4 flex items-center gap-3 ${
+          warning ? "text-red-600" : "text-[#1E1D59]"
+        }`}
+      >
         {icon}
-        <p className="text-sm font-bold text-gray-500">{label}</p>
+        <p
+          className={`text-sm font-bold ${
+            warning ? "text-red-500" : "text-gray-500"
+          }`}
+        >
+          {label}
+        </p>
       </div>
 
-      <p className="text-3xl font-extrabold">{value}</p>
+      <p
+        className={`text-3xl font-extrabold ${
+          warning ? "text-red-600" : "text-[#1E1D59]"
+        }`}
+      >
+        {value}
+      </p>
     </div>
   );
 }

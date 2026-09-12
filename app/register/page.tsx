@@ -31,6 +31,11 @@ export default function RegisterPage() {
       return;
     }
 
+    if (!gender) {
+      alert("Please select your gender.");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -132,9 +137,7 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">
-                  Gender <span className="font-normal text-gray-400">(optional)</span>
-                </label>
+                <label className="mb-2 block font-bold">Gender</label>
 
                 <div className="flex items-center rounded-xl border bg-white px-4">
                   <Users size={19} className="text-gray-400" />
@@ -142,9 +145,12 @@ export default function RegisterPage() {
                   <select
                     value={gender}
                     onChange={(event) => setGender(event.target.value)}
+                    required
                     className="w-full appearance-none bg-transparent px-3 py-3 outline-none"
                   >
-                    <option value="">Select gender</option>
+                    <option value="" disabled>
+                      Select gender
+                    </option>
                     <option value="FEMALE">Female</option>
                     <option value="MALE">Male</option>
                     <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>

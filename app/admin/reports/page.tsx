@@ -37,6 +37,7 @@ type LearnerRecord = {
   id: string;
   name: string | null;
   email: string;
+  gender: "MALE" | "FEMALE" | "PREFER_NOT_TO_SAY" | null;
   createdAt: Date;
 };
 
@@ -153,6 +154,7 @@ export default async function AdminReportsPage() {
         id: true,
         name: true,
         email: true,
+        gender: true,
         createdAt: true,
       },
     }) as Promise<LearnerRecord[]>,
@@ -292,6 +294,22 @@ export default async function AdminReportsPage() {
       ? Math.round((completedEnrollments / enrollments.length) * 100)
       : 0;
 
+  const maleLearners = learners.filter(
+    (learner: LearnerRecord) => learner.gender === "MALE"
+  ).length;
+
+  const femaleLearners = learners.filter(
+    (learner: LearnerRecord) => learner.gender === "FEMALE"
+  ).length;
+
+  const preferNotToSayLearners = learners.filter(
+    (learner: LearnerRecord) => learner.gender === "PREFER_NOT_TO_SAY"
+  ).length;
+
+  const unspecifiedGenderLearners = learners.filter(
+    (learner: LearnerRecord) => !learner.gender
+  ).length;
+
   const publishedCourses = courses.filter(
     (course: CourseRecord) => course.status === "PUBLISHED"
   ).length;
@@ -403,6 +421,23 @@ export default async function AdminReportsPage() {
               value={certificates.length.toString()}
               tone="green"
             />
+          </div>
+
+          <div className="mb-8 rounded-3xl bg-white p-8 shadow-sm">
+            <h2 className="text-3xl font-bold">Learners by Gender</h2>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-4">
+              <SmallStat label="Female" value={femaleLearners} />
+              <SmallStat label="Male" value={maleLearners} />
+              <SmallStat
+                label="Prefer not to say"
+                value={preferNotToSayLearners}
+              />
+              <SmallStat
+                label="Not specified"
+                value={unspecifiedGenderLearners}
+              />
+            </div>
           </div>
 
           <div className="mb-8 grid gap-6 md:grid-cols-4">

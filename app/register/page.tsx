@@ -4,10 +4,13 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { UserPlus, Mail, Lock, User, Users, ShieldCheck } from "lucide-react";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +50,7 @@ export default function RegisterPage() {
     try {
       setLoading(true);
 
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -65,15 +68,27 @@ export default function RegisterPage() {
         return;
       }
 
-      alert(
-        "✅ Account created successfully. Please check your email to confirm your account."
-      );
-
       setName("");
       setEmail("");
       setPassword("");
       setGender("");
       setConsent(false);
+
+      if (data.session) {
+        // Email confirmation is off for this project, so signUp already
+        // returned an active session — the learner is logged in now.
+        alert("✅ Account created successfully. Welcome!");
+        router.push("/profile");
+        router.refresh();
+        return;
+      }
+
+      // Email confirmation is required before a session exists — send
+      // them to login instead of leaving them stuck on this form.
+      alert(
+        "✅ Account created successfully. Please check your email to confirm your account, then login."
+      );
+      router.push("/login");
     } catch (error) {
       console.error(error);
       alert("Something went wrong while creating your account.");
@@ -253,6 +268,15 @@ export default function RegisterPage() {
                 <h3 className="text-xl font-bold">Receive certificates</h3>
                 <p className="mt-2 leading-7 text-white/70">
                   Certificates will be linked to your verified learner account.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-bold">Your data, protected</h3>
+                <p className="mt-2 leading-7 text-white/70">
+                  Creating an account means you consent to KWCA LMS collecting
+                  and processing your registration details and course
+                  activity, as described during signup.
                 </p>
               </div>
             </div>

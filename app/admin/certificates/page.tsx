@@ -237,7 +237,7 @@ export default async function AdminCertificatesPage({
 
                       <div className="flex items-start">
                         <Link
-                          href={`/courses/${certificate.course.slug}/certificate`}
+                          href={`/admin/certificates/${certificate.id}`}
                           className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                         >
                           <Eye size={17} />

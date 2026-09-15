@@ -516,7 +516,7 @@ export default async function AdminLearnersPage({
                                   </p>
 
                                   <Link
-                                    href={`/courses/${certificate.course.slug}/certificate`}
+                                    href={`/admin/certificates/${certificate.id}`}
                                     className="mt-4 inline-flex rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
                                   >
                                     View Certificate

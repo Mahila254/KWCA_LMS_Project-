@@ -5,6 +5,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isAdminRequest } from "@/lib/isAdminRequest";
 import MarkLessonCompleteButton from "@/components/MarkLessonCompleteButton";
+import NextLessonButton from "@/components/NextLessonButton";
 import PremiumLessonGate from "@/components/PremiumLessonGate";
 import ScrollReveal from "@/components/ScrollReveal";
 import {
@@ -646,26 +647,36 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   </Link>
                 )}
 
-                {nextLesson ? (
-                  <Link
-                    href={lessonHref(nextLesson.slug)}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
-                  >
-                    Next Lesson
-                    <ArrowRight size={18} />
-                  </Link>
+                {isAdminPreview ? (
+                  nextLesson ? (
+                    <Link
+                      href={lessonHref(nextLesson.slug)}
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                    >
+                      Next Lesson
+                      <ArrowRight size={18} />
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/admin/courses/${course.slug}/lessons`}
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                    >
+                      Back to Admin Lessons
+                      <ArrowRight size={18} />
+                    </Link>
+                  )
                 ) : (
-                  <Link
+                  <NextLessonButton
+                    courseSlug={course.slug}
+                    lessonSlug={currentLesson.slug}
                     href={
-                      isAdminPreview
-                        ? `/admin/courses/${course.slug}/lessons`
+                      nextLesson
+                        ? lessonHref(nextLesson.slug)
                         : `/courses/${slug}/quiz/practice`
                     }
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
-                  >
-                    {isAdminPreview ? "Back to Admin Lessons" : "Continue to Quiz"}
-                    <ArrowRight size={18} />
-                  </Link>
+                    label={nextLesson ? "Next Lesson" : "Continue to Quiz"}
+                    isAdminPreview={false}
+                  />
                 )}
               </div>
             </div>

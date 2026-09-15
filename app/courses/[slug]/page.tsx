@@ -5,6 +5,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isAdminRequest } from "@/lib/isAdminRequest";
 import EnrollCourseButton from "@/components/EnrollCourseButton";
+import CourseContinueLink from "@/components/CourseContinueLink";
 import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
 import ScrollReveal from "@/components/ScrollReveal";
 import {
@@ -272,17 +273,22 @@ export default async function CourseDetailsPage({
 
                 <div className="mt-8 flex flex-wrap gap-4">
                   {firstLesson ? (
-                    <Link
-                      href={
-                        isAdminPreview
-                          ? `/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`
-                          : `/courses/${course.slug}/${firstLesson.slug}`
-                      }
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
-                    >
-                      Start Course
-                      <ArrowRight size={18} />
-                    </Link>
+                    isAdminPreview ? (
+                      <Link
+                        href={`/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`}
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
+                      >
+                        Start Course
+                        <ArrowRight size={18} />
+                      </Link>
+                    ) : (
+                      <CourseContinueLink
+                        courseSlug={course.slug}
+                        lessons={course.lessons}
+                        initialLabel="Start Course"
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
+                      />
+                    )
                   ) : (
                     <button
                       type="button"
@@ -441,17 +447,22 @@ export default async function CourseDetailsPage({
 
               <div className="mt-8 space-y-4">
                 {firstLesson ? (
-                  <Link
-                    href={
-                      isAdminPreview
-                        ? `/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`
-                        : `/courses/${course.slug}/${firstLesson.slug}`
-                    }
-                    className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 font-bold text-[#1E1D59] transition hover:-translate-y-1"
-                  >
-                    Continue to First Lesson
-                    <ArrowRight size={18} />
-                  </Link>
+                  isAdminPreview ? (
+                    <Link
+                      href={`/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`}
+                      className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 font-bold text-[#1E1D59] transition hover:-translate-y-1"
+                    >
+                      Continue to First Lesson
+                      <ArrowRight size={18} />
+                    </Link>
+                  ) : (
+                    <CourseContinueLink
+                      courseSlug={course.slug}
+                      lessons={course.lessons}
+                      initialLabel="Continue to First Lesson"
+                      className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 font-bold text-[#1E1D59] transition hover:-translate-y-1"
+                    />
+                  )
                 ) : (
                   <div className="rounded-2xl bg-white/10 px-5 py-4 font-bold text-white/70">
                     Lessons have not been added yet.

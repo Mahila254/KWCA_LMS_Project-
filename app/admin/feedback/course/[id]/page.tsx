@@ -1,10 +1,17 @@
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { ArrowLeft, ArrowRight, MessageSquare, Star, TrendingUp } from "lucide-react";
+import { ArrowLeft, MessageSquare, Star, TrendingUp } from "lucide-react";
 
 export const dynamic = "force-dynamic";
+
+type PageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
 
 type FeedbackRecord = {
   id: string;
@@ -12,19 +19,36 @@ type FeedbackRecord = {
   comment: string | null;
   createdAt: Date;
   user: {
-    id: string;
     name: string | null;
     email: string;
   };
-  course: {
-    id: string;
-    title: string;
-    slug: string;
-  };
 };
 
-export default async function AdminFeedbackPage() {
-  const feedback = (await prisma.courseFeedback.findMany({
+export default async function AdminFeedbackByCoursePage({
+  params,
+}: PageProps) {
+  const { id } = await params;
+
+  const course = await prisma.course.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      category: true,
+    },
+  });
+
+  if (!course) {
+    notFound();
+  }
+
+  const feedback: FeedbackRecord[] = await prisma.courseFeedback.findMany({
+    where: {
+      courseId: course.id,
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -35,20 +59,12 @@ export default async function AdminFeedbackPage() {
       createdAt: true,
       user: {
         select: {
-          id: true,
           name: true,
           email: true,
         },
       },
-      course: {
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-        },
-      },
     },
-  })) as FeedbackRecord[];
+  });
 
   const totalFeedback = feedback.length;
 
@@ -70,45 +86,6 @@ export default async function AdminFeedbackPage() {
     (item) => item.comment && item.comment.trim().length > 0
   ).length;
 
-  // Per-course average, for a quick "which courses are landing well" view.
-  const courseAverages = Object.values(
-    feedback.reduce(
-      (acc, item) => {
-        const key = item.course.id;
-        if (!acc[key]) {
-          acc[key] = {
-            id: item.course.id,
-            title: item.course.title,
-            slug: item.course.slug,
-            total: 0,
-            count: 0,
-          };
-        }
-        acc[key].total += item.rating;
-        acc[key].count += 1;
-        return acc;
-      },
-      {} as Record<
-        string,
-        {
-          id: string;
-          title: string;
-          slug: string;
-          total: number;
-          count: number;
-        }
-      >
-    )
-  )
-    .map((entry) => ({
-      id: entry.id,
-      title: entry.title,
-      slug: entry.slug,
-      count: entry.count,
-      average: Math.round((entry.total / entry.count) * 10) / 10,
-    }))
-    .sort((a, b) => b.count - a.count);
-
   return (
     <>
       <AdminNavbar />
@@ -117,21 +94,23 @@ export default async function AdminFeedbackPage() {
         <section className="bg-[#F8F4F4] py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
-              href="/admin"
+              href="/admin/feedback"
               className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
             >
               <ArrowLeft size={18} />
-              Back to Admin Dashboard
+              Back to All Feedback
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Course Feedback</p>
+              <p className="font-bold text-[#1E1D59]">
+                {course.category || "Course"} Feedback
+              </p>
 
-              <h1 className="mt-3 text-5xl font-bold">Learner Feedback</h1>
+              <h1 className="mt-3 text-5xl font-bold">{course.title}</h1>
 
               <p className="mt-4 max-w-3xl text-xl text-gray-600">
-                Star ratings and comments learners leave after passing a
-                course&apos;s final quiz.
+                Every star rating and comment learners left after passing
+                this course&apos;s final quiz.
               </p>
             </div>
           </div>
@@ -172,87 +151,45 @@ export default async function AdminFeedbackPage() {
             </div>
           </div>
 
-          <div className="mb-8 grid gap-8 lg:grid-cols-2">
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <h2 className="text-2xl font-bold">Rating Breakdown</h2>
+          <div className="mb-8 rounded-3xl bg-white p-8 shadow-sm">
+            <h2 className="text-2xl font-bold">Rating Breakdown</h2>
 
-              <div className="mt-6 space-y-3">
-                {ratingCounts.map(({ stars, count }) => {
-                  const percent =
-                    totalFeedback > 0
-                      ? Math.round((count / totalFeedback) * 100)
-                      : 0;
+            <div className="mt-6 space-y-3">
+              {ratingCounts.map(({ stars, count }) => {
+                const percent =
+                  totalFeedback > 0
+                    ? Math.round((count / totalFeedback) * 100)
+                    : 0;
 
-                  return (
-                    <div key={stars} className="flex items-center gap-4">
-                      <span className="flex w-16 shrink-0 items-center gap-1 font-bold">
-                        {stars}
-                        <Star size={16} className="fill-[#632854] text-[#632854]" />
-                      </span>
+                return (
+                  <div key={stars} className="flex items-center gap-4">
+                    <span className="flex w-16 shrink-0 items-center gap-1 font-bold">
+                      {stars}
+                      <Star size={16} className="fill-[#632854] text-[#632854]" />
+                    </span>
 
-                      <div className="h-3 flex-1 rounded-full bg-gray-100">
-                        <div
-                          className="h-3 rounded-full bg-[#632854]"
-                          style={{ width: `${percent}%` }}
-                        />
-                      </div>
-
-                      <span className="w-10 shrink-0 text-right text-sm font-bold text-gray-500">
-                        {count}
-                      </span>
+                    <div className="h-3 flex-1 rounded-full bg-gray-100">
+                      <div
+                        className="h-3 rounded-full bg-[#632854]"
+                        style={{ width: `${percent}%` }}
+                      />
                     </div>
-                  );
-                })}
-              </div>
-            </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
-              <h2 className="text-2xl font-bold">Average by Course</h2>
-
-              {courseAverages.length === 0 ? (
-                <p className="mt-6 rounded-2xl bg-gray-50 p-5 text-gray-600">
-                  No feedback yet.
-                </p>
-              ) : (
-                <div className="mt-6 space-y-4">
-                  {courseAverages.map((course) => (
-                    <Link
-                      key={course.id}
-                      href={`/admin/feedback/course/${course.id}`}
-                      className="flex items-center justify-between rounded-2xl border p-4 transition hover:border-[#632854] hover:bg-[#FBEFF4]"
-                    >
-                      <div>
-                        <p className="font-bold">{course.title}</p>
-                        <p className="text-sm text-gray-500">
-                          {course.count} response
-                          {course.count === 1 ? "" : "s"}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1 text-lg font-extrabold text-[#632854]">
-                          {course.average}
-                          <Star
-                            size={18}
-                            className="fill-[#632854] text-[#632854]"
-                          />
-                        </span>
-
-                        <ArrowRight size={18} className="text-gray-400" />
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
+                    <span className="w-10 shrink-0 text-right text-sm font-bold text-gray-500">
+                      {count}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <h2 className="text-3xl font-bold">All Feedback</h2>
+            <h2 className="text-3xl font-bold">All Responses</h2>
 
             {feedback.length === 0 ? (
               <p className="mt-6 rounded-2xl bg-gray-50 p-5 text-gray-600">
-                No feedback submitted yet.
+                No feedback submitted for this course yet.
               </p>
             ) : (
               <div className="mt-6 space-y-4">
@@ -272,10 +209,6 @@ export default async function AdminFeedbackPage() {
                           <h3 className="font-bold">
                             {item.user.name || item.user.email}
                           </h3>
-
-                          <p className="mt-1 text-sm text-gray-600">
-                            {item.course.title}
-                          </p>
 
                           <p className="mt-1 text-sm text-gray-500">
                             {submittedDate}

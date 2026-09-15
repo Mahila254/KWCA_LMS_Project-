@@ -46,6 +46,11 @@ type Course = {
   imageUrl?: string | null;
 };
 
+type ExistingFinalResult = {
+  score: number;
+  createdAt: string;
+};
+
 export default function FinalQuizPage() {
   const params = useParams<{ slug: string }>();
   const courseSlug = params.slug;
@@ -53,6 +58,17 @@ export default function FinalQuizPage() {
   const [course, setCourse] = useState<Course | null>(null);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // A learner who already passed this final quiz on an earlier visit
+  // shouldn't be dropped straight back into a blank quiz every time they
+  // open this page — that's how the same course ends up with several
+  // duplicate "final quiz" attempts in their history. Instead, once we
+  // know they already have a passed result, we show it to them and only
+  // start a fresh attempt if they explicitly choose to retake it.
+  const [existingResult, setExistingResult] =
+    useState<ExistingFinalResult | null>(null);
+  const [checkingExistingResult, setCheckingExistingResult] = useState(true);
+  const [forceRetake, setForceRetake] = useState(false);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
@@ -110,22 +126,61 @@ export default function FinalQuizPage() {
     }
   }, [courseSlug]);
 
+  // Checks whether this learner already has a passed final-quiz result
+  // saved for this course, so we can show it instead of a blank quiz.
+  useEffect(() => {
+    async function fetchExistingResult() {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+          return;
+        }
+
+        const response = await authFetch(
+          `/api/courses/${courseSlug}/learner-status`
+        );
+
+        const data = await response.json();
+
+        if (response.ok && data?.finalQuizResult) {
+          setExistingResult({
+            score: data.finalQuizResult.score,
+            createdAt: data.finalQuizResult.createdAt,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setCheckingExistingResult(false);
+      }
+    }
+
+    if (courseSlug) {
+      fetchExistingResult();
+    }
+  }, [courseSlug]);
+
   // Ticks the 30-minute quiz timer down once the questions have loaded.
   // Stops automatically once the quiz is completed (submitted).
   useEffect(() => {
     if (loading || questions.length === 0 || completed) return;
+    if (existingResult && !forceRetake) return;
 
     const interval = setInterval(() => {
       setTimeLeft((current) => (current > 0 ? current - 1 : 0));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [loading, questions.length, completed]);
+  }, [loading, questions.length, completed, existingResult, forceRetake]);
 
   // Auto-submits whatever has been answered so far the moment the timer
   // hits zero, so a learner who runs out of time still gets a graded
   // result instead of losing their progress.
   useEffect(() => {
+    if (existingResult && !forceRetake) return;
     if (timeLeft > 0 || completed || autoSubmittedRef.current) return;
 
     autoSubmittedRef.current = true;
@@ -135,7 +190,7 @@ export default function FinalQuizPage() {
     setAnswers(updatedAnswers);
 
     submitFinalQuiz(updatedAnswers);
-  }, [timeLeft, completed]);
+  }, [timeLeft, completed, existingResult, forceRetake]);
 
   // Submits the learner's picked answers (never the score) and lets the
   // server grade the quiz and decide pass/fail. This is the only source
@@ -269,6 +324,7 @@ export default function FinalQuizPage() {
     setFeedbackComment("");
     setFeedbackSubmitted(false);
     setFeedbackSkipped(false);
+    setForceRetake(true);
   }
 
   function formatTimeLeft(totalSeconds: number) {
@@ -277,7 +333,7 @@ export default function FinalQuizPage() {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
-  if (loading) {
+  if (loading || checkingExistingResult) {
     return (
       <>
         <Navbar />
@@ -294,6 +350,95 @@ export default function FinalQuizPage() {
               Preparing your graded assessment.
             </p>
           </div>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  // Already passed this on an earlier visit — show what they did instead
+  // of silently starting a brand new (duplicate) attempt.
+  if (existingResult && !forceRetake && !completed) {
+    const existingDate = new Date(existingResult.createdAt).toLocaleDateString(
+      "en-GB",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }
+    );
+
+    return (
+      <>
+        <Navbar />
+
+        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+          <QuizHero
+            courseTitle={course?.title || "Course"}
+            courseSlug={courseSlug}
+            title="Final Quiz"
+            subtitle="You've already completed and passed this quiz."
+          />
+
+          <section className="mx-auto max-w-3xl px-6 py-10">
+            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+              <div className="bg-[#1E1D59] px-8 py-12 text-center text-white">
+                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
+                  <Trophy size={42} />
+                </div>
+
+                <p className="font-bold text-white/70">
+                  You&apos;ve already passed this quiz
+                </p>
+
+                <p className="mt-3 text-6xl font-extrabold text-[#D9D3EC]">
+                  {existingResult.score}%
+                </p>
+
+                <p className="mt-4 text-lg text-white/75">
+                  Completed on {existingDate}. No need to take it again —
+                  your certificate is ready.
+                </p>
+              </div>
+
+              <div className="p-8 text-center">
+                <p className="leading-8 text-gray-600">
+                  This result is already saved to your learner profile and
+                  counts toward your certificate. You can still retake the
+                  quiz if you&apos;d like a fresh attempt, but it isn&apos;t
+                  required.
+                </p>
+
+                <div className="mt-8 flex flex-wrap justify-center gap-4">
+                  <Link
+                    href={`/courses/${courseSlug}/certificate`}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                  >
+                    <Award size={18} />
+                    View Certificate
+                  </Link>
+
+                  <Link
+                    href={`/courses/${courseSlug}`}
+                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                  >
+                    <BookOpen size={18} />
+                    Back to Course
+                  </Link>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setForceRetake(true)}
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-[#1E1D59]"
+                >
+                  <RotateCcw size={15} />
+                  Retake the quiz anyway
+                </button>
+              </div>
+            </div>
+          </section>
         </main>
 
         <Footer />

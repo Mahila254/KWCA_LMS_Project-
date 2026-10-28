@@ -145,9 +145,10 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       },
     });
 
+    // Don't echo `course` back: it includes every lesson's content and
+    // video/reading links, premium ones too, and any learner can call this.
     return NextResponse.json({
       message: "Progress updated successfully.",
-      course,
       user,
       enrollment,
     });

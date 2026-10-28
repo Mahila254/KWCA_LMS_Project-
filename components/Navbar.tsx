@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { User } from "lucide-react";
 import AdminBackToAdminBar from "@/components/AdminBackToAdminBar";
+import MobileMenu from "@/components/MobileMenu";
 
 export default function Navbar() {
   return (
@@ -60,6 +61,22 @@ export default function Navbar() {
               Enrol Now
             </Link>
           </nav>
+
+          <MobileMenu
+            links={[
+              { href: "/#about", label: "About" },
+              { href: "/courses", label: "Courses" },
+              { href: "/#why-platform", label: "Resources" },
+              { href: "/profile", label: "My Profile" },
+            ]}
+          >
+            <Link
+              href="/login"
+              className="rounded-full bg-[#632854] px-6 py-3 text-center text-sm font-bold text-white transition hover:bg-[#4F2043]"
+            >
+              Enrol Now
+            </Link>
+          </MobileMenu>
         </div>
       </header>
     </>

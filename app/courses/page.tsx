@@ -124,7 +124,7 @@ export default async function CoursesPage() {
               </p>
             </div>
 
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
+            <div className="mt-10 grid grid-cols-3 gap-3 sm:gap-6">
               <HeroStat
                 icon={<BookOpen size={28} />}
                 label="Published Courses"
@@ -209,7 +209,7 @@ export default async function CoursesPage() {
                       href={`/courses/${course.slug}`}
                       className="group flex h-full min-h-[650px] flex-col overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                     >
-                      <div className="relative h-56 shrink-0 overflow-hidden bg-[#1E1D59]">
+                      <div className="relative h-44 shrink-0 overflow-hidden bg-[#1E1D59] sm:h-56">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={imageSource}
@@ -362,10 +362,12 @@ function HeroStat({
   value: string;
 }) {
   return (
-    <div className="rounded-3xl border border-white/70 bg-white/85 p-6 shadow-sm backdrop-blur-md">
-      <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
+    <div className="rounded-3xl border border-white/70 bg-white/85 p-3 shadow-sm backdrop-blur-md sm:p-6">
+      <div className="mb-2 flex flex-col items-start gap-1 text-[#1E1D59] sm:mb-4 sm:flex-row sm:items-center sm:gap-3">
         {icon}
-        <p className="text-sm font-bold text-gray-500">{label}</p>
+        <p className="text-xs font-bold leading-tight text-gray-500 sm:text-sm">
+          {label}
+        </p>
       </div>
 
       <p className="text-4xl font-extrabold">{value}</p>

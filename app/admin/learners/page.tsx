@@ -291,7 +291,7 @@ export default async function AdminLearnersPage({
                           </div>
                         </div>
 
-                        <div className="grid gap-4 sm:grid-cols-4">
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                           <div className="rounded-2xl bg-gray-50 p-4 text-center">
                             <p className="text-sm font-bold text-gray-500">
                               Enrolled

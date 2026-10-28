@@ -132,9 +132,9 @@ export default function Home() {
 
         {/* STATS BAR */}
         <section className="bg-gradient-to-r from-[#1E1D59] to-[#302A57]">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 divide-y divide-white/10 px-6 py-10 text-center sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <div className="mx-auto grid max-w-7xl grid-cols-3 divide-x divide-white/10 px-6 py-8 text-center sm:py-10">
             {stats.map((stat) => (
-              <div key={stat.label} className="px-4 py-4 sm:py-0">
+              <div key={stat.label} className="px-2 sm:px-4">
                 <p className="text-4xl font-extrabold text-white md:text-5xl">
                   {stat.value}
                 </p>
@@ -234,9 +234,14 @@ export default function Home() {
               </p>
             </ScrollReveal>
 
-            <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {/* Phones: a sideways swipe row (stacked, these cards made the
+                page ~5,000px long). md and up: the usual grid. */}
+            <div className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-8 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-3">
               {modules.map((item, index) => (
-                <ScrollReveal key={item.slug}>
+                <ScrollReveal
+                  key={item.slug}
+                  className="w-[82%] shrink-0 snap-start md:w-auto"
+                >
                   <Link
                     href="/courses"
                     className="group flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"

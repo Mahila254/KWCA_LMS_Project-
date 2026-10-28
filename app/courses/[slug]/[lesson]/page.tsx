@@ -316,7 +316,9 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-4">
-        <aside className="h-fit rounded-3xl bg-white p-6 shadow-sm lg:col-span-1">
+        {/* order-last: on phones the outline sits below the lesson, not
+            ~900px of links before the video. lg: back in the left column. */}
+        <aside className="order-last h-fit rounded-3xl bg-white p-6 shadow-sm lg:order-none lg:col-span-1">
           <h2 className="text-xl font-bold">Course Outline</h2>
 
           <p className="mt-2 text-sm text-gray-500">

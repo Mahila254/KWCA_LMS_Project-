@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AdminLogoutButton from "@/components/AdminLogoutButton";
+import MobileMenu from "@/components/MobileMenu";
 
 export default function AdminNavbar() {
   return (
@@ -66,6 +67,23 @@ export default function AdminNavbar() {
 
           <AdminLogoutButton />
         </nav>
+
+        <MobileMenu
+          links={[
+            { href: "/admin", label: "Dashboard" },
+            { href: "/admin/courses", label: "Courses" },
+            { href: "/admin/learners", label: "Learners" },
+            { href: "/admin/payments", label: "Payments" },
+            { href: "/admin/reports", label: "Reports" },
+            { href: "/admin/quiz-results", label: "Quiz Results" },
+            { href: "/admin/feedback", label: "Feedback" },
+            { href: "/admin/certificates", label: "Certificates" },
+            { href: "/admin/settings", label: "Settings" },
+            { href: "/", label: "Public Site" },
+          ]}
+        >
+          <AdminLogoutButton />
+        </MobileMenu>
       </div>
     </header>
   );

@@ -230,7 +230,7 @@ export default function PracticeQuizPage() {
                 </p>
               </div>
 
-              <div className="grid gap-6 p-8 md:grid-cols-3">
+              <div className="grid grid-cols-3 gap-3 p-8 sm:gap-6">
                 <ResultStat label="Questions" value={questions.length} />
                 <ResultStat label="Correct" value={score} />
                 <ResultStat
@@ -533,7 +533,7 @@ function QuizStat({
 
 function ResultStat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl bg-gray-50 p-6 text-center">
+    <div className="rounded-2xl bg-gray-50 p-4 text-center sm:p-6">
       <p className="text-sm font-bold text-gray-500">{label}</p>
 
       <p className="mt-2 text-4xl font-extrabold text-[#1E1D59]">{value}</p>

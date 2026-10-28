@@ -174,6 +174,12 @@ export default async function CourseDetailsPage({
     (lesson: LessonRecord) => lesson.accessType === "PREMIUM"
   ).length;
 
+  // Client components only get the slugs: passing whole lesson records
+  // would send every lesson's content (premium too) to the browser.
+  const lessonRefs = course.lessons.map((lesson: LessonRecord) => ({
+    slug: lesson.slug,
+  }));
+
   const practiceQuestions = course.quizQuestions.filter(
     (question: QuizQuestionRecord) => question.quizType === "PRACTICE"
   ).length;
@@ -284,7 +290,7 @@ export default async function CourseDetailsPage({
                     ) : (
                       <CourseContinueLink
                         courseSlug={course.slug}
-                        lessons={course.lessons}
+                        lessons={lessonRefs}
                         initialLabel="Start Course"
                         className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
                       />
@@ -338,7 +344,7 @@ export default async function CourseDetailsPage({
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-12">
-          <div className="grid gap-6 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
             <CourseStat
               icon={<BookOpen size={28} />}
               label="Lessons"
@@ -458,7 +464,7 @@ export default async function CourseDetailsPage({
                   ) : (
                     <CourseContinueLink
                       courseSlug={course.slug}
-                      lessons={course.lessons}
+                      lessons={lessonRefs}
                       initialLabel="Continue to First Lesson"
                       className="flex items-center justify-between rounded-2xl bg-white px-5 py-4 font-bold text-[#1E1D59] transition hover:-translate-y-1"
                     />
@@ -538,9 +544,9 @@ export default async function CourseDetailsPage({
                     return (
                       <div
                         key={lesson.id}
-                        className="grid gap-5 rounded-2xl border p-5 transition hover:border-[#1E1D59] hover:bg-gray-50 md:grid-cols-[70px_1fr_auto]"
+                        className="grid grid-cols-[auto_1fr] gap-4 rounded-2xl border p-5 transition hover:border-[#1E1D59] hover:bg-gray-50 md:grid-cols-[70px_1fr_auto] md:gap-5"
                       >
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-xl font-extrabold text-[#1E1D59]">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F1F0FA] text-lg font-extrabold text-[#1E1D59] md:h-14 md:w-14 md:text-xl">
                           {index + 1}
                         </div>
 
@@ -575,13 +581,18 @@ export default async function CourseDetailsPage({
 
                           <h3 className="text-xl font-bold">{lesson.title}</h3>
 
+                          {/* line-clamp only hides text visually — the full
+                              content is still in the page — so premium
+                              lesson text must not be rendered here. */}
                           <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
-                            {lesson.content ||
-                              "Lesson content will appear here once added by the admin."}
+                            {isPreview || isAdminPreview
+                              ? lesson.content ||
+                                "Lesson content will appear here once added by the admin."
+                              : "Unlock this premium lesson to read the full notes, video and reading."}
                           </p>
                         </div>
 
-                        <div className="flex items-center">
+                        <div className="col-span-2 flex items-center md:col-span-1">
                           {isAdminPreview ? (
                             <Link
                               href={`/courses/${course.slug}/${lesson.slug}?adminPreview=true`}
@@ -632,10 +643,10 @@ function CourseStat({
 }) {
   return (
     <ScrollReveal>
-      <div className="rounded-3xl bg-white p-6 shadow-sm">
-        <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
+      <div className="h-full rounded-3xl bg-white p-4 shadow-sm sm:p-6">
+        <div className="mb-3 flex items-center gap-2 text-[#1E1D59] sm:mb-4 sm:gap-3">
           {icon}
-          <p className="text-sm font-bold text-gray-500">{label}</p>
+          <p className="text-xs font-bold text-gray-500 sm:text-sm">{label}</p>
         </div>
 
         <p className="text-4xl font-extrabold">{value}</p>

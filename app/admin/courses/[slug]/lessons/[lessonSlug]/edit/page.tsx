@@ -1,5 +1,6 @@
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
+import LessonTextEditor from "@/components/LessonTextEditor";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -125,7 +126,7 @@ export default async function EditLessonPage({ params }: PageProps) {
 
           <Link
             href={`/admin/courses/${slug}/lessons`}
-            className="mt-6 inline-block rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+            className="mt-6 inline-block rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
           >
             Back to Lessons
           </Link>
@@ -273,33 +274,25 @@ export default async function EditLessonPage({ params }: PageProps) {
                 />
               </div>
 
-              <div>
-                <label className="mb-2 block font-bold">Lesson Content</label>
+              <LessonTextEditor
+                name="content"
+                label="Lesson Content"
+                rows={12}
+                defaultValue={lesson.content || ""}
+              />
 
-                <textarea
-                  name="content"
-                  rows={12}
-                  defaultValue={lesson.content || ""}
-                  className="w-full rounded-xl border px-5 py-4 text-lg leading-8 outline-none focus:border-[#1E1D59]"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block font-bold">Lesson Notes</label>
-
-                <textarea
-                  name="notes"
-                  rows={6}
-                  defaultValue={lesson.notes || ""}
-                  className="w-full rounded-xl border px-5 py-4 text-lg leading-8 outline-none focus:border-[#1E1D59]"
-                />
-              </div>
+              <LessonTextEditor
+                name="notes"
+                label="Lesson Notes"
+                rows={6}
+                defaultValue={lesson.notes || ""}
+              />
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 <Save size={18} />
                 Save Changes
@@ -307,14 +300,14 @@ export default async function EditLessonPage({ params }: PageProps) {
 
               <Link
                 href={`/courses/${course.slug}/${lesson.slug}?adminPreview=true`}
-                className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                className="rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
               >
                 Preview Lesson
               </Link>
 
               <Link
                 href={`/admin/courses/${course.slug}/lessons`}
-                className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                className="rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
               >
                 Cancel
               </Link>

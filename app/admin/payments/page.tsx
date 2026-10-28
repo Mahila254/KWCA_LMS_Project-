@@ -225,7 +225,7 @@ export default async function AdminPaymentsPage({
               {!query && (
                 <Link
                   href="/pricing"
-                  className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                 >
                   View Pricing Page
                 </Link>

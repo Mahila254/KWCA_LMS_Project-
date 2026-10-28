@@ -341,21 +341,21 @@ export default function AdminDashboardPage() {
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/admin/courses"
-                  className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                 >
                   Manage Courses
                 </Link>
 
                 <Link
                   href="/admin/payments"
-                  className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
+                  className="rounded-full border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
                 >
                   View Payments
                 </Link>
 
                 <Link
                   href="/admin/reports"
-                  className="rounded-xl border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
+                  className="rounded-full border border-white/20 px-6 py-3 font-bold text-white hover:bg-white/10"
                 >
                   View Reports
                 </Link>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Download, PlayCircle, ShieldCheck } from "lucide-react";
+import FormattedText from "@/components/FormattedText";
 
 /**
  * The parts of a lesson that are premium: video, notes and reading link.
@@ -33,46 +34,6 @@ function getYoutubeEmbedUrl(videoUrl: string | null) {
   }
 
   return videoUrl;
-}
-
-function renderTextBlocks(content: string) {
-  const blocks = content
-    .split(/\n\s*\n/)
-    .map((block: string) => block.trim())
-    .filter((block: string) => block.length > 0);
-
-  return blocks.map((block: string, index: number) => {
-    const headingTitles = [
-      "Lesson Objective",
-      "Key Notes",
-      "Important Ideas",
-      "Practical Example",
-      "Summary",
-      "Key Takeaway",
-      "Reflection",
-      "Activity",
-    ];
-
-    const isHeading = headingTitles.some(
-      (heading: string) =>
-        block === heading ||
-        block.toLowerCase().startsWith(`${heading.toLowerCase()}:`)
-    );
-
-    if (isHeading && block.length < 80) {
-      return (
-        <h3 key={index} className="text-2xl font-extrabold text-[#1E1D59]">
-          {block.replace(":", "")}
-        </h3>
-      );
-    }
-
-    return (
-      <p key={index} className="whitespace-pre-line text-lg leading-9">
-        {block}
-      </p>
-    );
-  });
 }
 
 export function LessonVideo({
@@ -119,9 +80,7 @@ export function LessonNotes({
   return (
     <>
       {content ? (
-        <div className="space-y-6 text-gray-600">
-          {renderTextBlocks(content)}
-        </div>
+        <FormattedText text={content} />
       ) : (
         <p className="text-lg leading-8 text-gray-600">
           Lesson content will appear here once added by the admin.
@@ -136,9 +95,7 @@ export function LessonNotes({
             <h3 className="text-xl font-bold">Key Takeaway</h3>
           </div>
 
-          <div className="space-y-4 text-gray-600">
-            {renderTextBlocks(notes)}
-          </div>
+          <FormattedText text={notes} />
         </div>
       )}
     </>
@@ -154,7 +111,7 @@ export function LessonReadingLink({
     return (
       <Link
         href={readingUrl}
-        className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold hover:bg-gray-50"
+        className="mt-5 inline-flex items-center gap-2 rounded-full border px-5 py-3 font-bold hover:bg-gray-50"
       >
         <Download size={18} />
         Download Reading
@@ -165,7 +122,7 @@ export function LessonReadingLink({
   return (
     <button
       type="button"
-      className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold text-gray-400"
+      className="mt-5 inline-flex items-center gap-2 rounded-full border px-5 py-3 font-bold text-gray-400"
     >
       <Download size={18} />
       Reading Coming Soon

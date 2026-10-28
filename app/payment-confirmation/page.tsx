@@ -57,7 +57,7 @@ export default async function PaymentConfirmationPage({
               <p className="font-bold text-[#1E1D59]">Payment Confirmation</p>
 
               <h1 className="mt-3 text-5xl font-bold">
-                Payment Record Created
+                Payment Record <em className="accent text-[#632854]">Created</em>
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">
@@ -83,7 +83,7 @@ export default async function PaymentConfirmationPage({
 
               <Link
                 href="/pricing"
-                className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 Back to Pricing
               </Link>
@@ -206,7 +206,7 @@ export default async function PaymentConfirmationPage({
                   {payment.course?.slug && (
                     <Link
                       href={`/courses/${payment.course.slug}`}
-                      className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                      className="rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
                     >
                       Back to Course
                     </Link>
@@ -214,14 +214,14 @@ export default async function PaymentConfirmationPage({
 
                   <Link
                     href="/pricing"
-                    className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                    className="rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
                   >
                     Back to Pricing
                   </Link>
 
                   <Link
                     href="/profile"
-                    className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                   >
                     <CheckCircle size={18} />
                     View Profile

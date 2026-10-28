@@ -105,7 +105,7 @@ export default async function AdminCoursesPage() {
 
               <Link
                 href="/admin/courses/create"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 <Plus size={18} />
                 Add New Course
@@ -138,7 +138,7 @@ export default async function AdminCoursesPage() {
 
                 <Link
                   href="/admin/courses/create"
-                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                 >
                   <Plus size={18} />
                   Add New Course
@@ -229,7 +229,7 @@ export default async function AdminCoursesPage() {
                     <div className="flex flex-wrap items-start gap-3 lg:justify-end">
                       <Link
                         href={`/courses/${course.slug}?adminPreview=true`}
-                        className="inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold hover:bg-gray-50"
+                        className="inline-flex items-center gap-2 rounded-full border px-5 py-3 font-bold hover:bg-gray-50"
                       >
                         <Eye size={17} />
                         View
@@ -237,7 +237,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/lessons`}
-                        className="inline-flex items-center gap-2 rounded-xl border border-[#1E1D59] px-5 py-3 font-bold text-[#1E1D59] hover:bg-[#F1F0FA]"
+                        className="inline-flex items-center gap-2 rounded-full border border-[#1E1D59] px-5 py-3 font-bold text-[#1E1D59] hover:bg-[#F1F0FA]"
                       >
                         <ListChecks size={17} />
                         Lessons
@@ -245,7 +245,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/quiz-questions`}
-                        className="inline-flex items-center gap-2 rounded-xl border border-[#632854] px-5 py-3 font-bold text-[#632854] hover:bg-[#FBEFF4]"
+                        className="inline-flex items-center gap-2 rounded-full border border-[#632854] px-5 py-3 font-bold text-[#632854] hover:bg-[#FBEFF4]"
                       >
                         <HelpCircle size={17} />
                         Quiz
@@ -253,7 +253,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/edit`}
-                        className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                        className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                       >
                         <Pencil size={17} />
                         Edit
@@ -264,7 +264,7 @@ export default async function AdminCoursesPage() {
 
                         <button
                           type="submit"
-                          className="inline-flex items-center gap-2 rounded-xl border border-red-200 px-5 py-3 font-bold text-red-600 hover:bg-red-50"
+                          className="inline-flex items-center gap-2 rounded-full border border-red-200 px-5 py-3 font-bold text-red-600 hover:bg-red-50"
                         >
                           <Trash2 size={17} />
                           Delete

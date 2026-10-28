@@ -73,7 +73,7 @@ export default function CreatePaymentButton({
       type="button"
       onClick={handleCreatePayment}
       disabled={creatingPayment}
-      className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-4 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+      className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1E1D59] px-6 py-4 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <CreditCard size={18} />
       {creatingPayment ? "Creating Payment..." : label}

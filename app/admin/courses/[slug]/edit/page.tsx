@@ -302,14 +302,14 @@ export default function EditCoursePage() {
                   type="button"
                   onClick={handleUpdateCourse}
                   disabled={saving}
-                  className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
 
                 <Link
                   href="/admin/courses"
-                  className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                  className="rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
                 >
                   Cancel
                 </Link>
@@ -318,7 +318,7 @@ export default function EditCoursePage() {
               <button
                 type="button"
                 onClick={handleDeleteCourse}
-                className="rounded-xl border border-red-200 px-6 py-3 font-bold text-red-600 hover:bg-red-50"
+                className="rounded-full border border-red-200 px-6 py-3 font-bold text-red-600 hover:bg-red-50"
               >
                 Delete Course
               </button>

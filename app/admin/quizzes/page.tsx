@@ -111,7 +111,7 @@ export default function QuizzesAdminPage() {
             <button
               type="button"
               onClick={createQuiz}
-              className="mt-6 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white"
+              className="mt-6 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white"
             >
               Create Quiz
             </button>
@@ -147,7 +147,7 @@ export default function QuizzesAdminPage() {
                   <button
                     type="button"
                     onClick={editQuiz}
-                    className="rounded-xl border px-5 py-2 font-bold hover:bg-gray-100"
+                    className="rounded-full border px-5 py-2 font-bold hover:bg-gray-100"
                   >
                     Edit
                   </button>
@@ -155,7 +155,7 @@ export default function QuizzesAdminPage() {
                   <button
                     type="button"
                     onClick={deleteQuiz}
-                    className="rounded-xl bg-red-600 px-5 py-2 font-bold text-white"
+                    className="rounded-full bg-red-600 px-5 py-2 font-bold text-white"
                   >
                     Delete
                   </button>

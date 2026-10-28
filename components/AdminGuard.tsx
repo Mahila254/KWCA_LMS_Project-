@@ -82,7 +82,7 @@ export default function AdminGuard({
 
           <Link
             href="/admin/login"
-            className="mt-6 inline-block rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white"
+            className="mt-6 inline-block rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white"
           >
             Go to Admin Login
           </Link>

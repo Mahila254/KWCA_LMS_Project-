@@ -729,7 +729,7 @@ function RecentPayments({ payments }: { payments: PaymentRecord[] }) {
 
         <Link
           href="/admin/payments"
-          className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+          className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
         >
           View All Payments
         </Link>
@@ -809,7 +809,7 @@ function RecentQuizResults({
 
         <Link
           href="/admin/quiz-results"
-          className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+          className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
         >
           View All Quiz Results
         </Link>
@@ -885,7 +885,7 @@ function RecentCertificates({
 
         <Link
           href="/admin/certificates"
-          className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+          className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
         >
           View All Certificates
         </Link>
@@ -927,7 +927,7 @@ function RecentCertificates({
 
                   <Link
                     href={`/admin/certificates/${certificate.id}`}
-                    className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+                    className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
                   >
                     View
                   </Link>

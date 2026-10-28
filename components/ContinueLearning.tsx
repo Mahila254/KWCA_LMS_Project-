@@ -35,7 +35,7 @@ export default function ContinueLearning() {
 
       <Link
         href={`/courses/what-is-a-conservancy/${lesson}`}
-        className="mt-6 inline-block rounded-xl bg-white px-6 py-3 font-semibold text-[#1E1D59]"
+        className="mt-6 inline-block rounded-full bg-white px-6 py-3 font-semibold text-[#1E1D59]"
       >
         Continue →
       </Link>

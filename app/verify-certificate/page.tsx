@@ -95,7 +95,7 @@ export default function VerifyCertificatePage() {
               </p>
 
               <h1 className="mt-3 text-5xl font-bold">
-                Verify a KWCA LMS Certificate
+                Verify a KWCA LMS <em className="accent text-[#632854]">Certificate</em>
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">
@@ -141,7 +141,7 @@ export default function VerifyCertificatePage() {
               <button
                 type="submit"
                 disabled={checking}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Search size={18} />
                 {checking ? "Checking..." : "Verify Certificate"}

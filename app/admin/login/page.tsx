@@ -167,7 +167,7 @@ export default function AdminLoginPage() {
                 <button
                   type="submit"
                   disabled={loggingIn}
-                  className="w-full rounded-xl bg-[#1E1D59] px-6 py-4 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-full bg-[#1E1D59] px-6 py-4 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loggingIn ? "Checking Admin Access..." : "Login as Admin"}
                 </button>

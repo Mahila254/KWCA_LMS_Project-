@@ -60,7 +60,7 @@ export default function CheckPaymentStatusButton({
       type="button"
       onClick={handleCheckStatus}
       disabled={checking}
-      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
     >
       {checking ? <RefreshCw className="animate-spin" size={18} /> : <CheckCircle size={18} />}
       {checking ? "Checking Payment..." : "Check Payment Status & Continue"}

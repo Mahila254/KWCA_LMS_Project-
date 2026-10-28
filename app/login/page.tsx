@@ -61,7 +61,7 @@ export default function LoginPage() {
             <p className="font-bold text-[#1E1D59]">Learner Login</p>
 
             <h1 className="mt-4 text-5xl font-extrabold">
-              Login to Your KWCA LMS Account
+              Login to Your KWCA LMS <em className="accent text-[#632854]">Account</em>
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
@@ -120,7 +120,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleLogin}
                 disabled={loading}
-                className="w-full rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Logging In..." : "Login"}
               </button>

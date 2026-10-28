@@ -153,6 +153,11 @@ model QuizResult {
   quizType   String
   score      Int
   passed     Boolean  @default(false)
+  // Snapshot of every question in the attempt (text, options, the
+  // learner's pick, the correct answer) so it can be reviewed later even
+  // if the admin edits the questions. Hidden by default in lib/prisma.ts;
+  // only the review route reads it, and only for PRACTICE attempts.
+  answers    Json?
   createdAt  DateTime @default(now())
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

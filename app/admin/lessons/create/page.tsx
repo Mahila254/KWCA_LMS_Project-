@@ -129,14 +129,14 @@ export default function CreateLessonPage() {
             <div className="flex gap-4 pt-4">
               <button
                 type="button"
-                className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white"
+                className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white"
               >
                 Create Lesson
               </button>
 
               <Link
                 href="/admin/lessons"
-                className="rounded-xl border px-6 py-3 font-bold"
+                className="rounded-full border px-6 py-3 font-bold"
               >
                 Cancel
               </Link>

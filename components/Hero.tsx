@@ -32,7 +32,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <button className="bg-[#1E1D59] text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg hover:opacity-90 transition">
+        <button className="bg-[#1E1D59] text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg hover:opacity-90 transition">
           Start Learning
         </button>
       </div>

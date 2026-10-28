@@ -8,8 +8,68 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Motion tokens shared by every animation on the site. One soft
+   "settle" curve keeps hovers, menus, reveals and page entrances
+   feeling like the same system. */
+@theme {
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* `backwards`, not `both`: once finished, <main> must not keep a
+     transform, or position:fixed children (modals) would be trapped. */
+  --animate-page-enter: page-enter 0.6s var(--ease-soft) backwards;
+  --animate-rise: rise 0.9s var(--ease-soft) both;
+  --animate-fade: fade 0.8s var(--ease-soft) both;
+  --animate-ken-burns: ken-burns 22s ease-out both;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+      filter: blur(6px);
+    }
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes ken-burns {
+    from {
+      transform: scale(1.12);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes float {
+    50% {
+      transform: translateY(-8px);
+    }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +82,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -30,8 +90,126 @@ body {
 
 html {
   scroll-behavior: smooth;
+  /* Anchor links (/#about) stop below the sticky header, not under it. */
+  scroll-padding-top: 5.5rem;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Every link and button eases its colour/shadow/lift changes the same
+     way, so pages that only wrote `hover:` classes still feel smooth.
+     Classes like `transition` or `duration-700` still win. */
+  :where(a, button, summary, [role="button"]) {
+    transition-property: color, background-color, border-color, box-shadow,
+      opacity, translate, scale, gap;
+    transition-duration: 220ms;
+    transition-timing-function: var(--ease-soft);
+  }
+
+  /* A small press-in on tap/click. Uses the separate `scale` property so
+     it stacks with Tailwind's hover:-translate-y-* lifts. */
+  :where(button:not(:disabled), a[class*="rounded"]):active {
+    scale: 0.97;
+  }
+
+  :where(a, button, input, select, textarea, summary):focus-visible {
+    outline: 2px solid #632854;
+    outline-offset: 3px;
+    border-radius: 0.5rem;
+  }
+
+  ::selection {
+    background: #f5dce6;
+    color: #1e1d59;
+  }
+
+  /* Each page's <main> remounts on navigation, so this plays once per
+     page change and gives route changes a soft settle instead of a
+     hard cut. The sticky header sits outside <main> and stays still. */
+  main {
+    animation: var(--animate-page-enter);
+  }
+}
+
+/* Headline accent words: <em className="accent">Learning Hub</em> */
+.accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Scroll reveal (components/ScrollReveal.tsx). Content is visible by
+   default; it only starts hidden once JS has marked it, so nothing is
+   lost if scripts fail. */
+.reveal[data-state="hidden"] {
+  opacity: 0;
+  transform: translateY(32px);
+  filter: blur(4px);
+}
+
+.reveal {
+  transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft),
+    filter 0.9s var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Headline lines that slide up from behind a mask. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.line-mask > span {
+  display: block;
+  animation: rise 1s var(--ease-soft) both;
+  animation-delay: var(--line-delay, 0ms);
+}
+
+/* Horizontal swipe rows: hide the scrollbar but keep the swipe. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Phones with the learner tab bar: keep page bottoms clear of it. */
+@media (width < 48rem) {
+  body:has([data-tabbar]) {
+    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal[data-state="hidden"] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }
 
 /*

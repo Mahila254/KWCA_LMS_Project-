@@ -150,7 +150,7 @@ export default async function CourseDetailsPage({
 
           <Link
             href={isAdminPreview ? "/admin/courses" : "/courses"}
-            className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+            className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
           >
             Back to Courses
           </Link>
@@ -210,7 +210,7 @@ export default async function CourseDetailsPage({
 
               <Link
                 href="/admin/courses"
-                className="rounded-xl bg-white px-5 py-3 font-bold text-[#1E1D59] hover:bg-gray-100"
+                className="rounded-full bg-white px-5 py-3 font-bold text-[#1E1D59] hover:bg-gray-100"
               >
                 Back to Admin Courses
               </Link>
@@ -282,7 +282,7 @@ export default async function CourseDetailsPage({
                     isAdminPreview ? (
                       <Link
                         href={`/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`}
-                        className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
+                        className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
                       >
                         Start Course
                         <ArrowRight size={18} />
@@ -298,7 +298,7 @@ export default async function CourseDetailsPage({
                   ) : (
                     <button
                       type="button"
-                      className="inline-flex cursor-not-allowed items-center gap-2 rounded-xl bg-gray-300 px-7 py-4 font-bold text-gray-600"
+                      className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-gray-300 px-7 py-4 font-bold text-gray-600"
                     >
                       Lessons Coming Soon
                     </button>
@@ -309,7 +309,7 @@ export default async function CourseDetailsPage({
                   {isAdminPreview && (
                     <Link
                       href={`/admin/courses/${course.slug}/edit`}
-                      className="inline-flex items-center gap-2 rounded-xl border bg-white px-7 py-4 font-bold hover:bg-gray-50"
+                      className="inline-flex items-center gap-2 rounded-full border bg-white px-7 py-4 font-bold hover:bg-gray-50"
                     >
                       Edit Course
                     </Link>
@@ -596,7 +596,7 @@ export default async function CourseDetailsPage({
                           {isAdminPreview ? (
                             <Link
                               href={`/courses/${course.slug}/${lesson.slug}?adminPreview=true`}
-                              className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                              className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                             >
                               Preview
                               <ArrowRight size={17} />
@@ -604,7 +604,7 @@ export default async function CourseDetailsPage({
                           ) : isPreview ? (
                             <Link
                               href={`/courses/${course.slug}/${lesson.slug}`}
-                              className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                              className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                             >
                               Start
                               <ArrowRight size={17} />

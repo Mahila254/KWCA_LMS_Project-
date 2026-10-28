@@ -62,7 +62,7 @@ export default function MarkLessonCompleteButton({
       type="button"
       onClick={handleMarkComplete}
       disabled={saving}
-      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <CheckCircle size={18} />
       {saving ? "Saving Progress..." : "Mark Lesson Complete"}

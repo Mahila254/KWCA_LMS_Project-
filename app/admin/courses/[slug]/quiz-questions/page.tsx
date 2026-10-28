@@ -534,7 +534,7 @@ export default function AdminQuizQuestionsPage() {
                 type="button"
                 onClick={handleSaveQuestion}
                 disabled={saving}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {editingQuestionId ? <Save size={18} /> : <Plus size={18} />}
                 {saving
@@ -548,7 +548,7 @@ export default function AdminQuizQuestionsPage() {
                 <button
                   type="button"
                   onClick={clearForm}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
                 >
                   <XCircle size={18} />
                   Cancel Edit

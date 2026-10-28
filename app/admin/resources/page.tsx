@@ -94,7 +94,7 @@ export default function ResourcesAdminPage() {
             <button
               type="button"
               onClick={uploadResource}
-              className="mt-6 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white"
+              className="mt-6 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white"
             >
               Upload Resource
             </button>
@@ -130,7 +130,7 @@ export default function ResourcesAdminPage() {
                   <button
                     type="button"
                     onClick={downloadResource}
-                    className="rounded-xl border px-5 py-2 font-bold hover:bg-gray-100"
+                    className="rounded-full border px-5 py-2 font-bold hover:bg-gray-100"
                   >
                     Download
                   </button>
@@ -138,7 +138,7 @@ export default function ResourcesAdminPage() {
                   <button
                     type="button"
                     onClick={deleteResource}
-                    className="rounded-xl bg-red-600 px-5 py-2 font-bold text-white"
+                    className="rounded-full bg-red-600 px-5 py-2 font-bold text-white"
                   >
                     Delete
                   </button>

@@ -83,7 +83,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
           <Link
             href="/admin/courses"
-            className="mt-6 inline-block rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+            className="mt-6 inline-block rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
           >
             Back to Courses
           </Link>
@@ -123,7 +123,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
               <Link
                 href={`/admin/courses/${course.slug}/lessons/create`}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 <Plus size={20} />
                 Add New Lesson
@@ -177,7 +177,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
               <Link
                 href={`/admin/courses/${course.slug}/lessons/create`}
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 <Plus size={18} />
                 Add First Lesson
@@ -260,14 +260,14 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
                       <div className="flex flex-wrap items-start gap-3">
                         <Link
                           href={`/courses/${course.slug}/${lesson.slug}?adminPreview=true`}
-                          className="rounded-xl border px-4 py-3 font-bold hover:bg-gray-50"
+                          className="rounded-full border px-4 py-3 font-bold hover:bg-gray-50"
                         >
                           View
                         </Link>
 
                         <Link
                           href={`/admin/courses/${course.slug}/lessons/${lesson.slug}/edit`}
-                          className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-4 py-3 font-bold text-white hover:bg-[#14123D]"
+                          className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-4 py-3 font-bold text-white hover:bg-[#14123D]"
                         >
                           <Pencil size={17} />
                           Edit

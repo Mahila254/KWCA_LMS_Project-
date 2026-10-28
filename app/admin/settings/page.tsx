@@ -333,7 +333,7 @@ export default function AdminSettingsPage() {
 
                   <Link
                     href="/verify-certificate"
-                    className="mt-5 inline-flex rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                    className="mt-5 inline-flex rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                   >
                     Open Certificate Verification
                   </Link>

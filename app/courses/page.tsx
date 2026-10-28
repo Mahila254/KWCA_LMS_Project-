@@ -114,7 +114,7 @@ export default async function CoursesPage() {
               <p className="font-bold text-[#1E1D59]">KWCA Learning Courses</p>
 
               <h1 className="mt-4 text-5xl font-extrabold leading-tight md:text-7xl">
-                Explore Conservation Learning Courses
+                Explore <em className="accent text-[#632854]">Conservation Learning</em> Courses
               </h1>
 
               <p className="mt-6 max-w-3xl text-xl leading-8 text-gray-600">
@@ -163,7 +163,7 @@ export default async function CoursesPage() {
 
             <Link
               href="/profile"
-              className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3 font-bold hover:bg-gray-50"
+              className="inline-flex items-center gap-2 rounded-full border bg-white px-6 py-3 font-bold hover:bg-gray-50"
             >
               View My Profile
               <ArrowRight size={18} />
@@ -336,7 +336,7 @@ export default async function CoursesPage() {
 
                 <Link
                   href="/profile"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 font-bold text-[#1E1D59] transition hover:-translate-y-1 hover:bg-gray-100"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 font-bold text-[#1E1D59] transition hover:-translate-y-1 hover:bg-gray-100"
                 >
                   Go to Learner Profile
                   <ArrowRight size={18} />

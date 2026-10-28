@@ -208,7 +208,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
             <Link
               href={`/admin/courses/${course.slug}/lessons`}
-              className="rounded-xl bg-white px-5 py-3 font-bold text-[#1E1D59] hover:bg-gray-100"
+              className="rounded-full bg-white px-5 py-3 font-bold text-[#1E1D59] hover:bg-gray-100"
             >
               Back to Admin Lessons
             </Link>
@@ -404,7 +404,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
               <Link
                 href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
-                className="mt-4 inline-block rounded-xl bg-[#1E1D59] px-4 py-3 text-sm font-bold text-white hover:bg-[#14123D]"
+                className="mt-4 inline-block rounded-full bg-[#1E1D59] px-4 py-3 text-sm font-bold text-white hover:bg-[#14123D]"
               >
                 View Pricing
               </Link>
@@ -508,7 +508,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
                 <Link
                   href={`/courses/${slug}/quiz/practice`}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
                 >
                   Start Practice Quiz
                   <ArrowRight size={18} />
@@ -545,7 +545,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                 {previousLesson ? (
                   <Link
                     href={lessonHref(previousLesson.slug)}
-                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                    className="inline-flex items-center gap-2 rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
                   >
                     <ArrowLeft size={18} />
                     Previous Lesson
@@ -553,7 +553,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                 ) : (
                   <Link
                     href={backToCourseHref}
-                    className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+                    className="inline-flex items-center gap-2 rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
                   >
                     <ArrowLeft size={18} />
                     {isAdminPreview ? "Back to Admin Lessons" : "Back to Course"}
@@ -564,7 +564,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   nextLesson ? (
                     <Link
                       href={lessonHref(nextLesson.slug)}
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                     >
                       Next Lesson
                       <ArrowRight size={18} />
@@ -572,7 +572,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   ) : (
                     <Link
                       href={`/admin/courses/${course.slug}/lessons`}
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                     >
                       Back to Admin Lessons
                       <ArrowRight size={18} />

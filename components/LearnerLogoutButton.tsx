@@ -30,7 +30,7 @@ export default function LearnerLogoutButton() {
       type="button"
       onClick={handleLogout}
       disabled={loggingOut}
-      className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-5 py-3 font-bold text-red-700 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-5 py-3 font-bold text-red-700 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {loggingOut ? (
         <Loader2 className="animate-spin" size={18} />

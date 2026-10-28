@@ -46,7 +46,7 @@ export default function LessonsAdminPage() {
 
             <a
               href="/admin/lessons/create"
-              className="rounded-xl bg-[#1E1D59] px-8 py-4 font-bold text-white hover:opacity-90"
+              className="rounded-full bg-[#1E1D59] px-8 py-4 font-bold text-white hover:opacity-90"
             >
               + Add Lesson
             </a>
@@ -79,7 +79,7 @@ export default function LessonsAdminPage() {
 
                   <a
                     href="/admin/lessons/edit"
-                    className="rounded-xl border px-6 py-3 font-semibold hover:bg-gray-100"
+                    className="rounded-full border px-6 py-3 font-semibold hover:bg-gray-100"
                   >
                     Edit
                   </a>

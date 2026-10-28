@@ -64,7 +64,7 @@ export default function NextLessonButton({
       type="button"
       onClick={handleClick}
       disabled={saving}
-      className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-70"
+      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-70"
     >
       {saving ? <Loader2 className="animate-spin" size={18} /> : null}
       {label}

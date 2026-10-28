@@ -14,11 +14,11 @@ export default function CTA() {
 
         <div className="flex flex-wrap gap-4">
 
-          <button className="bg-white text-[#4F2043] px-7 py-4 rounded-xl font-bold">
+          <button className="bg-white text-[#4F2043] px-7 py-4 rounded-full font-bold">
             Enroll Now
           </button>
 
-          <button className="border border-white px-7 py-4 rounded-xl font-bold">
+          <button className="border border-white px-7 py-4 rounded-full font-bold">
             Download Brochure
           </button>
 

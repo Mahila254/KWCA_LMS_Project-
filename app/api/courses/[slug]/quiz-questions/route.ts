@@ -63,8 +63,25 @@ export async function GET(request: Request, { params }: RouteProps) {
       return rest;
     });
 
+    // Titles and slugs only (never content), so the quiz screens can link
+    // back to the last lesson.
+    const lessons = await prisma.lesson.findMany({
+      where: {
+        courseId: course.id,
+      },
+      orderBy: {
+        order: "asc",
+      },
+      select: {
+        title: true,
+        slug: true,
+        order: true,
+      },
+    });
+
     return NextResponse.json({
       course,
+      lessons,
       quizQuestions: safeQuestions,
     });
   } catch (error) {

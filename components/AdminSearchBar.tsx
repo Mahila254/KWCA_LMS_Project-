@@ -30,7 +30,7 @@ export default function AdminSearchBar({
 
       <button
         type="submit"
-        className="shrink-0 rounded-xl bg-[#1E1D59] px-5 py-2 font-bold text-white hover:bg-[#14123D]"
+        className="shrink-0 rounded-full bg-[#1E1D59] px-5 py-2 font-bold text-white hover:bg-[#14123D]"
       >
         Search
       </button>
@@ -38,7 +38,7 @@ export default function AdminSearchBar({
       {defaultValue && (
         <a
           href={action}
-          className="shrink-0 rounded-xl border px-4 py-2 font-bold text-gray-600 hover:bg-gray-50"
+          className="shrink-0 rounded-full border px-4 py-2 font-bold text-gray-600 hover:bg-gray-50"
         >
           Clear
         </a>

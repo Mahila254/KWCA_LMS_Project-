@@ -80,7 +80,7 @@ export default function EditLessonPage() {
               <button
                 type="button"
                 onClick={saveLesson}
-                className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white"
+                className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white"
               >
                 Save Lesson
               </button>
@@ -88,7 +88,7 @@ export default function EditLessonPage() {
               <button
                 type="button"
                 onClick={deleteLesson}
-                className="rounded-xl bg-red-600 px-6 py-3 font-bold text-white"
+                className="rounded-full bg-red-600 px-6 py-3 font-bold text-white"
               >
                 Delete Lesson
               </button>
@@ -96,7 +96,7 @@ export default function EditLessonPage() {
               <button
                 type="button"
                 onClick={cancelEdit}
-                className="rounded-xl border px-6 py-3 font-bold"
+                className="rounded-full border px-6 py-3 font-bold"
               >
                 Cancel
               </button>

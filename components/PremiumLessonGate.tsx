@@ -133,14 +133,14 @@ export default function PremiumLessonGate({
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               href={`/pricing?courseId=${courseId}&courseSlug=${courseSlug}`}
-              className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+              className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
             >
               Unlock Course
             </Link>
 
             <Link
               href={`/courses/${courseSlug}`}
-              className="rounded-xl border px-6 py-3 font-bold hover:bg-gray-50"
+              className="rounded-full border px-6 py-3 font-bold hover:bg-gray-50"
             >
               Back to Course
             </Link>

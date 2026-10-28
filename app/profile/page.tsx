@@ -174,7 +174,7 @@ export default function ProfilePage() {
           <div className="mx-auto max-w-7xl px-6">
             <p className="font-bold text-[#1E1D59]">Learner Profile</p>
 
-            <h1 className="mt-3 text-5xl font-bold">My Learning Dashboard</h1>
+            <h1 className="mt-3 text-5xl font-bold">My Learning <em className="accent text-[#632854]">Dashboard</em></h1>
 
             <p className="mt-4 max-w-3xl text-xl text-gray-600">
               Track your enrolled courses, quiz results, certificates, payment
@@ -208,7 +208,7 @@ export default function ProfilePage() {
 
               <Link
                 href="/login"
-                className="mt-6 inline-flex rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
               >
                 Login
               </Link>
@@ -247,7 +247,7 @@ export default function ProfilePage() {
                   <div className="flex flex-wrap gap-3">
                     <Link
                       href="/courses"
-                      className="rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                      className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
                     >
                       Browse Courses
                     </Link>
@@ -479,7 +479,7 @@ export default function ProfilePage() {
                             <div className="mt-4 flex flex-wrap gap-3">
                               <Link
                                 href={`/payment-confirmation?paymentId=${payment.id}`}
-                                className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+                                className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
                               >
                                 View Payment
                               </Link>
@@ -487,7 +487,7 @@ export default function ProfilePage() {
                               {payment.course?.slug && (
                                 <Link
                                   href={`/courses/${payment.course.slug}`}
-                                  className="rounded-xl border px-4 py-2 text-sm font-bold hover:bg-gray-50"
+                                  className="rounded-full border px-4 py-2 text-sm font-bold hover:bg-gray-50"
                                 >
                                   Open Course
                                 </Link>
@@ -630,14 +630,14 @@ export default function ProfilePage() {
                             <div className="mt-4 flex flex-wrap gap-3">
                               <Link
                                 href={`/courses/${certificate.course.slug}/certificate`}
-                                className="rounded-xl bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+                                className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
                               >
                                 View Certificate
                               </Link>
 
                               <Link
                                 href="/verify-certificate"
-                                className="rounded-xl border px-4 py-2 text-sm font-bold hover:bg-gray-50"
+                                className="rounded-full border px-4 py-2 text-sm font-bold hover:bg-gray-50"
                               >
                                 Verify
                               </Link>
@@ -699,7 +699,7 @@ function EmptyState({
 
       <Link
         href={href}
-        className="mt-5 inline-flex rounded-xl bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+        className="mt-5 inline-flex rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
       >
         {label}
       </Link>

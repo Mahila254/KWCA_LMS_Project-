@@ -51,7 +51,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
               <p className="font-bold text-[#1E1D59]">Premium Access</p>
 
               <h1 className="mt-3 text-5xl font-bold">
-                Unlock KWCA LMS Learning
+                Unlock KWCA LMS <em className="accent text-[#632854]">Learning</em>
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">

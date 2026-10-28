@@ -109,7 +109,7 @@ export default function Quiz({ questions }: { questions: QuizQuestion[] }) {
       {!submitted ? (
         <button
           onClick={handleSubmit}
-          className="mt-6 bg-[#1E1D59] text-white px-6 py-3 rounded-xl font-bold"
+          className="mt-6 bg-[#1E1D59] text-white px-6 py-3 rounded-full font-bold"
         >
           Submit Quiz
         </button>

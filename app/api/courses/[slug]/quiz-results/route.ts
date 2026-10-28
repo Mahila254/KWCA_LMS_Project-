@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
 
@@ -15,6 +16,80 @@ type SubmittedAnswer = {
   questionId?: string;
   selectedAnswer?: string | null;
 };
+
+// The signed-in learner's own attempts at one quiz (?type=PRACTICE or
+// FINAL), newest first, for the attempts table on the quiz intro screen.
+// Only practice attempts are reviewable, and only ones saved after
+// answers started being stored.
+export async function GET(request: NextRequest, { params }: RouteProps) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ attempts: [] });
+  }
+
+  try {
+    const { slug } = await params;
+    const { searchParams } = new URL(request.url);
+    const quizType =
+      searchParams.get("type") === "PRACTICE" ? "PRACTICE" : "FINAL";
+
+    const [course, user] = await Promise.all([
+      prisma.course.findUnique({ where: { slug } }),
+      prisma.user.findUnique({ where: { email: verifiedUser.email } }),
+    ]);
+
+    if (!course || !user) {
+      return NextResponse.json({ attempts: [] });
+    }
+
+    const attempts = await prisma.quizResult.findMany({
+      where: {
+        userId: user.id,
+        courseId: course.id,
+        quizType,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      // Only ask the database whether answers exist, never for the
+      // answers themselves.
+      select: {
+        id: true,
+        score: true,
+        passed: true,
+        createdAt: true,
+      },
+    });
+
+    const reviewable =
+      quizType === "PRACTICE"
+        ? await prisma.quizResult.findMany({
+            where: {
+              id: { in: attempts.map((attempt) => attempt.id) },
+              NOT: { answers: { equals: Prisma.AnyNull } },
+            },
+            select: { id: true },
+          })
+        : [];
+
+    const reviewableIds = new Set(reviewable.map((attempt) => attempt.id));
+
+    return NextResponse.json({
+      attempts: attempts.map((attempt) => ({
+        ...attempt,
+        canReview: reviewableIds.has(attempt.id),
+      })),
+    });
+  } catch (error) {
+    console.error("List quiz attempts error:", error);
+
+    return NextResponse.json(
+      { error: "Something went wrong while loading your attempts." },
+      { status: 500 }
+    );
+  }
+}
 
 // Grades the quiz server-side instead of trusting a client-reported
 // score/passed value. The browser only ever sends which option it picked
@@ -93,6 +168,12 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       return {
         questionId: question.id,
         question: question.question,
+        options: {
+          A: question.optionA,
+          B: question.optionB,
+          C: question.optionC,
+          D: question.optionD,
+        },
         selectedAnswer,
         correctAnswer: question.correctAnswer,
         explanation: question.explanation,
@@ -125,6 +206,7 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
         quizType,
         score: percentage,
         passed,
+        answers: results,
       },
     });
 
@@ -138,7 +220,9 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
         passed,
         correctCount,
         totalQuestions: questions.length,
-        results,
+        // Final-quiz answers stay on the server: the learner only gets
+        // their score. Practice attempts get the full breakdown to review.
+        results: quizType === "PRACTICE" ? results : undefined,
       },
       { status: 201 }
     );

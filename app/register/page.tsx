@@ -107,7 +107,7 @@ export default function RegisterPage() {
             <p className="font-bold text-[#1E1D59]">Learner Registration</p>
 
             <h1 className="mt-4 text-5xl font-extrabold">
-              Create Your KWCA LMS Account
+              Create Your KWCA LMS <em className="accent text-[#632854]">Account</em>
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
@@ -230,7 +230,7 @@ export default function RegisterPage() {
                 type="button"
                 onClick={handleRegister}
                 disabled={loading}
-                className="w-full rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Creating Account..." : "Create Account"}
               </button>

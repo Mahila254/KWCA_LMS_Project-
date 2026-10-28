@@ -19,7 +19,7 @@ export default function DashboardPage() {
             </p>
 
             <h1 className="mt-3 text-6xl font-bold text-slate-900">
-              Welcome back
+              Welcome <em className="accent text-[#632854]">back</em>
             </h1>
 
             <p className="mt-4 text-xl text-gray-600">

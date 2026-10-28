@@ -114,7 +114,7 @@ export default function EnrollCourseButton({
     return (
       <Link
         href={`/courses/${courseSlug}/certificate`}
-        className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-3 font-bold text-white hover:bg-green-700"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-green-600 px-6 py-3 font-bold text-white hover:bg-green-700"
       >
         <Award size={18} />
         Course Completed — View Certificate
@@ -137,7 +137,7 @@ export default function EnrollCourseButton({
       type="button"
       onClick={handleEnroll}
       disabled={enrolling}
-      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <BookOpenCheck size={18} />
       {enrolling ? "Enrolling..." : "Enroll in Course"}

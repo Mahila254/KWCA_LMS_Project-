@@ -8,6 +8,7 @@ import EnrollCourseButton from "@/components/EnrollCourseButton";
 import CourseContinueLink from "@/components/CourseContinueLink";
 import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
 import ScrollReveal from "@/components/ScrollReveal";
+import FormattedText from "@/components/FormattedText";
 import {
   ArrowLeft,
   ArrowRight,
@@ -272,10 +273,15 @@ export default async function CourseDetailsPage({
                   {course.title}
                 </h1>
 
-                <p className="mt-6 max-w-3xl text-xl leading-9 text-gray-700">
-                  {course.description ||
-                    "A practical conservation learning course designed to support conservancy teams, leaders, and community-based conservation work."}
-                </p>
+                <div className="mt-6 max-w-3xl">
+                  <FormattedText
+                    size="base"
+                    text={
+                      course.description ||
+                      "A practical conservation learning course designed to support conservancy teams, leaders, and community-based conservation work."
+                    }
+                  />
+                </div>
 
                 <div className="mt-8 flex flex-wrap gap-4">
                   {firstLesson ? (
@@ -380,9 +386,8 @@ export default async function CourseDetailsPage({
                 <h2 className="text-3xl font-bold">Course Overview</h2>
               </div>
 
-              <p className="text-lg leading-9 text-gray-600">
-                {course.description ||
-                  "This course provides practical knowledge and tools to help learners understand and apply strong conservation management practices."}
+              <p className="text-lg leading-8 text-gray-600">
+                Here&apos;s what this course includes.
               </p>
 
               <div className="mt-8 grid gap-4 md:grid-cols-2">
@@ -419,19 +424,12 @@ export default async function CourseDetailsPage({
                 />
               </div>
 
-              {course.learningOutcomes && (
+              {course.learningOutcomes?.trim() && (
                 <div className="mt-8 rounded-2xl bg-gray-50 p-6">
                   <h3 className="text-2xl font-bold">Learning Outcomes</h3>
 
-                  <div className="mt-4 space-y-3 text-gray-600">
-                    {course.learningOutcomes
-                      .split(/\n\s*\n/)
-                      .filter((item: string) => item.trim().length > 0)
-                      .map((item: string, index: number) => (
-                        <p key={index} className="leading-8">
-                          {item.trim()}
-                        </p>
-                      ))}
+                  <div className="mt-4">
+                    <FormattedText size="base" text={course.learningOutcomes} />
                   </div>
                 </div>
               )}

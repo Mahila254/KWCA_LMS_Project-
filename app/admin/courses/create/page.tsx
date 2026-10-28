@@ -5,6 +5,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import CourseImageUpload from "@/components/CourseImageUpload";
+import FormattedTextEditor from "@/components/FormattedTextEditor";
 
 export default function CreateCoursePage() {
   const [title, setTitle] = useState("");
@@ -15,6 +16,7 @@ export default function CreateCoursePage() {
   const [status, setStatus] = useState("Draft");
   const [introVideoUrl, setIntroVideoUrl] = useState("");
   const [learningOutcomes, setLearningOutcomes] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [saving, setSaving] = useState(false);
 
   async function handleCreateCourse() {
@@ -35,7 +37,7 @@ export default function CreateCoursePage() {
           title,
           category,
           description,
-          imageUrl: "",
+          imageUrl,
           introVideoUrl,
           learningOutcomes,
           numberOfLessons,
@@ -111,21 +113,16 @@ export default function CreateCoursePage() {
               </select>
             </div>
 
-            <div>
-              <label className="mb-2 block font-bold">
-                Course Description
-              </label>
+            <FormattedTextEditor
+              name="description"
+              label="Course Description"
+              rows={8}
+              value={description}
+              onChange={setDescription}
+              placeholder="Start with a short intro line, then one point per line starting with - (a dash)"
+            />
 
-              <textarea
-                rows={5}
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder="Briefly describe what this course teaches..."
-                className="w-full rounded-xl border px-4 py-3"
-              />
-            </div>
-
-            <CourseImageUpload />
+            <CourseImageUpload value={imageUrl} onChange={setImageUrl} />
 
             <div>
               <label className="mb-2 block font-bold">Course Type</label>
@@ -184,17 +181,14 @@ export default function CreateCoursePage() {
               />
             </div>
 
-            <div>
-              <label className="mb-2 block font-bold">Learning Outcomes</label>
-
-              <textarea
-                rows={5}
-                value={learningOutcomes}
-                onChange={(event) => setLearningOutcomes(event.target.value)}
-                placeholder="By the end of this course, learners should be able to..."
-                className="w-full rounded-xl border px-4 py-3"
-              />
-            </div>
+            <FormattedTextEditor
+              name="learningOutcomes"
+              label="Learning Outcomes"
+              rows={6}
+              value={learningOutcomes}
+              onChange={setLearningOutcomes}
+              placeholder="By the end of this course, learners should be able to..."
+            />
 
             <div className="flex flex-wrap gap-4 pt-4">
               <button

@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
+import { toPlainText } from "@/components/FormattedText";
 import { prisma } from "@/lib/prisma";
 import {
   ArrowRight,
@@ -250,8 +251,9 @@ export default async function CoursesPage() {
                         </h3>
 
                         <p className="mt-4 line-clamp-4 min-h-[112px] leading-7 text-gray-600">
-                          {course.description ||
-                            "A practical conservation learning course designed for conservancy teams and community-based conservation leaders."}
+                          {course.description
+                            ? toPlainText(course.description)
+                            : "A practical conservation learning course designed for conservancy teams and community-based conservation leaders."}
                         </p>
 
                         <div className="mt-auto grid grid-cols-3 gap-3 pt-6">

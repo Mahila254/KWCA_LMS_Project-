@@ -216,11 +216,58 @@ function renderList(items: ListItem[], start: number, level: number): [ReactNode
   return [list, index];
 }
 
-export default function FormattedText({ text }: { text: string }) {
+/**
+ * The same text as one plain line, for previews that can't show lists
+ * (course cards, admin tables): bullet markers, images, heading marks,
+ * bold stars and link syntax are removed, and list items are joined
+ * with "; " so they still read as separate points. Pair with line-clamp.
+ */
+export function toPlainText(text: string) {
+  let plain = "";
+
+  for (const rawLine of text.replace(/\r\n?/g, "\n").split("\n")) {
+    const trimmed = rawLine.trim();
+    const isListItem = bulletPattern.test(trimmed) || numberPattern.test(trimmed);
+    const line = trimmed
+      .replace(imagePattern, "")
+      .replace(/^#{1,3}\s+/, "")
+      .replace(/^(?:[-*+•◦▪▫‣–●○■□➢➤✓✔]|\d{1,3}[.)])\s+/, "")
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, "$1");
+
+    if (!line) continue;
+
+    if (!plain) {
+      plain = line;
+    } else if (isListItem && !/[:;.!?]$/.test(plain)) {
+      plain += `; ${line}`;
+    } else {
+      plain += ` ${line}`;
+    }
+  }
+
+  return plain;
+}
+
+export default function FormattedText({
+  text,
+  size = "lg",
+}: {
+  text: string;
+  // "base" is a little smaller and tighter, for course headers and
+  // summaries; "lg" is the reading size used in lessons.
+  size?: "base" | "lg";
+}) {
   const blocks = parseBlocks(text);
 
   return (
-    <div className="space-y-5 text-lg leading-8 text-gray-700">
+    <div
+      className={
+        size === "lg"
+          ? "space-y-5 text-lg leading-8 text-gray-700"
+          : "space-y-3 text-base leading-7 text-gray-700 md:text-lg md:leading-8"
+      }
+    >
       {blocks.map((block, index) => {
         switch (block.kind) {
           case "heading":

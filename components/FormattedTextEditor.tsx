@@ -12,61 +12,56 @@ import {
   PenLine,
 } from "lucide-react";
 import FormattedText from "@/components/FormattedText";
+import { uploadAdminImage } from "@/lib/uploadImage";
 
-type LessonTextEditorProps = {
-  // The form field name the server action reads ("content" or "notes").
+type FormattedTextEditorProps = {
+  // The form field name, e.g. "content" or "notes" for lessons, which the
+  // lesson server actions read straight from the submitted form.
   name: string;
   label: string;
   defaultValue?: string;
+  // Pass value + onChange to control it from state instead (the course
+  // forms, which save with fetch rather than a form submit).
+  value?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   rows?: number;
+  // Shown under the box. Defaults to the formatting tips.
+  hint?: React.ReactNode;
 };
 
-// Screenshots are often 2-5 MB PNGs. Anything big is scaled to at most
-// 1800px wide and saved as WebP before uploading, so lessons load fast.
-async function shrinkImage(file: File): Promise<File> {
-  if (file.type === "image/gif" || file.size < 800 * 1024) return file;
-
-  try {
-    const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, 1800 / bitmap.width);
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/webp", 0.85)
-    );
-
-    return blob && blob.size < file.size
-      ? new File([blob], "screenshot.webp", { type: "image/webp" })
-      : file;
-  } catch {
-    return file;
-  }
-}
-
 /**
- * Textarea for lesson content/notes with a small formatting toolbar and a
- * live preview that matches what learners see (components/FormattedText).
+ * Textarea with a small formatting toolbar and a live preview that
+ * matches what learners see (components/FormattedText). Used for lesson
+ * content/notes and course descriptions/learning outcomes.
+ *
  * Screenshots can be added with the toolbar button, pasted straight in
  * (e.g. after Win+Shift+S), or dragged onto the box; each one is uploaded
  * and inserted as ![Screenshot](url) on its own line.
  *
- * It's still a plain <textarea name=...>, so the existing server actions
- * that save the lesson don't change.
+ * It's still a plain <textarea name=...>, so forms that submit directly
+ * (the lesson server actions) keep working unchanged.
  */
-export default function LessonTextEditor({
+export default function FormattedTextEditor({
   name,
   label,
   defaultValue = "",
+  value: controlledValue,
+  onChange,
   placeholder,
   rows = 12,
-}: LessonTextEditorProps) {
+  hint,
+}: FormattedTextEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [value, setValue] = useState(defaultValue);
+  const [innerValue, setInnerValue] = useState(defaultValue);
+  const value = controlledValue ?? innerValue;
+
+  function setValue(next: string) {
+    setInnerValue(next);
+    onChange?.(next);
+  }
+
   const [mode, setMode] = useState<"write" | "preview">("write");
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -153,20 +148,7 @@ export default function LessonTextEditor({
       const markdown: string[] = [];
 
       for (const image of images) {
-        const body = new FormData();
-        body.append("file", await shrinkImage(image));
-
-        const response = await fetch("/api/admin/uploads", {
-          method: "POST",
-          body,
-        });
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || "Upload failed.");
-        }
-
-        markdown.push(`![Screenshot](${data.url})`);
+        markdown.push(`![Screenshot](${await uploadAdminImage(image)})`);
       }
 
       replaceSelection(() => `\n${markdown.join("\n\n")}\n`);
@@ -313,6 +295,8 @@ export default function LessonTextEditor({
 
       {error ? (
         <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>
+      ) : hint !== undefined ? (
+        <p className="mt-2 text-sm text-gray-500">{hint}</p>
       ) : (
         <p className="mt-2 text-sm text-gray-500">
           Start a line with <code className="rounded bg-gray-100 px-1">-</code> for a

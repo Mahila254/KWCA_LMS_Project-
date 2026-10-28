@@ -1,6 +1,6 @@
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
-import LessonTextEditor from "@/components/LessonTextEditor";
+import FormattedTextEditor from "@/components/FormattedTextEditor";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -255,14 +255,14 @@ export default async function CreateLessonPage({ params }: PageProps) {
                 />
               </div>
 
-              <LessonTextEditor
+              <FormattedTextEditor
                 name="content"
                 label="Lesson Content"
                 rows={12}
                 placeholder="Add lesson objective, key notes, important ideas, and practical examples."
               />
 
-              <LessonTextEditor
+              <FormattedTextEditor
                 name="notes"
                 label="Lesson Notes"
                 rows={6}

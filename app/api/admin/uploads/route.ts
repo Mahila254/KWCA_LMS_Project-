@@ -14,9 +14,10 @@ const extensions: Record<string, string> = {
 };
 
 /**
- * Uploads a lesson image (e.g. a screenshot) to Supabase Storage and
- * returns its public URL, which the lesson editor inserts as
- * ![Screenshot](url).
+ * Uploads an admin image to Supabase Storage and returns its public URL:
+ * lesson screenshots (the editor inserts them as ![Screenshot](url)) and
+ * course pictures (saved as the course's imageUrl). Send folder=courses
+ * for course pictures; anything else goes under lessons/.
  *
  * Needs SUPABASE_SERVICE_ROLE_KEY (Supabase → Project Settings → API
  * keys → service_role / secret). That key bypasses all database rules,
@@ -86,8 +87,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    const folder = formData.get("folder") === "courses" ? "courses" : "lessons";
     const month = new Date().toISOString().slice(0, 7);
-    const path = `lessons/${month}/${crypto.randomUUID()}.${extension}`;
+    const path = `${folder}/${month}/${crypto.randomUUID()}.${extension}`;
 
     const { error: uploadError } = await supabase.storage
       .from(BUCKET)

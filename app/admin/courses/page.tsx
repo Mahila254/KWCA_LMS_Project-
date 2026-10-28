@@ -2,6 +2,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { toPlainText } from "@/components/FormattedText";
 import { revalidatePath } from "next/cache";
 import {
   ArrowLeft,
@@ -171,7 +172,9 @@ export default async function AdminCoursesPage() {
                         </h3>
 
                         <p className="mt-3 line-clamp-2 text-sm leading-6 text-gray-600">
-                          {course.description || "No description added yet."}
+                          {course.description
+                            ? toPlainText(course.description)
+                            : "No description added yet."}
                         </p>
 
                         <p className="mt-2 text-sm font-bold text-gray-500">

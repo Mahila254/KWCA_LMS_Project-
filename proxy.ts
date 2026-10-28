@@ -1,17 +1,37 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import {
+  ADMIN_SESSION_COOKIE,
+  readAdminSessionEmail,
+} from "@/lib/adminSession";
+import { prisma } from "@/lib/prisma";
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAdminPage = pathname.startsWith("/admin");
   const isAdminLoginPage = pathname === "/admin/login";
 
   if (isAdminPage && !isAdminLoginPage) {
-    const adminSession = request.cookies.get("kwca_admin_session")?.value;
-    const adminEmail = request.cookies.get("kwca_admin_email")?.value;
+    // This is the only server-side gate for /admin/** pages (AdminGuard runs
+    // in the browser), so it checks both that the server issued the cookie
+    // and that the account still has the ADMIN role.
+    const adminEmail = readAdminSessionEmail(
+      request.cookies.get(ADMIN_SESSION_COOKIE)?.value
+    );
 
-    if (adminSession !== "active" || !adminEmail) {
+    const admin = adminEmail
+      ? await prisma.user.findUnique({
+          where: {
+            email: adminEmail,
+          },
+          select: {
+            role: true,
+          },
+        })
+      : null;
+
+    if (admin?.role !== "ADMIN") {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = "/admin/login";
 

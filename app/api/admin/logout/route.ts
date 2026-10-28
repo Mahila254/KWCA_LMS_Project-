@@ -1,23 +1,22 @@
 import { NextResponse } from "next/server";
+import {
+  ADMIN_SESSION_COOKIE,
+  LEGACY_ADMIN_EMAIL_COOKIE,
+  adminCookieOptions,
+} from "@/lib/adminSession";
 
 export async function POST() {
   const response = NextResponse.json({
     message: "Admin logged out successfully.",
   });
 
-  response.cookies.set("kwca_admin_session", "", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
+  response.cookies.set(ADMIN_SESSION_COOKIE, "", {
+    ...adminCookieOptions,
     maxAge: 0,
   });
 
-  response.cookies.set("kwca_admin_email", "", {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
+  response.cookies.set(LEGACY_ADMIN_EMAIL_COOKIE, "", {
+    ...adminCookieOptions,
     maxAge: 0,
   });
 

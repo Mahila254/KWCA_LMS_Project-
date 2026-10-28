@@ -6,20 +6,26 @@ import { prisma } from "@/lib/prisma";
 import { isAdminRequest } from "@/lib/isAdminRequest";
 import MarkLessonCompleteButton from "@/components/MarkLessonCompleteButton";
 import NextLessonButton from "@/components/NextLessonButton";
-import PremiumLessonGate from "@/components/PremiumLessonGate";
+import PremiumLessonGate, {
+  PremiumLessonNotes,
+  PremiumLessonReadingLink,
+  PremiumLessonVideo,
+} from "@/components/PremiumLessonGate";
+import {
+  LessonNotes,
+  LessonReadingLink,
+  LessonVideo,
+} from "@/components/LessonMaterial";
 import ScrollReveal from "@/components/ScrollReveal";
 import {
   ArrowLeft,
   BookOpen,
   Eye,
   Lock,
-  PlayCircle,
   FileText,
-  Download,
   CheckCircle,
   HelpCircle,
   ArrowRight,
-  ShieldCheck,
   ClipboardList,
 } from "lucide-react";
 
@@ -66,66 +72,6 @@ type CourseWithLessons = {
   updatedAt: Date;
   lessons: LessonRecord[];
 };
-
-function getYoutubeEmbedUrl(videoUrl: string | null) {
-  if (!videoUrl) return null;
-
-  if (videoUrl.includes("youtube.com/embed/")) {
-    return videoUrl;
-  }
-
-  if (videoUrl.includes("youtube.com/watch?v=")) {
-    const videoId = videoUrl.split("v=")[1]?.split("&")[0];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
-  }
-
-  if (videoUrl.includes("youtu.be/")) {
-    const videoId = videoUrl.split("youtu.be/")[1]?.split("?")[0];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
-  }
-
-  return videoUrl;
-}
-
-function renderTextBlocks(content: string) {
-  const blocks = content
-    .split(/\n\s*\n/)
-    .map((block: string) => block.trim())
-    .filter((block: string) => block.length > 0);
-
-  return blocks.map((block: string, index: number) => {
-    const headingTitles = [
-      "Lesson Objective",
-      "Key Notes",
-      "Important Ideas",
-      "Practical Example",
-      "Summary",
-      "Key Takeaway",
-      "Reflection",
-      "Activity",
-    ];
-
-    const isHeading = headingTitles.some(
-      (heading: string) =>
-        block === heading ||
-        block.toLowerCase().startsWith(`${heading.toLowerCase()}:`)
-    );
-
-    if (isHeading && block.length < 80) {
-      return (
-        <h3 key={index} className="text-2xl font-extrabold text-[#1E1D59]">
-          {block.replace(":", "")}
-        </h3>
-      );
-    }
-
-    return (
-      <p key={index} className="whitespace-pre-line text-lg leading-9">
-        {block}
-      </p>
-    );
-  });
-}
 
 export default async function LessonPage({ params, searchParams }: PageProps) {
   const { slug, lesson } = await params;
@@ -226,7 +172,10 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
       ? Math.round((lessonNumber / course.lessons.length) * 100)
       : 0;
 
-  const videoEmbedUrl = getYoutubeEmbedUrl(currentLesson.videoUrl);
+  // Premium material (video, notes, reading) must never be rendered into
+  // the page for a learner: PremiumLessonGate fetches it from the material
+  // API after confirming payment and fills the PremiumLesson* slots.
+  const isLocked = !isAdminPreview && !isPreview;
 
   const imageSource =
     course.imageUrl && course.imageUrl.trim() !== ""
@@ -465,24 +414,13 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
           <ScrollReveal>
             <div className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
               <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-[#1E1D59] text-white">
-                {videoEmbedUrl ? (
-                  <iframe
-                    src={videoEmbedUrl}
-                    title={currentLesson.title}
-                    className="h-full w-full rounded-3xl"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  />
+                {isLocked ? (
+                  <PremiumLessonVideo title={currentLesson.title} />
                 ) : (
-                  <div className="px-6 text-center">
-                    <PlayCircle className="mx-auto mb-4" size={72} />
-
-                    <p className="text-3xl font-bold">Lesson Video</p>
-
-                    <p className="mt-2 text-white/70">
-                      Video content will be embedded here once added.
-                    </p>
-                  </div>
+                  <LessonVideo
+                    title={currentLesson.title}
+                    videoUrl={currentLesson.videoUrl}
+                  />
                 )}
               </div>
 
@@ -520,28 +458,13 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                 <h2 className="text-3xl font-bold">Lesson Notes</h2>
               </div>
 
-              {currentLesson.content ? (
-                <div className="space-y-6 text-gray-600">
-                  {renderTextBlocks(currentLesson.content)}
-                </div>
+              {isLocked ? (
+                <PremiumLessonNotes />
               ) : (
-                <p className="text-lg leading-8 text-gray-600">
-                  Lesson content will appear here once added by the admin.
-                </p>
-              )}
-
-              {currentLesson.notes && (
-                <div className="mt-8 rounded-2xl bg-gray-50 p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <ShieldCheck className="text-[#1E1D59]" size={24} />
-
-                    <h3 className="text-xl font-bold">Key Takeaway</h3>
-                  </div>
-
-                  <div className="space-y-4 text-gray-600">
-                    {renderTextBlocks(currentLesson.notes)}
-                  </div>
-                </div>
+                <LessonNotes
+                  content={currentLesson.content}
+                  notes={currentLesson.notes}
+                />
               )}
             </div>
           </ScrollReveal>
@@ -560,22 +483,10 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   connects to conservancy governance and management.
                 </p>
 
-                {currentLesson.readingUrl ? (
-                  <Link
-                    href={currentLesson.readingUrl}
-                    className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold hover:bg-gray-50"
-                  >
-                    <Download size={18} />
-                    Download Reading
-                  </Link>
+                {isLocked ? (
+                  <PremiumLessonReadingLink />
                 ) : (
-                  <button
-                    type="button"
-                    className="mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-3 font-bold text-gray-400"
-                  >
-                    <Download size={18} />
-                    Reading Coming Soon
-                  </button>
+                  <LessonReadingLink readingUrl={currentLesson.readingUrl} />
                 )}
               </div>
             </ScrollReveal>
@@ -693,7 +604,11 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
       {isAdminPreview ? (
         lessonContent
       ) : !isPreview ? (
-        <PremiumLessonGate courseId={course.id} courseSlug={course.slug}>
+        <PremiumLessonGate
+          courseId={course.id}
+          courseSlug={course.slug}
+          lessonSlug={currentLesson.slug}
+        >
           {lessonContent}
         </PremiumLessonGate>
       ) : (

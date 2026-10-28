@@ -1,27 +1,64 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 import { CheckCircle, Loader2, Lock } from "lucide-react";
+import {
+  LessonMaterialData,
+  LessonNotes,
+  LessonReadingLink,
+  LessonVideo,
+} from "@/components/LessonMaterial";
 
 type PremiumLessonGateProps = {
   courseId: string;
   courseSlug: string;
+  lessonSlug: string;
   children: ReactNode;
 };
+
+// The server never puts premium material in the page. The gate fetches it
+// from the material API (which checks payment) and hands it to the
+// PremiumLesson* slots below through this context.
+const PremiumMaterialContext = createContext<LessonMaterialData | null>(null);
+
+export function PremiumLessonVideo({ title }: { title: string }) {
+  const material = useContext(PremiumMaterialContext);
+
+  return <LessonVideo title={title} videoUrl={material?.videoUrl ?? null} />;
+}
+
+export function PremiumLessonNotes() {
+  const material = useContext(PremiumMaterialContext);
+
+  return (
+    <LessonNotes
+      content={material?.content ?? null}
+      notes={material?.notes ?? null}
+    />
+  );
+}
+
+export function PremiumLessonReadingLink() {
+  const material = useContext(PremiumMaterialContext);
+
+  return <LessonReadingLink readingUrl={material?.readingUrl ?? null} />;
+}
 
 export default function PremiumLessonGate({
   courseId,
   courseSlug,
+  lessonSlug,
   children,
 }: PremiumLessonGateProps) {
   const [checking, setChecking] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
+  const [material, setMaterial] = useState<LessonMaterialData | null>(null);
+  const hasAccess = material !== null;
 
   useEffect(() => {
-    async function checkAccess() {
+    async function loadMaterial() {
       try {
         const {
           data: { user },
@@ -29,35 +66,32 @@ export default function PremiumLessonGate({
         } = await supabase.auth.getUser();
 
         if (error || !user) {
-          setHasAccess(false);
+          setMaterial(null);
           return;
         }
 
-        const response = await authFetch("/api/access/check-premium", {
-          method: "POST",
-          body: JSON.stringify({
-            courseId,
-          }),
-        });
+        const response = await authFetch(
+          `/api/courses/${courseSlug}/lessons/${lessonSlug}/material`
+        );
 
         const data = await response.json();
 
-        if (!response.ok || !data.hasAccess) {
-          setHasAccess(false);
+        if (!response.ok || !data.material) {
+          setMaterial(null);
           return;
         }
 
-        setHasAccess(true);
+        setMaterial(data.material);
       } catch (error) {
         console.error(error);
-        setHasAccess(false);
+        setMaterial(null);
       } finally {
         setChecking(false);
       }
     }
 
-    checkAccess();
-  }, [courseId]);
+    loadMaterial();
+  }, [courseSlug, lessonSlug]);
 
   if (checking) {
     return (
@@ -125,7 +159,9 @@ export default function PremiumLessonGate({
         </div>
       </div>
 
-      {children}
+      <PremiumMaterialContext.Provider value={material}>
+        {children}
+      </PremiumMaterialContext.Provider>
     </>
   );
 }

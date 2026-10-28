@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { prisma } from "@/lib/prisma";
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_MAX_AGE_SECONDS,
+  LEGACY_ADMIN_EMAIL_COOKIE,
+  adminCookieOptions,
+  createAdminSessionToken,
+} from "@/lib/adminSession";
 
 export const dynamic = "force-dynamic";
 
@@ -67,6 +74,19 @@ export async function POST(request: Request) {
       );
     }
 
+    const sessionToken = createAdminSessionToken(adminUser.email);
+
+    if (!sessionToken) {
+      console.error(
+        "Admin login error: ADMIN_SESSION_SECRET is missing or shorter than 32 characters."
+      );
+
+      return NextResponse.json(
+        { error: "Admin login is not configured on the server." },
+        { status: 500 }
+      );
+    }
+
     const response = NextResponse.json({
       message: "Admin login successful.",
       admin: {
@@ -77,20 +97,14 @@ export async function POST(request: Request) {
       },
     });
 
-    response.cookies.set("kwca_admin_session", "active", {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 8,
+    response.cookies.set(ADMIN_SESSION_COOKIE, sessionToken, {
+      ...adminCookieOptions,
+      maxAge: ADMIN_SESSION_MAX_AGE_SECONDS,
     });
 
-    response.cookies.set("kwca_admin_email", adminUser.email, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 60 * 60 * 8,
+    response.cookies.set(LEGACY_ADMIN_EMAIL_COOKIE, "", {
+      ...adminCookieOptions,
+      maxAge: 0,
     });
 
     return response;

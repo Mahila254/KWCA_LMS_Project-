@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminLogoutButton from "@/components/AdminLogoutButton";
 
 export default function AdminNavbar() {
   return (
@@ -63,12 +64,7 @@ export default function AdminNavbar() {
             Public Site
           </Link>
 
-          <Link
-            href="/api/admin/logout"
-            className="rounded-xl bg-white px-4 py-2 font-bold text-[#1E1D59] hover:bg-gray-100"
-          >
-            Logout
-          </Link>
+          <AdminLogoutButton />
         </nav>
       </div>
     </header>

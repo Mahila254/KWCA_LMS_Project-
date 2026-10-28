@@ -1,10 +1,14 @@
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  ADMIN_SESSION_COOKIE,
+  readAdminSessionEmail,
+} from "@/lib/adminSession";
 
 /**
  * Verifies that a request is coming from a logged-in admin.
  *
- * Checks the same session cookies proxy.ts checks for admin pages, then
+ * Verifies the signed session cookie (see lib/adminSession.ts), then
  * re-confirms the account still has the ADMIN role in the database (so a
  * demoted admin's existing cookie stops working immediately, not just on
  * next login). Returns the admin user record, or null if unauthorized.
@@ -13,10 +17,11 @@ import { prisma } from "@/lib/prisma";
  * /admin/** pages, it does NOT cover /api/admin/** routes.
  */
 export async function requireAdmin(request: NextRequest) {
-  const adminSession = request.cookies.get("kwca_admin_session")?.value;
-  const adminEmail = request.cookies.get("kwca_admin_email")?.value;
+  const adminEmail = readAdminSessionEmail(
+    request.cookies.get(ADMIN_SESSION_COOKIE)?.value
+  );
 
-  if (adminSession !== "active" || !adminEmail) {
+  if (!adminEmail) {
     return null;
   }
 

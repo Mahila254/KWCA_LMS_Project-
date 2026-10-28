@@ -1,9 +1,13 @@
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import {
+  ADMIN_SESSION_COOKIE,
+  readAdminSessionEmail,
+} from "@/lib/adminSession";
 
 /**
  * Server Component equivalent of lib/adminAuth.ts's requireAdmin — reads
- * the same admin session cookies proxy.ts and the admin API routes trust,
+ * the same signed admin session cookie proxy.ts and the admin API routes trust,
  * and re-confirms the account still has the ADMIN role.
  *
  * Use this anywhere a page reads an "adminPreview=true" query param (or
@@ -13,10 +17,11 @@ import { prisma } from "@/lib/prisma";
  */
 export async function isAdminRequest() {
   const cookieStore = await cookies();
-  const adminSession = cookieStore.get("kwca_admin_session")?.value;
-  const adminEmail = cookieStore.get("kwca_admin_email")?.value;
+  const adminEmail = readAdminSessionEmail(
+    cookieStore.get(ADMIN_SESSION_COOKIE)?.value
+  );
 
-  if (adminSession !== "active" || !adminEmail) {
+  if (!adminEmail) {
     return false;
   }
 

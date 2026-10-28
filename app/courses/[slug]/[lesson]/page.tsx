@@ -4,7 +4,6 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isAdminRequest } from "@/lib/isAdminRequest";
-import MarkLessonCompleteButton from "@/components/MarkLessonCompleteButton";
 import NextLessonButton from "@/components/NextLessonButton";
 import PremiumLessonGate, {
   PremiumLessonNotes,
@@ -516,28 +515,6 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
               </div>
             </ScrollReveal>
           </div>
-
-          {!isAdminPreview && (
-            <ScrollReveal>
-              <div className="rounded-3xl bg-white p-8 shadow-sm">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <h2 className="text-2xl font-bold">Lesson Progress</h2>
-
-                    <p className="mt-2 text-gray-600">
-                      Mark this lesson as complete to update your learner
-                      progress.
-                    </p>
-                  </div>
-
-                  <MarkLessonCompleteButton
-                    courseSlug={course.slug}
-                    lessonSlug={currentLesson.slug}
-                  />
-                </div>
-              </div>
-            </ScrollReveal>
-          )}
 
           <ScrollReveal>
             <div className="rounded-3xl bg-white p-8 shadow-sm">

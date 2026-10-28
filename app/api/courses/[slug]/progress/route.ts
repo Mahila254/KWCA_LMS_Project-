@@ -119,10 +119,28 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
 
     const completedLessons = lessonIndex + 1;
 
-    const progress =
+    const lessonProgress =
       course.lessons.length > 0
         ? Math.round((completedLessons / course.lessons.length) * 100)
         : 0;
+
+    // "Next Lesson" saves progress every time, including when a learner
+    // goes back to re-read an earlier lesson. Never let that lower what
+    // they've already reached (re-reading lesson 1 of 4 after finishing
+    // must not drop them from 100% to 25%).
+    const existingEnrollment = await prisma.enrollment.findUnique({
+      where: {
+        userId_courseId: {
+          userId: user.id,
+          courseId: course.id,
+        },
+      },
+      select: {
+        progress: true,
+      },
+    });
+
+    const progress = Math.max(lessonProgress, existingEnrollment?.progress ?? 0);
 
     const completed = progress >= 100;
 

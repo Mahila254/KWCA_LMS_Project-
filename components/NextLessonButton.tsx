@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 
@@ -14,12 +14,11 @@ type NextLessonButtonProps = {
   isAdminPreview: boolean;
 };
 
-// Previously, moving on only saved progress if a learner separately
-// clicked "Mark Lesson Complete" — clicking straight through with "Next
-// Lesson" saved nothing, so progress (and what shows as done when the
-// course is reopened) silently lagged behind what was actually read.
-// This saves the lesson being left before navigating, so "Next Lesson"
-// alone is enough to keep progress accurate.
+// "Next Lesson" is how a learner completes a lesson: it saves the lesson
+// being left as complete, briefly confirms it, then opens the next part.
+// There's no separate "Mark Lesson Complete" step any more. The progress
+// route never lowers progress, so going back to re-read an earlier
+// lesson and clicking Next again is harmless.
 export default function NextLessonButton({
   courseSlug,
   lessonSlug,
@@ -28,7 +27,7 @@ export default function NextLessonButton({
   isAdminPreview,
 }: NextLessonButtonProps) {
   const router = useRouter();
-  const [saving, setSaving] = useState(false);
+  const [state, setState] = useState<"idle" | "saving" | "saved">("idle");
 
   async function handleClick() {
     if (isAdminPreview) {
@@ -36,7 +35,7 @@ export default function NextLessonButton({
       return;
     }
 
-    setSaving(true);
+    setState("saving");
 
     try {
       const {
@@ -44,31 +43,50 @@ export default function NextLessonButton({
       } = await supabase.auth.getUser();
 
       if (user) {
-        await authFetch(`/api/courses/${courseSlug}/progress`, {
+        const response = await authFetch(`/api/courses/${courseSlug}/progress`, {
           method: "POST",
           body: JSON.stringify({ lessonSlug }),
         });
+
+        if (response.ok) {
+          setState("saved");
+          // Long enough to read "Lesson complete", short enough not to
+          // feel like waiting.
+          await new Promise((resolve) => setTimeout(resolve, 450));
+        }
       }
     } catch (error) {
-      // Don't block navigation on a failed save — the explicit "Mark
-      // Lesson Complete" button is still there as a fallback.
-      console.error("Auto-save lesson progress failed:", error);
+      // Don't block moving on just because the save failed.
+      console.error("Saving lesson progress failed:", error);
     } finally {
-      setSaving(false);
       router.push(href);
     }
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={saving}
-      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-70"
-    >
-      {saving ? <Loader2 className="animate-spin" size={18} /> : null}
-      {label}
-      <ArrowRight size={18} />
-    </button>
+    <div className="flex flex-col items-end gap-2">
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={state !== "idle"}
+        className={`inline-flex items-center gap-2 rounded-full px-6 py-3 font-bold text-white disabled:cursor-wait ${
+          state === "saved"
+            ? "bg-green-600"
+            : "bg-[#1E1D59] hover:bg-[#14123D]"
+        }`}
+      >
+        {state === "saving" && <Loader2 className="animate-spin" size={18} />}
+        {state === "saved" && <CheckCircle size={18} />}
+        {state === "saved" ? "Lesson complete" : label}
+        {state !== "saved" && <ArrowRight size={18} />}
+      </button>
+
+      {!isAdminPreview && (
+        <p className="flex items-center gap-1.5 text-sm text-gray-500">
+          <CheckCircle size={14} className="text-green-600" />
+          Continuing marks this lesson as complete.
+        </p>
+      )}
+    </div>
   );
 }

@@ -153,7 +153,7 @@ export default function Home() {
 
             {/* Stats ride along the bottom of the hero */}
             <div
-              className="mt-12 grid animate-rise grid-cols-3 divide-x divide-white/15 rounded-3xl border border-white/15 bg-[#1E1D59]/35 py-5 text-white backdrop-blur-md md:mt-16"
+              className="mt-10 grid animate-rise grid-cols-3 divide-x divide-white/15 rounded-3xl border border-white/15 bg-[#1E1D59]/35 py-5 text-white backdrop-blur-md md:mt-12"
               style={{ animationDelay: "650ms" }}
             >
               {stats.map((stat) => (
@@ -205,8 +205,8 @@ export default function Home() {
         </section>
 
         {/* ABOUT */}
-        <section id="about" className="bg-white px-6 py-24 md:py-32">
-          <div className="mx-auto grid max-w-7xl items-center gap-14 md:grid-cols-2 lg:gap-20">
+        <section id="about" className="bg-white px-6 py-16 md:py-20">
+          <div className="mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2 lg:gap-14">
             <ScrollReveal>
               <span className="mb-5 inline-block rounded-full bg-[#FBE4EA] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#632854]">
                 About the Hub
@@ -219,7 +219,7 @@ export default function Home() {
                 </em>
               </h2>
 
-              <p className="mb-10 text-lg leading-8 text-gray-600">
+              <p className="mb-8 text-lg leading-8 text-gray-600">
                 The Kenya Conservancies Learning Hub is your comprehensive
                 platform for establishing, managing, and growing successful
                 wildlife conservancies that benefit both nature and
@@ -267,7 +267,7 @@ export default function Home() {
                 <img
                   src="/images/hero-conservancy.jpg"
                   alt="Conservancy landscape"
-                  className="h-[420px] w-full object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 md:h-[560px]"
+                  className="h-[380px] w-full object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 md:h-[500px]"
                 />
               </div>
 
@@ -282,9 +282,9 @@ export default function Home() {
         </section>
 
         {/* KEY LEARNING TOPICS: bento grid, lead module gets the big tile */}
-        <section id="courses" className="bg-gray-50 px-6 py-24 md:py-32">
+        <section id="courses" className="bg-gray-50 px-6 py-16 md:py-20">
           <div className="mx-auto max-w-7xl">
-            <ScrollReveal className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+            <ScrollReveal className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
               <h2 className="text-4xl font-bold leading-[1.05] md:text-5xl lg:text-6xl">
                 Key Learning
                 <br />
@@ -427,8 +427,8 @@ export default function Home() {
         </section>
 
         {/* WHY THIS PLATFORM */}
-        <section id="why-platform" className="bg-[#F8F4F4] px-6 py-24 md:py-32">
-          <div className="mx-auto grid max-w-7xl items-start gap-14 md:grid-cols-2 lg:gap-20">
+        <section id="why-platform" className="bg-[#F8F4F4] px-6 py-16 md:py-20">
+          <div className="mx-auto grid max-w-7xl items-start gap-10 md:grid-cols-2 lg:gap-14">
             <ScrollReveal className="md:sticky md:top-28">
               <span className="mb-5 inline-block rounded-full bg-[#E4E1F5] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#1E1D59]">
                 Why This Platform
@@ -502,16 +502,16 @@ export default function Home() {
         </section>
 
         {/* CTA */}
-        <section className="bg-white px-6 py-20 md:py-28">
+        <section className="bg-white px-6 py-16 md:py-20">
           <ScrollReveal>
-            <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#1E1D59] to-[#632854] p-10 text-white shadow-xl md:p-16">
+            <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#1E1D59] to-[#632854] p-8 text-white shadow-xl md:p-12">
               <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 animate-float rounded-full bg-white/10" />
               <div
                 className="pointer-events-none absolute -bottom-16 left-1/3 h-48 w-48 animate-float rounded-full bg-white/10"
                 style={{ animationDelay: "-3s" }}
               />
 
-              <div className="relative grid items-end gap-10 lg:grid-cols-[1.5fr_1fr]">
+              <div className="relative grid items-end gap-8 lg:grid-cols-[1.5fr_1fr]">
                 <div>
                   <span className="mb-5 inline-block rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em]">
                     Join the Movement

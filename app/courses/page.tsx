@@ -94,7 +94,7 @@ export default async function CoursesPage() {
       <Navbar />
 
       <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="relative overflow-hidden px-6 py-24">
+        <section className="relative overflow-hidden px-6 py-16 md:py-20">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
@@ -146,7 +146,7 @@ export default async function CoursesPage() {
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-14">
+        <section className="mx-auto max-w-7xl px-6 py-12">
           <ScrollReveal className="mb-10 flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="font-bold text-[#632854]">Course Catalogue</p>
@@ -316,7 +316,7 @@ export default async function CoursesPage() {
           )}
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 pb-20">
+        <section className="mx-auto max-w-7xl px-6 pb-16">
           <ScrollReveal>
             <div className="overflow-hidden rounded-3xl bg-[#1E1D59] p-10 text-white shadow-sm md:p-14">
               <div className="grid gap-8 md:grid-cols-[1.5fr_1fr] md:items-center">

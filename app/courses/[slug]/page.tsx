@@ -499,7 +499,7 @@ export default async function CourseDetailsPage({
           </ScrollReveal>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 pb-20">
+        <section className="mx-auto max-w-7xl px-6 pb-16">
           <ScrollReveal>
             <div className="rounded-3xl bg-white p-8 shadow-sm">
               <div className="mb-8 flex flex-wrap items-end justify-between gap-4">

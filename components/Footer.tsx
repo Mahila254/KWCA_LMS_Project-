@@ -10,11 +10,11 @@ const platformLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#1E1D59] px-6 pt-20 text-white">
+    <footer className="relative overflow-hidden bg-[#1E1D59] px-6 pt-12 text-white md:pt-16">
       <div className="mx-auto max-w-7xl">
         {/* Big closing statement */}
-        <div className="flex flex-col gap-8 border-b border-white/10 pb-14 md:flex-row md:items-end md:justify-between">
-          <h2 className="max-w-3xl text-4xl font-bold leading-[1.05] md:text-6xl">
+        <div className="flex flex-col gap-8 border-b border-white/10 pb-10 md:flex-row md:items-end md:justify-between">
+          <h2 className="max-w-3xl text-4xl font-bold leading-[1.05] md:text-5xl">
             Living Nature.{" "}
             <em className="accent text-[#F0A8C4]">Living People.</em>
           </h2>
@@ -30,9 +30,9 @@ export default function Footer() {
           </Link>
         </div>
 
-        <div className="grid gap-10 py-14 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="grid gap-8 py-10 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
           <div>
-            <div className="mb-5 flex items-center gap-3">
+            <div className="mb-4 flex items-center gap-3">
               <img
                 src="/logo-white.png"
                 alt="Kenya Wildlife Conservancies Foundation"
@@ -54,11 +54,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-white/50">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-white/50">
               Platform
             </h4>
 
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {platformLinks.map((link) => (
                 <li key={link.href}>
                   <Link
@@ -75,11 +75,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-5 text-xs font-bold uppercase tracking-[0.18em] text-white/50">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-white/50">
               Organisation
             </h4>
 
-            <ul className="space-y-3 text-white/80">
+            <ul className="space-y-2.5 text-white/80">
               <li>Kenya Wildlife Conservancies Foundation</li>
               <li>Kenya Wildlife Conservancies Association</li>
               <li>Partners</li>
@@ -88,7 +88,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-3 md:gap-6">
           {[
             { icon: Mail, text: "info@kwcakenya.com" },
             { icon: Phone, text: "+254 XXX XXX XXX" },
@@ -106,7 +106,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-white/10 py-6 text-sm text-white/60 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/10 py-5 text-sm text-white/60 sm:flex-row">
           <p>
             &copy; {new Date().getFullYear()} Kenya Wildlife Conservancies
             Association. All rights reserved.

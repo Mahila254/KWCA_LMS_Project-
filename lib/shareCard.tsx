@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import sharp from "sharp";
 import { SITE_URL } from "@/lib/site";
 
 // The picture WhatsApp, Facebook, LinkedIn and X show under a shared link.
@@ -8,7 +9,9 @@ import { SITE_URL } from "@/lib/site";
 // app/courses/[slug]/opengraph-image.tsx (one per course).
 
 export const shareCardSize = { width: 1200, height: 630 };
-export const shareCardContentType = "image/png";
+// JPEG, not the renderer's PNG: a photo card as PNG is ~800 KB, and
+// WhatsApp quietly drops preview pictures much over 300 KB.
+export const shareCardContentType = "image/jpeg";
 
 const NAVY = "#1E1D59";
 const PINK = "#F0A8C4";
@@ -67,7 +70,7 @@ export async function renderShareCard({
   // Long course names step down in size so they stay on three lines.
   const titleSize = title.length > 70 ? 54 : title.length > 42 ? 64 : 76;
 
-  return new ImageResponse(
+  const card = new ImageResponse(
     (
       <div
         style={{
@@ -156,4 +159,17 @@ export async function renderShareCard({
     ),
     { ...shareCardSize, fonts: fonts.length ? fonts : undefined }
   );
+
+  const jpeg = await sharp(Buffer.from(await card.arrayBuffer()))
+    .jpeg({ quality: 80, mozjpeg: true })
+    .toBuffer();
+
+  return new Response(new Uint8Array(jpeg), {
+    headers: {
+      "Content-Type": shareCardContentType,
+      // Sharing apps fetch the card once per link; a day is plenty fresh
+      // for a renamed course.
+      "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
+    },
+  });
 }

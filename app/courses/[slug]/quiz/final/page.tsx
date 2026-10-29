@@ -10,16 +10,15 @@ import { authFetch } from "@/lib/authFetch";
 import QuizHero from "@/components/quiz/QuizHero";
 import QuizIntro from "@/components/quiz/QuizIntro";
 import QuestionNavigator from "@/components/quiz/QuestionNavigator";
+import QuestionCard from "@/components/quiz/QuestionCard";
 import type { QuestionStatus, QuizAttempt } from "@/components/quiz/types";
 import {
-  ArrowLeft,
   ArrowRight,
   Award,
   BookOpen,
   CheckCircle,
   ClipboardList,
   Clock,
-  Lock,
   MessageSquare,
   RotateCcw,
   ShieldCheck,
@@ -772,7 +771,7 @@ export default function FinalQuizPage() {
 
   const timer = (
     <div
-      className={`flex items-center justify-between rounded-2xl px-4 py-3 ${
+      className={`flex items-center justify-between rounded-2xl px-4 py-2.5 ${
         timeLeft <= 300 ? "bg-red-50 text-red-600" : "bg-gray-50 text-[#1E1D59]"
       }`}
     >
@@ -796,9 +795,10 @@ export default function FinalQuizPage() {
           courseSlug={courseSlug}
           title="Final Quiz"
           subtitle="This is a graded quiz. Select your answers carefully before submitting."
+          compact
         />
 
-        <section className="mx-auto grid max-w-6xl items-start gap-6 px-6 pb-16 pt-4 lg:grid-cols-[1fr_17rem]">
+        <section className="mx-auto grid max-w-6xl items-start gap-4 px-6 pb-10 lg:grid-cols-[1fr_16rem] lg:gap-6">
           <div className="lg:order-2">
             <QuestionNavigator
               statuses={statuses}
@@ -808,7 +808,9 @@ export default function FinalQuizPage() {
                 <div className="space-y-3">
                   {timer}
 
-                  <p className="flex items-center gap-2 text-sm font-semibold text-gray-500">
+                  {/* Phones: just the timer here, so the question stays on
+                      screen; Submit is on the last question's button. */}
+                  <p className="hidden items-center gap-2 text-sm font-semibold text-gray-500 lg:flex">
                     <ShieldCheck size={16} className="text-[#632854]" />
                     Pass mark: {PASS_MARK}%
                   </p>
@@ -817,7 +819,7 @@ export default function FinalQuizPage() {
                     type="button"
                     onClick={handleSubmit}
                     disabled={savingResult}
-                    className="w-full rounded-full bg-[#632854] px-5 py-3 text-sm font-bold text-white hover:bg-[#4F2043] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="hidden w-full rounded-full lg:block bg-[#632854] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#4F2043] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {savingResult ? "Submitting..." : "Submit Quiz"}
                   </button>
@@ -826,93 +828,31 @@ export default function FinalQuizPage() {
             />
           </div>
 
-          <div
-            key={currentQuestionIndex}
-            className="animate-page-enter rounded-3xl bg-white p-6 shadow-sm sm:p-8 lg:order-1"
-          >
-            <div className="rounded-3xl bg-[#F1F0FA] p-6 sm:p-8">
-              <p className="mb-3 inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-[#1E1D59]">
-                <Lock size={15} />
-                Question {currentQuestionIndex + 1} of {questions.length}
-              </p>
-
-              <h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">
-                {currentQuestion.question}
-              </h2>
-            </div>
-
-            <div className="mt-8 grid gap-4">
-              {answerOptions.map((option) => {
-                const selected = selectedAnswer === option.label;
-
-                return (
-                  <button
-                    key={option.label}
-                    type="button"
-                    onClick={() => selectAnswer(option.label)}
-                    className={`flex items-start gap-4 rounded-2xl border p-5 text-left transition ${
-                      selected
-                        ? "border-[#1E1D59] bg-[#F1F0FA]"
-                        : "border-gray-200 bg-white hover:border-[#1E1D59] hover:bg-[#F1F0FA]"
-                    }`}
-                  >
-                    <span
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-extrabold ${
-                        selected
-                          ? "bg-[#1E1D59] text-white"
-                          : "bg-[#F1F0FA] text-[#1E1D59]"
-                      }`}
-                    >
-                      {option.label}
-                    </span>
-
-                    <span className="pt-2 text-lg font-semibold leading-7">
-                      {option.text}
-                    </span>
-
-                    {selected && (
-                      <CheckCircle
-                        className="ml-auto mt-2 shrink-0 text-[#1E1D59]"
-                        size={24}
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-              <button
-                type="button"
-                onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
-                disabled={currentQuestionIndex === 0}
-                className="inline-flex items-center gap-2 rounded-full border px-6 py-3 font-bold hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-transparent"
-              >
-                <ArrowLeft size={18} />
-                Previous
-              </button>
-
-              {isLast ? (
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={savingResult}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#632854] px-6 py-3 font-bold text-white hover:bg-[#4F2043] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {savingResult ? "Submitting..." : "Submit Final Quiz"}
-                  <ArrowRight size={18} />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
-                >
-                  Next Question
-                  <ArrowRight size={18} />
-                </button>
-              )}
-            </div>
+          <div className="lg:order-1">
+            <QuestionCard
+              graded
+              index={currentQuestionIndex}
+              total={questions.length}
+              question={currentQuestion.question}
+              options={answerOptions}
+              selected={selectedAnswer}
+              onSelect={selectAnswer}
+              onPrevious={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
+              onNext={
+                isLast
+                  ? handleSubmit
+                  : () => setCurrentQuestionIndex(currentQuestionIndex + 1)
+              }
+              nextLabel={
+                isLast
+                  ? savingResult
+                    ? "Submitting..."
+                    : "Submit Final Quiz"
+                  : "Next Question"
+              }
+              nextAccent={isLast}
+              nextDisabled={isLast && savingResult}
+            />
           </div>
         </section>
       </main>

@@ -11,6 +11,7 @@ import QuizHero from "@/components/quiz/QuizHero";
 import QuizIntro from "@/components/quiz/QuizIntro";
 import QuizReview from "@/components/quiz/QuizReview";
 import QuestionNavigator from "@/components/quiz/QuestionNavigator";
+import QuestionCard from "@/components/quiz/QuestionCard";
 import type {
   AnswerLetter,
   QuestionStatus,
@@ -20,8 +21,6 @@ import type {
 import {
   ArrowLeft,
   ArrowRight,
-  CheckCircle,
-  XCircle,
   RotateCcw,
   HelpCircle,
   ClipboardList,
@@ -556,7 +555,6 @@ export default function PracticeQuizPage() {
   const currentQuestion = questions[currentQuestionIndex];
   const selectedAnswer = answers[currentQuestionIndex] || "";
   const showFeedback = Boolean(selectedAnswer);
-  const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
   const isLast = currentQuestionIndex === questions.length - 1;
 
   const answerOptions: { label: AnswerLetter; text: string }[] = [
@@ -597,9 +595,10 @@ export default function PracticeQuizPage() {
           courseSlug={courseSlug}
           title="Practice Quiz"
           subtitle="Answer each question and get instant feedback to strengthen your understanding."
+          compact
         />
 
-        <section className="mx-auto grid max-w-6xl items-start gap-6 px-6 pb-16 pt-4 lg:grid-cols-[1fr_17rem]">
+        <section className="mx-auto grid max-w-6xl items-start gap-4 px-6 pb-10 lg:grid-cols-[1fr_16rem] lg:gap-6">
           <div className="lg:order-2">
             <QuestionNavigator
               statuses={statuses}
@@ -616,142 +615,25 @@ export default function PracticeQuizPage() {
             />
           </div>
 
-          <div
-            key={currentQuestionIndex}
-            className="animate-page-enter rounded-3xl bg-white p-6 shadow-sm sm:p-8 lg:order-1"
-          >
-            <div className="rounded-3xl bg-[#F1F0FA] p-6 sm:p-8">
-              <p className="mb-3 text-sm font-extrabold uppercase tracking-wide text-[#1E1D59]">
-                Question {currentQuestionIndex + 1} of {questions.length}
-              </p>
-
-              <h2 className="text-2xl font-extrabold leading-tight sm:text-3xl">
-                {currentQuestion.question}
-              </h2>
-            </div>
-
-            <div className="mt-8 grid gap-4">
-              {answerOptions.map((option) => {
-                const selected = selectedAnswer === option.label;
-                const correct = currentQuestion.correctAnswer === option.label;
-
-                let optionClass =
-                  "border-gray-200 bg-white hover:border-[#1E1D59] hover:bg-[#F1F0FA]";
-
-                if (showFeedback && correct) {
-                  optionClass = "border-green-500 bg-green-50";
-                } else if (showFeedback && selected && !correct) {
-                  optionClass = "border-red-500 bg-red-50";
-                } else if (showFeedback) {
-                  optionClass = "border-gray-200 bg-white opacity-70";
-                }
-
-                return (
-                  <button
-                    key={option.label}
-                    type="button"
-                    onClick={() => handleSelectAnswer(option.label)}
-                    disabled={showFeedback}
-                    className={`flex items-start gap-4 rounded-2xl border p-5 text-left transition ${optionClass}`}
-                  >
-                    <span
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-extrabold ${
-                        showFeedback && correct
-                          ? "bg-green-600 text-white"
-                          : showFeedback && selected && !correct
-                          ? "bg-red-600 text-white"
-                          : "bg-[#F1F0FA] text-[#1E1D59]"
-                      }`}
-                    >
-                      {option.label}
-                    </span>
-
-                    <span className="pt-2 text-lg font-semibold leading-7">
-                      {option.text}
-                    </span>
-
-                    <span className="ml-auto pt-2">
-                      {showFeedback && correct && (
-                        <CheckCircle className="text-green-600" size={24} />
-                      )}
-
-                      {showFeedback && selected && !correct && (
-                        <XCircle className="text-red-600" size={24} />
-                      )}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {showFeedback && (
-              <div
-                className={`mt-8 animate-page-enter rounded-3xl p-6 ${
-                  isCorrect ? "bg-green-50" : "bg-red-50"
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  {isCorrect ? (
-                    <CheckCircle className="mt-1 shrink-0 text-green-600" size={28} />
-                  ) : (
-                    <XCircle className="mt-1 shrink-0 text-red-600" size={28} />
-                  )}
-
-                  <div>
-                    <h3
-                      className={`text-2xl font-bold ${
-                        isCorrect ? "text-green-700" : "text-red-700"
-                      }`}
-                    >
-                      {isCorrect ? "Correct answer!" : "Not quite."}
-                    </h3>
-
-                    <p className="mt-2 leading-7 text-gray-700">
-                      {currentQuestion.explanation ||
-                        "Review the lesson notes and try to understand why this answer is correct."}
-                    </p>
-
-                    {!isCorrect && (
-                      <p className="mt-3 font-bold text-gray-800">
-                        Correct answer: {currentQuestion.correctAnswer}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-              <button
-                type="button"
-                onClick={() => goTo(currentQuestionIndex - 1)}
-                disabled={currentQuestionIndex === 0}
-                className="inline-flex items-center gap-2 rounded-full border px-6 py-3 font-bold hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-transparent"
-              >
-                <ArrowLeft size={18} />
-                Previous
-              </button>
-
-              {isLast ? (
-                <button
-                  type="button"
-                  onClick={finishQuiz}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#632854] px-6 py-3 font-bold text-white hover:bg-[#4F2043]"
-                >
-                  Finish Quiz
-                  <ArrowRight size={18} />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => goTo(currentQuestionIndex + 1)}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
-                >
-                  Next Question
-                  <ArrowRight size={18} />
-                </button>
-              )}
-            </div>
+          <div className="lg:order-1">
+            <QuestionCard
+              index={currentQuestionIndex}
+              total={questions.length}
+              question={currentQuestion.question}
+              options={answerOptions}
+              selected={selectedAnswer}
+              onSelect={handleSelectAnswer}
+              locked={showFeedback}
+              correctAnswer={showFeedback ? currentQuestion.correctAnswer : undefined}
+              explanation={
+                currentQuestion.explanation ||
+                "Review the lesson notes and try to understand why this answer is correct."
+              }
+              onPrevious={() => goTo(currentQuestionIndex - 1)}
+              onNext={isLast ? finishQuiz : () => goTo(currentQuestionIndex + 1)}
+              nextLabel={isLast ? "Finish Quiz" : "Next Question"}
+              nextAccent={isLast}
+            />
           </div>
         </section>
       </main>

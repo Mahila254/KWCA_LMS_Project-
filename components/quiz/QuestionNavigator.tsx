@@ -38,8 +38,8 @@ export default function QuestionNavigator({
   );
 
   return (
-    <aside className="rounded-3xl bg-white p-5 shadow-sm lg:sticky lg:top-28">
-      <div className="mb-4 flex items-baseline justify-between gap-3">
+    <aside className="rounded-3xl bg-white p-3.5 shadow-sm sm:p-5 lg:sticky lg:top-24">
+      <div className="mb-2 flex items-baseline justify-between gap-3 sm:mb-3">
         <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-gray-500">
           Questions
         </p>
@@ -48,7 +48,7 @@ export default function QuestionNavigator({
         </p>
       </div>
 
-      <ol className="no-scrollbar -mx-1 flex gap-2.5 overflow-x-auto px-1 py-1 lg:grid lg:grid-cols-5 lg:overflow-visible">
+      <ol className="no-scrollbar -mx-1 flex gap-2.5 overflow-x-auto px-1 py-1 lg:grid lg:grid-cols-4 lg:overflow-visible">
         {statuses.map((status, index) => {
           const isCurrent = index === current;
 
@@ -74,7 +74,7 @@ export default function QuestionNavigator({
         })}
       </ol>
 
-      <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-gray-100 pt-4 text-xs font-semibold text-gray-500">
+      <ul className="mt-3 hidden flex-wrap gap-x-4 gap-y-2 border-t border-gray-100 pt-3 text-xs font-semibold text-gray-500 lg:flex">
         <li className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded-full bg-gray-200" />
           Not answered
@@ -99,7 +99,7 @@ export default function QuestionNavigator({
         )}
       </ul>
 
-      {footer && <div className="mt-4">{footer}</div>}
+      {footer && <div className="mt-3">{footer}</div>}
     </aside>
   );
 }

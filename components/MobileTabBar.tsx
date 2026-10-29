@@ -54,6 +54,12 @@ export default function MobileTabBar() {
     setHidden(false);
   }
 
+  // Quizzes are a focus mode: the bar would sit on top of the
+  // Previous/Next buttons, and the header menu is still there.
+  if (pathname.includes("/quiz/")) {
+    return null;
+  }
+
   return (
     <nav
       data-tabbar

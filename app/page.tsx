@@ -13,11 +13,14 @@ import {
   Download,
   GraduationCap,
   MessageCircle,
-  PlayCircle,
+  FileText,
   Target,
   Users,
   Video,
 } from "lucide-react";
+
+// Built from scripts/brochure/brochure.html (see build-brochure.mjs there).
+const BROCHURE_URL = "/brochure/kwca-learning-hub-brochure.pdf";
 
 const stats = [
   { value: `${modules.length}+`, label: "Learning Modules" },
@@ -140,13 +143,16 @@ export default function Home() {
                     />
                   </Link>
 
-                  <Link
-                    href="/#about"
+                  {/* Swap back to a "Watch Overview" video once one exists. */}
+                  <a
+                    href={BROCHURE_URL}
+                    target="_blank"
+                    rel="noopener"
                     className="inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/5 px-6 py-4 text-base font-bold text-white backdrop-blur-md hover:border-white hover:bg-white/15"
                   >
-                    <PlayCircle size={19} />
-                    Watch Overview
-                  </Link>
+                    <FileText size={19} />
+                    Read the Brochure
+                  </a>
                 </div>
               </div>
             </div>
@@ -540,13 +546,14 @@ export default function Home() {
                     />
                   </Link>
 
-                  <button
-                    type="button"
+                  <a
+                    href={BROCHURE_URL}
+                    download
                     className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-4 font-bold hover:bg-white hover:text-[#1E1D59]"
                   >
                     <Download size={18} />
                     Download Brochure
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>

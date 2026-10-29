@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
+import { PLAN_PRICES_KES, isPlanType } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -15,20 +16,33 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { paymentType, amount, courseId } = body;
+    // Any amount in the body is ignored: the price comes from the plan.
+    const { paymentType, courseId } = body;
 
-    if (!paymentType) {
+    if (!isPlanType(paymentType)) {
       return NextResponse.json(
-        { error: "Payment type is required." },
+        { error: "Please choose a valid payment plan." },
         { status: 400 }
       );
     }
 
-    if (!amount) {
-      return NextResponse.json(
-        { error: "Payment amount is required." },
-        { status: 400 }
-      );
+    const amount = PLAN_PRICES_KES[paymentType];
+
+    if (paymentType === "PAY_PER_COURSE") {
+      const course =
+        typeof courseId === "string"
+          ? await prisma.course.findUnique({
+              where: { id: courseId },
+              select: { id: true },
+            })
+          : null;
+
+      if (!course) {
+        return NextResponse.json(
+          { error: "Please choose a course to unlock." },
+          { status: 400 }
+        );
+      }
     }
 
     const user = await prisma.user.upsert({
@@ -49,7 +63,7 @@ export async function POST(request: NextRequest) {
     const payment = await prisma.payment.create({
       data: {
         userId: user.id,
-        courseId: courseId || null,
+        courseId: typeof courseId === "string" && courseId ? courseId : null,
         paymentType,
         amount,
         currency: "KES",

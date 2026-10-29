@@ -1,0 +1,233 @@
+<!doctype html>
+<!--
+  One-page A4 brochure for the Conservancies Learning Hub.
+  Edit this file, then run:  node scripts/brochure/build-brochure.mjs
+  to rebuild public/brochure/kwca-learning-hub-brochure.pdf.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Conservancies Learning Hub – Brochure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=block" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1E1D59;
+    --navy-deep: #14123D;
+    --burgundy: #632854;
+    --pink: #F0A8C4;
+    --blush: #FBEFF4;
+    --lavender: #F1F0FA;
+    --sand: #F8F4F4;
+    --ink: #3d3c5c;
+  }
+  html, body {
+    width: 210mm; height: 297mm;
+    font-family: "Hanken Grotesk", system-ui, sans-serif;
+    color: var(--navy);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    background: #fff;
+  }
+  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  em, .serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-weight: 400; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative; height: 90mm; flex-shrink: 0; color: #fff;
+    background: url("../../public/images/hero-conservancy.jpg") 70% 78% / 125% auto no-repeat;
+    padding: 10mm 14mm 9mm; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(20,18,61,0.5) 0%, rgba(20,18,61,0) 30%),
+      linear-gradient(90deg, rgba(20,18,61,0.94) 0%, rgba(30,29,89,0.78) 45%, rgba(30,29,89,0.15) 75%, rgba(30,29,89,0) 100%);
+  }
+  .hero > * { position: relative; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; }
+  .topbar img { height: 13mm; }
+  .tag {
+    font-size: 7.5pt; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.45); border-radius: 99px; padding: 2mm 4mm;
+  }
+  .eyebrow { font-size: 8pt; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--pink); }
+  h1 { font-size: 31pt; line-height: 1.02; font-weight: 800; letter-spacing: -0.02em; margin-top: 3mm; max-width: 125mm; }
+  h1 em { color: var(--pink); font-size: 1.08em; letter-spacing: -0.01em; }
+  .lede { margin-top: 3.5mm; font-size: 10.5pt; line-height: 1.5; color: rgba(255,255,255,0.88); max-width: 112mm; }
+
+  /* ---------- Body ---------- */
+  .body { flex: 1; padding: 7mm 14mm 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 10mm; align-content: start; }
+  .label { font-size: 7.5pt; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--burgundy); margin-bottom: 2.5mm; }
+  .story p { font-size: 9.2pt; line-height: 1.55; color: var(--ink); }
+  .story p + p { margin-top: 2.4mm; }
+  .story strong { color: var(--navy); }
+  .quote {
+    background: var(--sand); border-radius: 5mm; padding: 5mm 6mm 4.5mm; position: relative;
+  }
+  .quote blockquote { font-family: "Instrument Serif", Georgia, serif; font-size: 17pt; line-height: 1.15; color: var(--navy); }
+  .quote blockquote em { color: var(--burgundy); }
+  .quote .mark { position: absolute; top: -1mm; right: 5mm; font-family: "Instrument Serif", serif; font-size: 64pt; line-height: 1; color: var(--pink); opacity: 0.7; }
+  .quote p { margin-top: 3mm; font-size: 8.2pt; line-height: 1.5; color: var(--ink); }
+
+  .who { margin-top: 4mm; }
+  .chips { display: flex; flex-wrap: wrap; gap: 1.4mm; }
+  .chip { font-size: 7.6pt; font-weight: 600; padding: 1.2mm 3mm; border-radius: 99px; background: var(--lavender); color: var(--navy); }
+
+  .modules { grid-column: 1 / -1; margin-top: 5.5mm; }
+  .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6mm; }
+  .module { display: flex; gap: 2.6mm; align-items: baseline; padding: 1.8mm 3mm; border: 1px solid #e7e5f3; border-radius: 3mm; font-size: 7.9pt; white-space: nowrap; font-weight: 600; line-height: 1.3; }
+  .module span { font-family: "Instrument Serif", serif; font-style: italic; font-size: 12pt; color: var(--burgundy); min-width: 5mm; }
+
+  .steps { grid-column: 1 / -1; margin-top: 5.5mm; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+  .step { border-top: 2px solid var(--navy); padding-top: 3mm; }
+  .step h3 { font-size: 10.5pt; font-weight: 800; display: flex; align-items: baseline; gap: 2mm; }
+  .step h3 span { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; font-size: 17pt; color: var(--burgundy); }
+  .step p { margin-top: 1.4mm; font-size: 8.4pt; line-height: 1.5; color: var(--ink); }
+
+  /* ---------- Call to action ---------- */
+  .cta {
+    margin-top: auto; flex-shrink: 0; background: var(--navy); color: #fff; padding: 7mm 14mm 6mm;
+    position: relative; overflow: hidden;
+  }
+  .cta::after {
+    content: ""; position: absolute; right: -30mm; top: -40mm; width: 110mm; height: 110mm; border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,40,84,0.9) 0%, rgba(99,40,84,0) 70%);
+  }
+  .cta > * { position: relative; z-index: 1; }
+  .cta-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 8mm; }
+  .cta h2 { font-size: 21pt; line-height: 1.08; font-weight: 800; letter-spacing: -0.015em; max-width: 110mm; }
+  .cta h2 em { color: var(--pink); }
+  .cta .sub { margin-top: 2.5mm; font-size: 9pt; line-height: 1.5; color: rgba(255,255,255,0.75); max-width: 112mm; }
+  .button {
+    flex-shrink: 0; display: inline-flex; flex-direction: column; align-items: flex-start;
+    background: #fff; color: var(--navy); border-radius: 4mm; padding: 4mm 5.5mm; text-decoration: none;
+  }
+  .button small { font-size: 7pt; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--burgundy); }
+  .button strong { font-size: 11.5pt; font-weight: 800; margin-top: 1mm; }
+  .contacts {
+    margin-top: 4.5mm; padding-top: 3.5mm; border-top: 1px solid rgba(255,255,255,0.15);
+    display: flex; justify-content: space-between; gap: 4mm; font-size: 7.8pt; color: rgba(255,255,255,0.7);
+  }
+  .contacts b { color: #fff; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="topbar">
+      <img src="../../public/logo-white.png" alt="KWCA">
+      <span class="tag">Conservancies Learning Hub</span>
+    </div>
+
+    <div>
+      <p class="eyebrow">Living nature · Living people</p>
+      <h1>Years of conservancy wisdom. <em>Now one click away.</em></h1>
+      <p class="lede">
+        The Kenya Wildlife Conservancies Association has brought more than a decade of
+        hard-won field experience into one online learning platform, open to everyone
+        who lives with, works for and believes in Kenya&rsquo;s conservancies.
+      </p>
+    </div>
+  </header>
+
+  <main class="body">
+    <section class="story">
+      <p class="label">The story</p>
+      <p>
+        Kenya&rsquo;s conservancies were not built in classrooms. They were built
+        under acacia trees, at community meetings and in the field, by people who
+        learned by doing.
+      </p>
+      <p>
+        For years that knowledge lived in workshop notes, manuals and the memories
+        of experienced managers: valuable, but hard to reach.
+      </p>
+      <p>
+        The <strong>Conservancies Learning Hub</strong> changes that. It
+        <strong>consolidates years of KWCA&rsquo;s work</strong> into short, practical
+        courses that anyone can take on a phone or a laptop, at their own pace,
+        wherever they are.
+      </p>
+    </section>
+
+    <aside>
+      <div class="quote">
+        <span class="mark">&ldquo;</span>
+        <blockquote>When one conservancy learns, <em>every conservancy grows.</em></blockquote>
+        <p>Lessons, notes, practice quizzes and certificates, all drawn from what has
+        worked across Kenya&rsquo;s conservancies.</p>
+      </div>
+
+      <div class="who">
+        <p class="label">Made for</p>
+        <div class="chips">
+          <span class="chip">Conservancy managers</span>
+          <span class="chip">Board members</span>
+          <span class="chip">Rangers &amp; scouts</span>
+          <span class="chip">Landowners</span>
+          <span class="chip">Women &amp; youth leaders</span>
+          <span class="chip">Community members</span>
+          <span class="chip">Partners &amp; supporters</span>
+        </div>
+      </div>
+    </aside>
+
+    <section class="modules">
+      <p class="label">What you will learn</p>
+      <div class="module-grid">
+        <div class="module"><span>01</span>What is a Conservancy?</div>
+        <div class="module"><span>02</span>Establishing a Strong Conservancy</div>
+        <div class="module"><span>03</span>Managing a Conservancy Effectively</div>
+        <div class="module"><span>04</span>Creating Sustainable Revenue</div>
+        <div class="module"><span>05</span>Holding a Good AGM</div>
+        <div class="module"><span>06</span>Creating a Credible Carbon Project</div>
+        <div class="module"><span>07</span>Writing a Management Plan</div>
+        <div class="module"><span>08</span>Women &amp; Youth in Conservation</div>
+        <div class="module"><span>09</span>Achieving Greenlisting Status</div>
+      </div>
+    </section>
+
+    <section class="steps">
+      <div class="step">
+        <h3><span>1</span>Sign up</h3>
+        <p>Create your free learner account in a minute and start with the preview lessons.</p>
+      </div>
+      <div class="step">
+        <h3><span>2</span>Learn your way</h3>
+        <p>Short lessons, notes and practice quizzes that you can take at your own pace, on any device.</p>
+      </div>
+      <div class="step">
+        <h3><span>3</span>Get certified</h3>
+        <p>Pass the final quiz to earn a KWCA certificate that anyone can verify online.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cta">
+    <div class="cta-row">
+      <div>
+        <h2>Your conservancy&rsquo;s next chapter <em>starts with one lesson.</em></h2>
+        <p class="sub">Join the leaders, rangers and communities already learning together.
+        Share this with your board, your team and your neighbours.</p>
+      </div>
+      <a class="button" href="https://kwca-lms-project.vercel.app">
+        <small>Start learning today</small>
+        <strong>kwca-lms-project.vercel.app</strong>
+      </a>
+    </div>
+
+    <div class="contacts">
+      <span><b>Email</b> &nbsp;info@kwcakenya.com</span>
+      <span><b>Mobile</b> &nbsp;+254 708 418 522</span>
+      <span><b>Landline</b> &nbsp;+254 (20) 251 8211</span>
+      <span><b>Visit</b> &nbsp;Seminary Road, Karen, Nairobi</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

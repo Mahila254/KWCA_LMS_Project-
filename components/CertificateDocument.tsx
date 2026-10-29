@@ -241,7 +241,7 @@ export default function CertificateDocument({
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: "url('/images/course-hero-background.jpg')",
+              backgroundImage: "url('/images/conservancy-training.jpg')",
             }}
           />
 

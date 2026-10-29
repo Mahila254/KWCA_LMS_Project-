@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import CreatePaymentButton from "@/components/CreatePaymentButton";
+import { PLAN_PRICES_KES, formatKes } from "@/lib/pricing";
 import {
   ArrowLeft,
   CheckCircle,
@@ -102,7 +103,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
               </p>
 
               <div className="mt-6">
-                <p className="text-5xl font-extrabold">KES 500</p>
+                <p className="text-5xl font-extrabold">{formatKes(PLAN_PRICES_KES.PAY_PER_COURSE)}</p>
                 <p className="mt-1 text-sm text-gray-500">per course</p>
               </div>
 
@@ -115,7 +116,6 @@ export default async function PricingPage({ searchParams }: PageProps) {
 
               <CreatePaymentButton
                 paymentType="PAY_PER_COURSE"
-                amount={500}
                 label={
                   hasCourseContext
                     ? "Create Course Payment"
@@ -151,7 +151,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
               </p>
 
               <div className="mt-6">
-                <p className="text-5xl font-extrabold">KES 1,200</p>
+                <p className="text-5xl font-extrabold">{formatKes(PLAN_PRICES_KES.MONTHLY_SUBSCRIPTION)}</p>
                 <p className="mt-1 text-sm text-gray-500">per month</p>
               </div>
 
@@ -164,7 +164,6 @@ export default async function PricingPage({ searchParams }: PageProps) {
 
               <CreatePaymentButton
                 paymentType="MONTHLY_SUBSCRIPTION"
-                amount={1200}
                 label="Create Monthly Payment"
               />
             </div>
@@ -183,7 +182,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
               </p>
 
               <div className="mt-6">
-                <p className="text-5xl font-extrabold">KES 5,000</p>
+                <p className="text-5xl font-extrabold">{formatKes(PLAN_PRICES_KES.ANNUAL_SUBSCRIPTION)}</p>
                 <p className="mt-1 text-sm text-gray-500">per year</p>
               </div>
 
@@ -196,7 +195,6 @@ export default async function PricingPage({ searchParams }: PageProps) {
 
               <CreatePaymentButton
                 paymentType="ANNUAL_SUBSCRIPTION"
-                amount={5000}
                 label="Create Annual Payment"
               />
             </div>

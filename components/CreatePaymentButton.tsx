@@ -5,22 +5,16 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 import { CreditCard } from "lucide-react";
-
-type PaymentType =
-  | "PAY_PER_COURSE"
-  | "MONTHLY_SUBSCRIPTION"
-  | "ANNUAL_SUBSCRIPTION";
+import type { PlanType } from "@/lib/pricing";
 
 type CreatePaymentButtonProps = {
-  paymentType: PaymentType;
-  amount: number;
+  paymentType: PlanType;
   label: string;
   courseId?: string | null;
 };
 
 export default function CreatePaymentButton({
   paymentType,
-  amount,
   label,
   courseId = null,
 }: CreatePaymentButtonProps) {
@@ -46,7 +40,6 @@ export default function CreatePaymentButton({
         method: "POST",
         body: JSON.stringify({
           paymentType,
-          amount,
           courseId,
         }),
       });

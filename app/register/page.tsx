@@ -222,7 +222,24 @@ export default function RegisterPage() {
                   I consent to KWCA LMS collecting and processing my
                   registration details and course activity (progress, quiz
                   results, and certificates) for the purpose of delivering
-                  this course and reporting on platform usage.
+                  this course and reporting on platform usage, as set out in
+                  the{" "}
+                  <Link
+                    href="/privacy"
+                    target="_blank"
+                    className="font-semibold text-[#632854] underline underline-offset-2"
+                  >
+                    Privacy Policy
+                  </Link>
+                  , and I agree to the{" "}
+                  <Link
+                    href="/terms"
+                    target="_blank"
+                    className="font-semibold text-[#632854] underline underline-offset-2"
+                  >
+                    Terms and Conditions
+                  </Link>
+                  .
                 </label>
               </div>
 

@@ -8,6 +8,35 @@ const platformLinks = [
   { href: "/verify-certificate", label: "Verify Certificate" },
 ];
 
+// Same details as the Contact Us page of kwcakenya.com. Complaints and
+// data requests have their own address, shown on the Privacy and Terms
+// pages (components/LegalPage.tsx).
+const contactDetails = [
+  {
+    icon: Mail,
+    text: "info@kwcakenya.com",
+    detail: "Email",
+    href: "mailto:info@kwcakenya.com",
+  },
+  {
+    icon: Phone,
+    text: "+254 708 418 522",
+    detail: "Mobile",
+    href: "tel:+254708418522",
+  },
+  {
+    icon: Phone,
+    text: "+254 (20) 251 8211",
+    detail: "Landline",
+    href: "tel:+254202518211",
+  },
+  {
+    icon: MapPin,
+    text: "Seminary Road, off Magadi Road",
+    detail: "Karen, Nairobi",
+  },
+];
+
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-[#1E1D59] px-6 pt-12 text-white md:pt-16">
@@ -88,22 +117,38 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-3 md:gap-6">
-          {[
-            { icon: Mail, text: "info@kwcakenya.com" },
-            { icon: Phone, text: "+254 XXX XXX XXX" },
-            { icon: MapPin, text: "Nairobi, Kenya" },
-          ].map((item) => (
-            <div
-              key={item.text}
-              className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10">
-                <item.icon size={16} />
-              </span>
-              <span className="text-sm text-white/80">{item.text}</span>
-            </div>
-          ))}
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+          {contactDetails.map((item) => {
+            const content = (
+              <>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10">
+                  <item.icon size={16} />
+                </span>
+                <span className="text-sm leading-snug text-white/80">
+                  {item.text}
+                  {item.detail && (
+                    <span className="block text-white/55">{item.detail}</span>
+                  )}
+                </span>
+              </>
+            );
+            const className =
+              "flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3";
+
+            return item.href ? (
+              <a
+                key={item.text}
+                href={item.href}
+                className={`${className} hover:border-white/30 hover:bg-white/10`}
+              >
+                {content}
+              </a>
+            ) : (
+              <div key={item.text} className={className}>
+                {content}
+              </div>
+            );
+          })}
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-white/10 py-5 text-sm text-white/60 sm:flex-row">
@@ -113,11 +158,11 @@ export default function Footer() {
           </p>
 
           <div className="flex gap-6">
-            <Link href="#" className="hover:text-white">
+            <Link href="/privacy" className="hover:text-white">
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-white">
-              Terms of Service
+            <Link href="/terms" className="hover:text-white">
+              Terms and Conditions
             </Link>
           </div>
         </div>

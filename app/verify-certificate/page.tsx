@@ -13,7 +13,6 @@ import {
   User,
   BookOpen,
   CalendarDays,
-  Mail,
   ArrowLeft,
 } from "lucide-react";
 
@@ -21,7 +20,6 @@ type VerifiedCertificate = {
   code: string;
   issuedAt: string;
   learnerName: string;
-  learnerEmail: string;
   courseTitle: string;
   courseCategory: string | null;
 };
@@ -204,7 +202,7 @@ export default function VerifyCertificatePage() {
                 </div>
 
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
-                  <div className="rounded-2xl bg-white p-5">
+                  <div className="rounded-2xl bg-white p-5 md:col-span-2">
                     <div className="mb-3 flex items-center gap-2 text-[#1E1D59]">
                       <User size={20} />
                       <p className="font-bold">Learner Name</p>
@@ -212,17 +210,6 @@ export default function VerifyCertificatePage() {
 
                     <p className="text-2xl font-bold">
                       {certificate.learnerName}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-white p-5">
-                    <div className="mb-3 flex items-center gap-2 text-[#1E1D59]">
-                      <Mail size={20} />
-                      <p className="font-bold">Learner Email</p>
-                    </div>
-
-                    <p className="break-words text-lg font-bold">
-                      {certificate.learnerEmail}
                     </p>
                   </div>
 

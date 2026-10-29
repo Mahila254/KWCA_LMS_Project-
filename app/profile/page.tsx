@@ -16,6 +16,7 @@ import {
   GraduationCap,
   Loader2,
   Mail,
+  MessageSquareWarning,
   User,
   XCircle,
   Clock,
@@ -649,6 +650,39 @@ export default function ProfilePage() {
                   )}
                 </section>
               </div>
+
+              <section className="flex flex-col gap-5 rounded-3xl bg-[#1E1D59] p-8 text-white md:flex-row md:items-center md:justify-between">
+                <div className="flex gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10">
+                    <MessageSquareWarning size={22} />
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-bold">
+                      Need help or have a complaint?
+                    </h2>
+                    <p className="mt-1 max-w-2xl leading-7 text-white/70">
+                      Email us about a problem with a course, a payment or your
+                      account, or to ask for a copy or deletion of your data.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex shrink-0 flex-wrap gap-3">
+                  <a
+                    href="mailto:complaints@kwcakenya.com"
+                    className="rounded-full bg-white px-6 py-3 font-bold text-[#1E1D59] hover:bg-[#F1F0FA]"
+                  >
+                    complaints@kwcakenya.com
+                  </a>
+                  <Link
+                    href="/privacy#your-rights"
+                    className="rounded-full border border-white/25 px-6 py-3 font-bold hover:border-white hover:bg-white/10"
+                  >
+                    Your data rights
+                  </Link>
+                </div>
+              </section>
             </div>
           ) : null}
         </section>

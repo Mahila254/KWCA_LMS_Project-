@@ -19,9 +19,11 @@ export async function GET(request: Request) {
       where: {
         certificateCode: code.trim(),
       },
+      // This route is public: anyone holding a code can look it up, so
+      // only what is printed on the certificate itself goes back.
       include: {
-        user: true,
-        course: true,
+        user: { select: { name: true } },
+        course: { select: { title: true, category: true } },
       },
     });
 
@@ -41,7 +43,6 @@ export async function GET(request: Request) {
         code: certificate.certificateCode,
         issuedAt: certificate.issuedAt,
         learnerName: certificate.user.name || "Unnamed Learner",
-        learnerEmail: certificate.user.email,
         courseTitle: certificate.course.title,
         courseCategory: certificate.course.category,
       },

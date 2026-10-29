@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { courseMetadata } from "@/lib/courseMeta";
 import Navbar from "@/components/Navbar";
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
@@ -5,6 +7,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isAdminRequest } from "@/lib/isAdminRequest";
 import NextLessonButton from "@/components/NextLessonButton";
+import AutoEnroll from "@/components/AutoEnroll";
 import PremiumLessonGate, {
   PremiumLessonNotes,
   PremiumLessonReadingLink,
@@ -71,6 +74,17 @@ type CourseWithLessons = {
   updatedAt: Date;
   lessons: LessonRecord[];
 };
+
+export async function generateMetadata({
+  params,
+}: Pick<PageProps, "params">): Promise<Metadata> {
+  const { slug, lesson } = await params;
+  return courseMetadata(slug, (course) => {
+    const index = course.lessons.findIndex((item) => item.slug === lesson);
+    if (index < 0) return course.title.trim();
+    return `Lesson ${index + 1}: ${course.lessons[index].title.trim()} · ${course.title.trim()}`;
+  });
+}
 
 export default async function LessonPage({ params, searchParams }: PageProps) {
   const { slug, lesson } = await params;
@@ -192,6 +206,9 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
   const lessonContent = (
     <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+      {/* Opening a lesson enrols the learner (admins previewing aren't). */}
+      {!isAdminPreview && <AutoEnroll courseSlug={course.slug} />}
+
       {isAdminPreview && (
         <section className="border-b bg-[#1E1D59] px-6 py-4 text-white">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">

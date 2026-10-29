@@ -3,7 +3,7 @@ import Link from "next/link";
 import LegalPage, { type LegalSection } from "@/components/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Terms and Conditions | KWCA Learning Hub",
+  title: "Terms and Conditions",
   description:
     "The rules for using the KWCA Learning Hub: accounts, courses, payments, certificates and acceptable use.",
 };

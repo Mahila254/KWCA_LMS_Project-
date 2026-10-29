@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { courseMetadata } from "@/lib/courseMeta";
 import Navbar from "@/components/Navbar";
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
@@ -96,6 +98,13 @@ function getAccessBadgeClass(accessType: CourseRecord["accessType"]) {
   }
 
   return "bg-[#F5DCE6] text-[#632854]";
+}
+
+export async function generateMetadata({
+  params,
+}: Pick<PageProps, "params">): Promise<Metadata> {
+  const { slug } = await params;
+  return courseMetadata(slug);
 }
 
 export default async function CourseDetailsPage({
@@ -219,131 +228,112 @@ export default async function CourseDetailsPage({
           </section>
         )}
 
-        <section className="relative overflow-hidden px-6 py-16">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url('${imageSource}')`,
-            }}
+        {/* The course picture fills the band and fades into navy on the
+            left (top on phones), so the title sits on solid colour. */}
+        <section className="relative isolate overflow-hidden bg-[#14123D] px-6 text-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageSource}
+            alt=""
+            className="absolute inset-0 -z-20 h-full w-full animate-ken-burns object-cover object-center"
           />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#1E1D59]/60 via-[#1E1D59]/90 to-[#14123D] lg:bg-gradient-to-r lg:from-[#14123D] lg:via-[#1E1D59]/85 lg:via-45% lg:to-[#1E1D59]/5" />
+          <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-[#14123D]/60 to-transparent" />
 
-          <div className="absolute inset-0 bg-white/70" />
-
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/85 via-white/80 to-gray-50" />
-
-          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#1E1D59]/20 blur-3xl" />
-          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#632854]/20 blur-3xl" />
-
-          <ScrollReveal className="relative mx-auto max-w-7xl">
+          <ScrollReveal className="relative mx-auto max-w-7xl py-14 md:py-20 lg:py-24">
             <Link
               href={isAdminPreview ? "/admin/courses" : "/courses"}
-              className="mb-8 inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="group mb-8 inline-flex items-center gap-2 font-bold text-white/80 hover:text-white"
             >
-              <ArrowLeft size={18} />
+              <ArrowLeft
+                size={18}
+                className="transition-transform duration-300 group-hover:-translate-x-1"
+              />
               {isAdminPreview ? "Back to Admin Courses" : "Back to Courses"}
             </Link>
 
-            <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-              <div>
-                <div className="mb-6 flex flex-wrap gap-3">
-                  <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
-                    {course.category || "General"}
-                  </span>
+            <div className="max-w-2xl">
+              <div className="mb-6 flex flex-wrap gap-3">
+                <span className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-extrabold backdrop-blur-md">
+                  {course.category || "General"}
+                </span>
 
-                  <span
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold ${getAccessBadgeClass(
-                      course.accessType
-                    )}`}
-                  >
-                    {course.accessType === "FREE_PREVIEW" ? (
-                      <Eye size={15} />
-                    ) : (
-                      <Lock size={15} />
-                    )}
+                <span
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold ${getAccessBadgeClass(
+                    course.accessType
+                  )}`}
+                >
+                  {course.accessType === "FREE_PREVIEW" ? (
+                    <Eye size={15} />
+                  ) : (
+                    <Lock size={15} />
+                  )}
 
-                    {getAccessLabel(course.accessType)}
-                  </span>
+                  {getAccessLabel(course.accessType)}
+                </span>
 
-                  <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
+                {/* Learners only ever see published courses. */}
+                {isAdminPreview && (
+                  <span className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-extrabold backdrop-blur-md">
                     {course.status}
                   </span>
-                </div>
-
-                <h1 className="max-w-4xl text-5xl font-extrabold leading-tight md:text-7xl">
-                  {course.title}
-                </h1>
-
-                <div className="mt-6 max-w-3xl">
-                  <FormattedText
-                    size="base"
-                    text={
-                      course.description ||
-                      "A practical conservation learning course designed to support conservancy teams, leaders, and community-based conservation work."
-                    }
-                  />
-                </div>
-
-                <div className="mt-8 flex flex-wrap gap-4">
-                  {firstLesson ? (
-                    isAdminPreview ? (
-                      <Link
-                        href={`/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`}
-                        className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
-                      >
-                        Start Course
-                        <ArrowRight size={18} />
-                      </Link>
-                    ) : (
-                      <CourseContinueLink
-                        courseSlug={course.slug}
-                        lessons={lessonRefs}
-                        initialLabel="Start Course"
-                        className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-7 py-4 font-bold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#14123D]"
-                      />
-                    )
-                  ) : (
-                    <button
-                      type="button"
-                      className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-gray-300 px-7 py-4 font-bold text-gray-600"
-                    >
-                      Lessons Coming Soon
-                    </button>
-                  )}
-
-                  {!isAdminPreview && <EnrollCourseButton courseSlug={course.slug} />}
-
-                  {isAdminPreview && (
-                    <Link
-                      href={`/admin/courses/${course.slug}/edit`}
-                      className="inline-flex items-center gap-2 rounded-full border bg-white px-7 py-4 font-bold hover:bg-gray-50"
-                    >
-                      Edit Course
-                    </Link>
-                  )}
-                </div>
+                )}
               </div>
 
-              <div className="rounded-3xl bg-white p-4 shadow-sm">
-                <div className="relative h-[380px] overflow-hidden rounded-3xl bg-[#1E1D59]">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={imageSource}
-                    alt={course.title}
-                    className="h-full w-full object-cover"
-                  />
+              <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+                {course.title.trim()}
+              </h1>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1E1D59]/75 via-transparent to-transparent" />
+              <div className="mt-6">
+                <FormattedText
+                  size="base"
+                  tone="onDark"
+                  text={
+                    course.description ||
+                    "A practical conservation learning course designed to support conservancy teams, leaders, and community-based conservation work."
+                  }
+                />
+              </div>
 
-                  <div className="absolute bottom-6 left-6 right-6 text-white">
-                    <p className="text-sm font-bold text-white/80">
-                      KWCA LMS Course
-                    </p>
+              <div className="mt-8 flex flex-wrap gap-3 sm:gap-4">
+                {firstLesson ? (
+                  isAdminPreview ? (
+                    <Link
+                      href={`/courses/${course.slug}/${firstLesson.slug}?adminPreview=true`}
+                      className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-bold text-[#1E1D59] shadow-lg transition hover:-translate-y-1 hover:bg-[#F1F0FA]"
+                    >
+                      Start Course
+                      <ArrowRight size={18} />
+                    </Link>
+                  ) : (
+                    <CourseContinueLink
+                      courseSlug={course.slug}
+                      lessons={lessonRefs}
+                      initialLabel="Start Course"
+                      className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 font-bold text-[#1E1D59] shadow-lg transition hover:-translate-y-1 hover:bg-[#F1F0FA]"
+                    />
+                  )
+                ) : (
+                  <button
+                    type="button"
+                    className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-white/20 px-7 py-4 font-bold text-white/70"
+                  >
+                    Lessons Coming Soon
+                  </button>
+                )}
 
-                    <h2 className="mt-2 text-3xl font-extrabold">
-                      {course.title}
-                    </h2>
-                  </div>
-                </div>
+                {!isAdminPreview && (
+                  <EnrollCourseButton courseSlug={course.slug} tone="onDark" />
+                )}
+
+                {isAdminPreview && (
+                  <Link
+                    href={`/admin/courses/${course.slug}/edit`}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur-md hover:border-white hover:bg-white/20"
+                  >
+                    Edit Course
+                  </Link>
+                )}
               </div>
             </div>
           </ScrollReveal>

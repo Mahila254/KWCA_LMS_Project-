@@ -3,7 +3,7 @@ import Link from "next/link";
 import LegalPage, { type LegalSection } from "@/components/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | KWCA Learning Hub",
+  title: "Privacy Policy",
   description:
     "How the KWCA Learning Hub collects, uses, protects and keeps your personal data.",
 };

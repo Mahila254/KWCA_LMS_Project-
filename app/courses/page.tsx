@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -15,6 +16,12 @@ import {
   PlayCircle,
   CheckCircle,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Courses",
+  description:
+    "Browse practical courses for Kenya's conservancies: governance, management, revenue, carbon projects, AGMs and more.",
+};
 
 export const dynamic = "force-dynamic";
 

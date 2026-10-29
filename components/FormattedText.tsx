@@ -252,21 +252,27 @@ export function toPlainText(text: string) {
 export default function FormattedText({
   text,
   size = "lg",
+  tone = "default",
 }: {
   text: string;
   // "base" is a little smaller and tighter, for course headers and
   // summaries; "lg" is the reading size used in lessons.
   size?: "base" | "lg";
+  // "onDark" lightens every colour for text over a dark photo or navy
+  // band (the rules are in globals.css, .formatted-on-dark).
+  tone?: "default" | "onDark";
 }) {
   const blocks = parseBlocks(text);
+  const sizeClass =
+    size === "lg"
+      ? "space-y-5 text-lg leading-8"
+      : "space-y-3 text-base leading-7 md:text-lg md:leading-8";
 
   return (
     <div
-      className={
-        size === "lg"
-          ? "space-y-5 text-lg leading-8 text-gray-700"
-          : "space-y-3 text-base leading-7 text-gray-700 md:text-lg md:leading-8"
-      }
+      className={`${sizeClass} ${
+        tone === "onDark" ? "formatted-on-dark text-white/85" : "text-gray-700"
+      }`}
     >
       {blocks.map((block, index) => {
         switch (block.kind) {

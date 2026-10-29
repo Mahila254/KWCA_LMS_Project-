@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
+import { ensureEnrollment } from "@/lib/enrollment";
 
 type RouteProps = {
   params: Promise<{
@@ -67,26 +68,14 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       },
     });
 
-    const enrollment = await prisma.enrollment.upsert({
-      where: {
-        userId_courseId: {
-          userId: user.id,
-          courseId: course.id,
-        },
-      },
-      update: {},
-      create: {
-        userId: user.id,
-        courseId: course.id,
-        progress: 0,
-        completed: false,
-      },
-    });
+    // Called by the Enrol button and automatically whenever a learner
+    // opens a lesson. Enrolling twice is harmless: the second call just
+    // returns the existing record, progress and all.
+    const { enrollment, created } = await ensureEnrollment(user.id, course.id);
 
     return NextResponse.json({
-      message: "Enrollment successful.",
-      course,
-      user,
+      message: created ? "Enrollment successful." : "Already enrolled.",
+      alreadyEnrolled: !created,
       enrollment,
     });
   } catch (error) {

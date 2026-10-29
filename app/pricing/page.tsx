@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -15,6 +16,12 @@ import {
   CalendarDays,
   AlertCircle,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Pricing",
+  description:
+    "Pay per course or subscribe monthly or yearly to unlock premium lessons, final quizzes and certificates.",
+};
 
 export const dynamic = "force-dynamic";
 

@@ -5,20 +5,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
-import { Award, BookOpenCheck, CheckCircle2 } from "lucide-react";
+import { Award, BookOpenCheck, CheckCircle2, Loader2 } from "lucide-react";
 
 type EnrollCourseButtonProps = {
   courseSlug: string;
+  // "onDark" is a see-through outline for use over a photo or navy band.
+  tone?: "default" | "onDark";
 };
 
 type LearnerStatus = {
   enrolled: boolean;
-  enrollment: { completed: boolean } | null;
+  enrollment: { completed: boolean; progress: number } | null;
   finalQuizResult: { score: number } | null;
 };
 
 export default function EnrollCourseButton({
   courseSlug,
+  tone = "default",
 }: EnrollCourseButtonProps) {
   const router = useRouter();
   const [enrolling, setEnrolling] = useState(false);
@@ -92,8 +95,14 @@ export default function EnrollCourseButton({
         return;
       }
 
-      alert("✅ You have enrolled in this course!");
-      router.push("/profile");
+      // Stay on the course: the button turns into "You're Enrolled", so
+      // there is nothing left to click twice. refresh() updates the
+      // enrolment count on the page.
+      setStatus((current) => ({
+        enrolled: true,
+        enrollment: data.enrollment,
+        finalQuizResult: current?.finalQuizResult ?? null,
+      }));
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -124,10 +133,33 @@ export default function EnrollCourseButton({
 
   // Already enrolled but still working through it.
   if (!checkingStatus && status?.enrolled) {
+    const progress = status.enrollment?.progress ?? 0;
+
     return (
-      <span className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#1E1D59] bg-white px-6 py-3 font-bold text-[#1E1D59]">
+      <span className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-[#1E1D59] bg-white px-6 py-3 font-bold text-[#1E1D59]">
         <CheckCircle2 size={18} />
-        You're Enrolled
+        You&rsquo;re Enrolled
+        {progress > 0 && (
+          <span className="font-semibold text-gray-500">· {progress}%</span>
+        )}
+      </span>
+    );
+  }
+
+  // Until we know whether they're enrolled, don't offer "Enroll": that
+  // brief flash is how learners ended up enrolling in a course twice.
+  if (checkingStatus) {
+    return (
+      <span
+        aria-busy="true"
+        className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold ${
+          tone === "onDark"
+            ? "border border-white/20 bg-white/5 text-white/60"
+            : "border-2 border-gray-200 bg-white text-gray-400"
+        }`}
+      >
+        <Loader2 size={18} className="animate-spin" />
+        Checking enrolment…
       </span>
     );
   }
@@ -137,7 +169,11 @@ export default function EnrollCourseButton({
       type="button"
       onClick={handleEnroll}
       disabled={enrolling}
-      className="inline-flex items-center justify-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+      className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-60 ${
+        tone === "onDark"
+          ? "border border-white/40 bg-white/10 backdrop-blur-md hover:border-white hover:bg-white/20"
+          : "bg-[#1E1D59] hover:bg-[#14123D]"
+      }`}
     >
       <BookOpenCheck size={18} />
       {enrolling ? "Enrolling..." : "Enroll in Course"}

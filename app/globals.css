@@ -311,3 +311,19 @@ html {
     margin-block-end: 1.25rem;
   }
 }
+/* FormattedText tone="onDark": the same formatting, lightened for a
+   dark photo or navy band. Left outside @layer so it beats the
+   component's own colour utilities. */
+.formatted-on-dark :is(strong, h3, h4) {
+  color: #fff;
+}
+
+.formatted-on-dark h3 > span,
+.formatted-on-dark li::marker {
+  color: #f0a8c4;
+}
+
+.formatted-on-dark a {
+  color: #f0a8c4;
+  text-decoration-color: rgb(240 168 196 / 0.4);
+}

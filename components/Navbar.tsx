@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, User } from "lucide-react";
+import { ArrowRight, GraduationCap, LogIn, LogOut } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useLearner } from "@/lib/useLearner";
 import AdminBackToAdminBar from "@/components/AdminBackToAdminBar";
 import MobileMenu from "@/components/MobileMenu";
 import MobileTabBar from "@/components/MobileTabBar";
@@ -24,6 +26,8 @@ function isActive(pathname: string, href: string) {
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const learner = useLearner();
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
 
@@ -33,6 +37,12 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  }
 
   const activeHref = links.find((link) => isActive(pathname, link.href))?.href;
   // The pill sits under the hovered link, falling back to the current page.
@@ -100,44 +110,120 @@ export default function Navbar() {
 
             <span className="mx-3 h-6 w-px bg-white/15" />
 
-            <Link
-              href="/profile"
-              aria-current={pathname === "/profile" ? "page" : undefined}
-              className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold hover:bg-white/10 ${
-                pathname === "/profile" ? "text-white" : "text-white/75 hover:text-white"
-              }`}
-            >
-              <User size={16} />
-              My Profile
-            </Link>
+            {learner === undefined ? (
+              // Session still loading: hold the space so nothing jumps.
+              <span aria-hidden className="h-10 w-48" />
+            ) : learner ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  aria-current={pathname === "/dashboard" ? "page" : undefined}
+                  className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold hover:bg-white/10 ${
+                    pathname === "/dashboard" ? "text-white" : "text-white/75 hover:text-white"
+                  }`}
+                >
+                  <GraduationCap size={16} />
+                  My Learning
+                </Link>
 
-            <Link
-              href="/login"
-              className="group ml-2 inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#632854] py-2.5 pl-5 pr-4 text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(99,40,84,0.8)] hover:bg-[#4F2043] hover:shadow-[0_12px_24px_-8px_rgba(99,40,84,0.9)]"
-            >
-              Enrol Now
-              <ArrowRight
-                size={16}
-                className="transition-transform duration-300 group-hover:translate-x-0.5"
-              />
-            </Link>
+                <Link
+                  href="/profile"
+                  aria-current={pathname === "/profile" ? "page" : undefined}
+                  title={learner.email}
+                  className={`ml-1 flex items-center gap-2.5 whitespace-nowrap rounded-full border py-1 pl-1 pr-4 text-sm font-semibold hover:border-white/40 hover:bg-white/10 ${
+                    pathname === "/profile"
+                      ? "border-white/40 bg-white/10 text-white"
+                      : "border-white/15 text-white/85"
+                  }`}
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F0A8C4] text-sm font-extrabold uppercase text-[#1E1D59]">
+                    {learner.firstName.charAt(0)}
+                  </span>
+                  <span className="max-w-[9rem] truncate">{learner.firstName}</span>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  aria-label="Log out"
+                  title="Log out"
+                  className="ml-1 flex h-10 w-10 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white"
+                >
+                  <LogOut size={17} />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  aria-current={pathname === "/login" ? "page" : undefined}
+                  className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold hover:bg-white/10 ${
+                    pathname === "/login" ? "text-white" : "text-white/75 hover:text-white"
+                  }`}
+                >
+                  <LogIn size={16} />
+                  Log in
+                </Link>
+
+                <Link
+                  href="/register"
+                  className="group ml-2 inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#632854] py-2.5 pl-5 pr-4 text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(99,40,84,0.8)] hover:bg-[#4F2043] hover:shadow-[0_12px_24px_-8px_rgba(99,40,84,0.9)]"
+                >
+                  Enrol Now
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5"
+                  />
+                </Link>
+              </>
+            )}
           </nav>
 
           <MobileMenu
             links={[
               ...links,
-              { href: "/dashboard", label: "My Learning" },
-              { href: "/profile", label: "My Profile" },
+              ...(learner
+                ? [
+                    { href: "/dashboard", label: "My Learning" },
+                    { href: "/profile", label: "My Profile" },
+                  ]
+                : []),
               { href: "/verify-certificate", label: "Verify a Certificate" },
             ]}
           >
-            <Link
-              href="/login"
-              className="flex items-center justify-center gap-2 rounded-full bg-[#632854] px-6 py-4 text-center text-base font-bold text-white hover:bg-[#4F2043]"
-            >
-              Enrol Now
-              <ArrowRight size={18} />
-            </Link>
+            {learner ? (
+              <>
+                <p className="text-sm text-white/60">
+                  Signed in as{" "}
+                  <span className="font-semibold text-white">{learner.email}</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-4 text-base font-bold text-white hover:border-white hover:bg-white/10"
+                >
+                  <LogOut size={18} />
+                  Log out
+                </button>
+              </>
+            ) : learner === null ? (
+              <>
+                <Link
+                  href="/register"
+                  className="flex items-center justify-center gap-2 rounded-full bg-[#632854] px-6 py-4 text-center text-base font-bold text-white hover:bg-[#4F2043]"
+                >
+                  Enrol Now
+                  <ArrowRight size={18} />
+                </Link>
+                <Link
+                  href="/login"
+                  className="flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-4 text-center text-base font-bold text-white hover:border-white hover:bg-white/10"
+                >
+                  <LogIn size={18} />
+                  Log in
+                </Link>
+              </>
+            ) : null}
           </MobileMenu>
         </div>
       </header>

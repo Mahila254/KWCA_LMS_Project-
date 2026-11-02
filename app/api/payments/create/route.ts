@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
+import { ensureLearnerRecord } from "@/lib/learnerRecord";
 import { PLAN_PRICES_KES, isPlanType } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
@@ -45,20 +46,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const user = await prisma.user.upsert({
-      where: {
-        email: verifiedUser.email,
-      },
-      update: {
-        name: verifiedUser.name || undefined,
-      },
-      create: {
-        id: verifiedUser.id,
-        email: verifiedUser.email,
-        name: verifiedUser.name,
-        role: "STUDENT",
-      },
-    });
+    const user = await ensureLearnerRecord(verifiedUser);
 
     const payment = await prisma.payment.create({
       data: {

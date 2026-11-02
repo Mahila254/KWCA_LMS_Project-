@@ -262,7 +262,9 @@ const sections: LegalSection[] = [
           </li>
         </ul>
         <p>
-          To use any of these rights, email{" "}
+          You can correct your name and gender yourself on your{" "}
+          <Link href="/profile">profile page</Link>. To use any of these rights,
+          email{" "}
           <a href="mailto:complaints@kwcakenya.com">complaints@kwcakenya.com</a>{" "}
           from the email address on your account. We may ask you to confirm
           your identity. We will respond within the time limits set by the Data

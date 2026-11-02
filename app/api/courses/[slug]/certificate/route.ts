@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
+import { ensureLearnerRecord } from "@/lib/learnerRecord";
 
 type RouteProps = {
   params: Promise<{
@@ -99,20 +100,7 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       );
     }
 
-    const user = await prisma.user.upsert({
-      where: {
-        email: verifiedUser.email,
-      },
-      update: {
-        name: verifiedUser.name || undefined,
-      },
-      create: {
-        id: verifiedUser.id,
-        name: verifiedUser.name,
-        email: verifiedUser.email,
-        role: "STUDENT",
-      },
-    });
+    const user = await ensureLearnerRecord(verifiedUser);
 
     const passedFinalQuiz = await prisma.quizResult.findFirst({
       where: {

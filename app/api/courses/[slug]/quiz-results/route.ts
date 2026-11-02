@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
+import { ensureLearnerRecord } from "@/lib/learnerRecord";
 
 type RouteProps = {
   params: Promise<{
@@ -184,20 +185,7 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
     const percentage = Math.round((correctCount / questions.length) * 100);
     const passed = percentage >= PASS_THRESHOLD;
 
-    const user = await prisma.user.upsert({
-      where: {
-        email: verifiedUser.email,
-      },
-      update: {
-        name: verifiedUser.name || undefined,
-      },
-      create: {
-        id: verifiedUser.id,
-        email: verifiedUser.email,
-        name: verifiedUser.name,
-        role: "STUDENT",
-      },
-    });
+    const user = await ensureLearnerRecord(verifiedUser);
 
     const quizResult = await prisma.quizResult.create({
       data: {

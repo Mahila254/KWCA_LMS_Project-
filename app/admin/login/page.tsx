@@ -154,6 +154,13 @@ export default function AdminLoginPage() {
                   </div>
                 </div>
 
+                <Link
+                  href="/forgot-password"
+                  className="inline-block text-sm font-bold text-[#632854] underline-offset-2 hover:underline"
+                >
+                  Forgot your password?
+                </Link>
+
                 {error && (
                   <div className="rounded-2xl bg-red-50 p-4 text-red-700">
                     <div className="flex gap-3">

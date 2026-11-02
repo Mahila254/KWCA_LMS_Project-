@@ -30,13 +30,27 @@ export async function POST(request: NextRequest) {
       ? new Date(verifiedUser.consentedAt)
       : new Date();
 
+    // Details already on record stay as they are: they change only through
+    // PATCH /api/profile (see lib/learnerRecord.ts for why).
+    const existing = await prisma.user.findUnique({
+      where: {
+        email: verifiedUser.email,
+      },
+      select: {
+        name: true,
+        gender: true,
+      },
+    });
+
     const user = await prisma.user.upsert({
       where: {
         email: verifiedUser.email,
       },
       update: {
-        name,
-        ...(normalizedGender ? { gender: normalizedGender } : {}),
+        ...(existing?.name ? {} : { name }),
+        ...(!existing?.gender && normalizedGender
+          ? { gender: normalizedGender }
+          : {}),
       },
       create: {
         id: verifiedUser.id,

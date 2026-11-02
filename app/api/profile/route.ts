@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
+import { ensureLearnerRecord, parseProfileUpdate } from "@/lib/learnerRecord";
 
 export const dynamic = "force-dynamic";
 
@@ -72,6 +73,58 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { error: "Something went wrong while fetching the learner profile." },
+      { status: 500 }
+    );
+  }
+}
+
+// A learner correcting their own name and gender. The account is always the
+// verified caller's, whatever the request body says.
+export async function PATCH(request: NextRequest) {
+  const verifiedUser = await requireUser(request);
+
+  if (!verifiedUser) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  try {
+    const update = parseProfileUpdate(await request.json().catch(() => null));
+
+    if ("error" in update) {
+      return NextResponse.json({ error: update.error }, { status: 400 });
+    }
+
+    const learner = await ensureLearnerRecord(verifiedUser);
+
+    // Certificates show the learner's current name, and anyone can look them
+    // up by code, so changing it would change what's already been issued.
+    if (update.name !== learner.name) {
+      const certificates = await prisma.certificate.count({
+        where: { userId: learner.id },
+      });
+
+      if (certificates > 0) {
+        return NextResponse.json(
+          {
+            error:
+              "Your name is on an issued certificate, so it can't be changed here. Please email complaints@kwcakenya.com to correct it.",
+          },
+          { status: 409 }
+        );
+      }
+    }
+
+    const saved = await prisma.user.update({
+      where: { id: learner.id },
+      data: { name: update.name, gender: update.gender },
+    });
+
+    return NextResponse.json({ name: saved.name, gender: saved.gender });
+  } catch (error) {
+    console.error("Update profile error:", error);
+
+    return NextResponse.json(
+      { error: "Something went wrong while saving your details." },
       { status: 500 }
     );
   }

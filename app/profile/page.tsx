@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 import LearnerLogoutButton from "@/components/LearnerLogoutButton";
+import EditProfileCard from "@/components/EditProfileCard";
 import {
   Award,
   BookOpen,
@@ -257,6 +258,18 @@ export default function ProfilePage() {
                   </div>
                 </div>
               </div>
+
+              <EditProfileCard
+                name={learner.name}
+                gender={learner.gender}
+                email={learner.email}
+                nameLocked={learner.certificates.length > 0}
+                onSaved={(details) =>
+                  setLearner((current) =>
+                    current ? { ...current, ...details } : current
+                  )
+                }
+              />
 
               <div className="grid gap-6 md:grid-cols-5">
                 <SummaryCard

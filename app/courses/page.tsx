@@ -10,9 +10,8 @@ import {
   BookOpen,
   Eye,
   Lock,
-  Award,
   ClipboardList,
-  Users,
+  GraduationCap,
   PlayCircle,
   CheckCircle,
 } from "lucide-react";
@@ -46,12 +45,6 @@ type CourseRecord = {
   quizQuestions: {
     id: string;
   }[];
-  enrollments: {
-    id: string;
-  }[];
-  certificates: {
-    id: string;
-  }[];
 };
 
 export default async function CoursesPage() {
@@ -74,16 +67,6 @@ export default async function CoursesPage() {
           id: true,
         },
       },
-      enrollments: {
-        select: {
-          id: true,
-        },
-      },
-      certificates: {
-        select: {
-          id: true,
-        },
-      },
     },
   });
 
@@ -92,8 +75,9 @@ export default async function CoursesPage() {
     0
   );
 
-  const totalLearners = courses.reduce(
-    (total: number, course: CourseRecord) => total + course.enrollments.length,
+  const totalQuestions = courses.reduce(
+    (total: number, course: CourseRecord) =>
+      total + course.quizQuestions.length,
     0
   );
 
@@ -140,15 +124,15 @@ export default async function CoursesPage() {
               />
 
               <HeroStat
-                icon={<ClipboardList size={28} />}
+                icon={<GraduationCap size={28} />}
                 label="Total Lessons"
                 value={totalLessons.toString()}
               />
 
               <HeroStat
-                icon={<Users size={28} />}
-                label="Learner Enrollments"
-                value={totalLearners.toString()}
+                icon={<ClipboardList size={28} />}
+                label="Quiz Questions"
+                value={totalQuestions.toString()}
               />
             </div>
           </ScrollReveal>
@@ -263,7 +247,7 @@ export default async function CoursesPage() {
                             : "A practical conservation learning course designed for conservancy teams and community-based conservation leaders."}
                         </p>
 
-                        <div className="mt-auto grid grid-cols-3 gap-3 pt-6">
+                        <div className="mt-auto grid grid-cols-2 gap-3 pt-6">
                           <MiniStat
                             icon={<BookOpen size={17} />}
                             value={course.lessons.length.toString()}
@@ -274,12 +258,6 @@ export default async function CoursesPage() {
                             icon={<ClipboardList size={17} />}
                             value={course.quizQuestions.length.toString()}
                             label="Quizzes"
-                          />
-
-                          <MiniStat
-                            icon={<Award size={17} />}
-                            value={course.certificates.length.toString()}
-                            label="Awards"
                           />
                         </div>
 

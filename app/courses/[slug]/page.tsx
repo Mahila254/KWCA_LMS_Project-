@@ -7,6 +7,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isAdminRequest } from "@/lib/isAdminRequest";
 import EnrollCourseButton from "@/components/EnrollCourseButton";
+import CourseLearnerStats from "@/components/CourseLearnerStats";
 import CourseContinueLink from "@/components/CourseContinueLink";
 import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -353,17 +354,25 @@ export default async function CourseDetailsPage({
               value={course.quizQuestions.length.toString()}
             />
 
-            <CourseStat
-              icon={<Users size={28} />}
-              label="Enrollments"
-              value={course.enrollments.length.toString()}
-            />
+            {/* Totals across all learners are for admins only; a learner
+                sees whether they themself are enrolled and certified. */}
+            {isAdminPreview ? (
+              <>
+                <CourseStat
+                  icon={<Users size={28} />}
+                  label="Enrollments"
+                  value={course.enrollments.length.toString()}
+                />
 
-            <CourseStat
-              icon={<Award size={28} />}
-              label="Certificates"
-              value={course.certificates.length.toString()}
-            />
+                <CourseStat
+                  icon={<Award size={28} />}
+                  label="Certificates"
+                  value={course.certificates.length.toString()}
+                />
+              </>
+            ) : (
+              <CourseLearnerStats courseSlug={course.slug} />
+            )}
           </div>
         </section>
 

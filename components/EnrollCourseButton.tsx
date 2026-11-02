@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
+import { LEARNER_STATUS_CHANGED } from "@/components/CourseLearnerStats";
 import { Award, BookOpenCheck, CheckCircle2, Loader2 } from "lucide-react";
 
 type EnrollCourseButtonProps = {
@@ -96,13 +97,13 @@ export default function EnrollCourseButton({
       }
 
       // Stay on the course: the button turns into "You're Enrolled", so
-      // there is nothing left to click twice. refresh() updates the
-      // enrolment count on the page.
+      // there is nothing left to click twice.
       setStatus((current) => ({
         enrolled: true,
         enrollment: data.enrollment,
         finalQuizResult: current?.finalQuizResult ?? null,
       }));
+      window.dispatchEvent(new Event(LEARNER_STATUS_CHANGED));
       router.refresh();
     } catch (error) {
       console.error(error);

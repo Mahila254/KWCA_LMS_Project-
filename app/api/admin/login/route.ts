@@ -8,6 +8,12 @@ import {
   adminCookieOptions,
   createAdminSessionToken,
 } from "@/lib/adminSession";
+import {
+  clearLoginFailures,
+  clientIp,
+  loginBlockedMinutes,
+  recordLoginFailure,
+} from "@/lib/loginThrottle";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +36,25 @@ export async function POST(request: Request) {
       );
     }
 
+    // Checked before the password is even tried, so a blocked guesser
+    // learns nothing, even by trying the right password.
+    const ip = clientIp(request);
+    const blockedMinutes = await loginBlockedMinutes(email, ip);
+
+    if (blockedMinutes > 0) {
+      return NextResponse.json(
+        {
+          error: `Too many failed attempts. Please wait ${blockedMinutes} minute${
+            blockedMinutes === 1 ? "" : "s"
+          } and try again.`,
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": String(blockedMinutes * 60) },
+        }
+      );
+    }
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
@@ -48,6 +73,8 @@ export async function POST(request: Request) {
     });
 
     if (error || !data.user) {
+      await recordLoginFailure(email, ip);
+
       return NextResponse.json(
         { error: "Invalid email or password." },
         { status: 401 }
@@ -61,6 +88,8 @@ export async function POST(request: Request) {
     });
 
     if (!adminUser) {
+      await recordLoginFailure(email, ip);
+
       return NextResponse.json(
         { error: "This account is not registered in the LMS database." },
         { status: 403 }
@@ -68,6 +97,8 @@ export async function POST(request: Request) {
     }
 
     if (adminUser.role !== "ADMIN") {
+      await recordLoginFailure(email, ip);
+
       return NextResponse.json(
         { error: "Access denied. This account is not an admin." },
         { status: 403 }
@@ -86,6 +117,8 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+
+    await clearLoginFailures(email, ip);
 
     const response = NextResponse.json({
       message: "Admin login successful.",

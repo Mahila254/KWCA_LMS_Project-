@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
 import { getPremiumAccess } from "@/lib/premiumAccess";
+import { getLessonVideoQuestions } from "@/lib/lessonVideoQuestions";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,7 @@ export async function GET(request: NextRequest, { params }: RouteProps) {
         },
       },
       select: {
+        id: true,
         courseId: true,
         accessType: true,
         content: true,
@@ -73,6 +75,7 @@ export async function GET(request: NextRequest, { params }: RouteProps) {
         notes: lesson.notes,
         videoUrl: lesson.videoUrl,
         readingUrl: lesson.readingUrl,
+        videoQuestions: await getLessonVideoQuestions(lesson.id),
       },
     });
   } catch (error) {

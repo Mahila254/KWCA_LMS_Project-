@@ -19,6 +19,7 @@ import {
   LessonVideo,
 } from "@/components/LessonMaterial";
 import ScrollReveal from "@/components/ScrollReveal";
+import { getLessonVideoQuestions } from "@/lib/lessonVideoQuestions";
 import {
   ArrowLeft,
   BookOpen,
@@ -189,6 +190,11 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
   // the page for a learner: PremiumLessonGate fetches it from the material
   // API after confirming payment and fills the PremiumLesson* slots.
   const isLocked = !isAdminPreview && !isPreview;
+
+  // Part of the premium material too, so only loaded here when unlocked.
+  const videoQuestions = isLocked
+    ? []
+    : await getLessonVideoQuestions(currentLesson.id);
 
   const imageSource =
     course.imageUrl && course.imageUrl.trim() !== ""
@@ -431,16 +437,15 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         <section className="space-y-8 lg:col-span-3">
           <ScrollReveal>
             <div className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
-              <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-[#1E1D59] text-white">
-                {isLocked ? (
-                  <PremiumLessonVideo title={currentLesson.title} />
-                ) : (
-                  <LessonVideo
-                    title={currentLesson.title}
-                    videoUrl={currentLesson.videoUrl}
-                  />
-                )}
-              </div>
+              {isLocked ? (
+                <PremiumLessonVideo title={currentLesson.title} />
+              ) : (
+                <LessonVideo
+                  title={currentLesson.title}
+                  videoUrl={currentLesson.videoUrl}
+                  videoQuestions={videoQuestions}
+                />
+              )}
 
               <div className="mt-8 flex flex-wrap gap-4">
                 {isPreview ? (

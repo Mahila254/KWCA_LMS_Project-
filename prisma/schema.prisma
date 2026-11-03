@@ -52,6 +52,11 @@ enum QuizType {
   FINAL
 }
 
+enum VideoQuestionType {
+  TRUE_FALSE
+  MULTIPLE_CHOICE
+}
+
 // Failed admin login counts, see lib/loginThrottle.ts. Keys are hashed.
 model AdminLoginAttempt {
   key         String   @id
@@ -115,9 +120,30 @@ model Lesson {
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
 
-  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course         Course                @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  videoQuestions LessonVideoQuestion[]
 
   @@unique([courseId, slug])
+}
+
+// A question that pops up part-way through a lesson video: the video
+// pauses at timeSeconds, the learner answers, sees the answer, and carries
+// on. Not marked or recorded. See lib/videoQuestions.ts.
+model LessonVideoQuestion {
+  id           String            @id @default(cuid())
+  lessonId     String
+  timeSeconds  Int
+  type         VideoQuestionType @default(TRUE_FALSE)
+  question     String
+  options      String[]
+  correctIndex Int
+  explanation  String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId])
 }
 
 model QuizQuestion {

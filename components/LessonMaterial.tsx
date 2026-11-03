@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { Download, PlayCircle, ShieldCheck } from "lucide-react";
 import FormattedText from "@/components/FormattedText";
+import InteractiveVideo from "@/components/InteractiveVideo";
+import { getVideoSource } from "@/lib/videoSource";
+import type { VideoQuestion } from "@/lib/videoQuestions";
 
 /**
- * The parts of a lesson that are premium: video, notes and reading link.
+ * The parts of a lesson that are premium: video (with its pop-up
+ * questions), notes and reading link.
  * Shared by the lesson page (free preview lessons, rendered on the server)
  * and PremiumLessonGate (premium lessons, rendered in the browser only
  * after the material API confirms the learner has paid).
@@ -14,58 +18,66 @@ export type LessonMaterialData = {
   notes: string | null;
   videoUrl: string | null;
   readingUrl: string | null;
+  videoQuestions: VideoQuestion[];
 };
 
-function getYoutubeEmbedUrl(videoUrl: string | null) {
-  if (!videoUrl) return null;
-
-  if (videoUrl.includes("youtube.com/embed/")) {
-    return videoUrl;
-  }
-
-  if (videoUrl.includes("youtube.com/watch?v=")) {
-    const videoId = videoUrl.split("v=")[1]?.split("&")[0];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
-  }
-
-  if (videoUrl.includes("youtu.be/")) {
-    const videoId = videoUrl.split("youtu.be/")[1]?.split("?")[0];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
-  }
-
-  return videoUrl;
-}
-
+/**
+ * The lesson video, in its own 16:9 box. Video files, and YouTube videos
+ * with pop-up questions, get the player that can pause for them
+ * (components/InteractiveVideo.tsx); anything else is a plain embed.
+ */
 export function LessonVideo({
   title,
   videoUrl,
+  videoQuestions = [],
 }: {
   title: string;
   videoUrl: string | null;
+  videoQuestions?: VideoQuestion[];
 }) {
-  const videoEmbedUrl = getYoutubeEmbedUrl(videoUrl);
+  const source = getVideoSource(videoUrl);
 
-  if (videoEmbedUrl) {
+  if (
+    source?.kind === "file" ||
+    (source?.kind === "youtube" && videoQuestions.length > 0)
+  ) {
     return (
-      <iframe
-        src={videoEmbedUrl}
+      <InteractiveVideo
         title={title}
-        className="h-full w-full rounded-3xl"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
+        source={source}
+        questions={videoQuestions}
       />
     );
   }
 
+  const embedUrl =
+    source?.kind === "youtube"
+      ? `https://www.youtube.com/embed/${source.videoId}?rel=0${
+          source.start ? `&start=${source.start}` : ""
+        }`
+      : (source?.src ?? null);
+
   return (
-    <div className="px-6 text-center">
-      <PlayCircle className="mx-auto mb-4" size={72} />
+    <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-[#1E1D59] text-white">
+      {embedUrl ? (
+        <iframe
+          src={embedUrl}
+          title={title}
+          className="h-full w-full rounded-3xl"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      ) : (
+        <div className="px-6 text-center">
+          <PlayCircle className="mx-auto mb-4" size={72} />
 
-      <p className="text-3xl font-bold">Lesson Video</p>
+          <p className="text-3xl font-bold">Lesson Video</p>
 
-      <p className="mt-2 text-white/70">
-        Video content will be embedded here once added.
-      </p>
+          <p className="mt-2 text-white/70">
+            Video content will be embedded here once added.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

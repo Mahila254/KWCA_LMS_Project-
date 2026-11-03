@@ -1,8 +1,14 @@
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import FormattedTextEditor from "@/components/FormattedTextEditor";
+import VideoQuestionsInput from "@/components/VideoQuestionsInput";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import {
+  getLessonVideoQuestions,
+  replaceLessonVideoQuestions,
+} from "@/lib/lessonVideoQuestions";
+import { parseVideoQuestions } from "@/lib/videoQuestions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ArrowLeft, BookOpen, Save } from "lucide-react";
@@ -82,6 +88,11 @@ async function updateLesson(formData: FormData) {
     },
   });
 
+  await replaceLessonVideoQuestions(
+    lessonId,
+    parseVideoQuestions(formData.get("videoQuestions"))
+  );
+
   revalidatePath(`/admin/courses/${courseSlug}/lessons`);
   revalidatePath(`/courses/${courseSlug}`);
   revalidatePath(`/courses/${courseSlug}/${lessonSlug}`);
@@ -136,6 +147,8 @@ export default async function EditLessonPage({ params }: PageProps) {
       </>
     );
   }
+
+  const videoQuestions = await getLessonVideoQuestions(lesson.id);
 
   return (
     <>
@@ -261,6 +274,11 @@ export default async function EditLessonPage({ params }: PageProps) {
                   https://www.youtube.com/embed/VIDEO_ID
                 </p>
               </div>
+
+              <VideoQuestionsInput
+                name="videoQuestions"
+                defaultValue={videoQuestions}
+              />
 
               <div>
                 <label className="mb-2 block font-bold">Reading URL</label>

@@ -27,7 +27,13 @@ const PremiumMaterialContext = createContext<LessonMaterialData | null>(null);
 export function PremiumLessonVideo({ title }: { title: string }) {
   const material = useContext(PremiumMaterialContext);
 
-  return <LessonVideo title={title} videoUrl={material?.videoUrl ?? null} />;
+  return (
+    <LessonVideo
+      title={title}
+      videoUrl={material?.videoUrl ?? null}
+      videoQuestions={material?.videoQuestions ?? []}
+    />
+  );
 }
 
 export function PremiumLessonNotes() {

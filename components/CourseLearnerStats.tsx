@@ -7,10 +7,6 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 
-// EnrollCourseButton fires this after enrolling, so these cards update
-// without a reload.
-export const LEARNER_STATUS_CHANGED = "learner-status-changed";
-
 type LearnerStatus = {
   enrolled: boolean;
   enrollment: { progress: number; completed: boolean } | null;
@@ -60,11 +56,9 @@ export default function CourseLearnerStats({
     }
 
     load();
-    window.addEventListener(LEARNER_STATUS_CHANGED, load);
 
     return () => {
       cancelled = true;
-      window.removeEventListener(LEARNER_STATUS_CHANGED, load);
     };
   }, [courseSlug]);
 
@@ -76,7 +70,7 @@ export default function CourseLearnerStats({
     <>
       <StatusCard
         icon={<Users size={28} />}
-        label="Your Enrolment"
+        label="Your Enrollment"
         loading={loading}
         positive={Boolean(status?.enrolled)}
         value={status?.enrolled ? "Enrolled" : "Not enrolled"}

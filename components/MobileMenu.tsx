@@ -13,7 +13,7 @@ type MobileMenuLink = {
 
 type MobileMenuProps = {
   links: MobileMenuLink[];
-  // Extra actions shown under the links, e.g. "Enrol Now". Clicking these
+  // Extra actions shown under the links, e.g. "Enroll Now". Clicking these
   // doesn't close the menu; they navigate away, and the route change
   // closes it.
   children?: ReactNode;

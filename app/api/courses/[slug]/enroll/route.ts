@@ -56,9 +56,10 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
 
     const user = await ensureLearnerRecord(verifiedUser);
 
-    // Called by the Enrol button and automatically whenever a learner
-    // opens a lesson. Enrolling twice is harmless: the second call just
-    // returns the existing record, progress and all.
+    // Called automatically whenever a learner opens a lesson (see
+    // components/AutoEnroll.tsx), which is how Start Course enrolls them.
+    // Enrolling twice is harmless: the second call just returns the
+    // existing record, progress and all.
     const { enrollment, created } = await ensureEnrollment(user.id, course.id);
 
     return NextResponse.json({

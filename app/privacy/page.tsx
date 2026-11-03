@@ -64,7 +64,7 @@ const sections: LegalSection[] = [
 
         <h3>Information created while you learn</h3>
         <ul>
-          <li>The courses you enrol in and how far you have progressed.</li>
+          <li>The courses you enroll in and how far you have progressed.</li>
           <li>
             Your quiz attempts: scores, pass or fail, the date, and the answer
             you chose for each question (so you can review practice quizzes).
@@ -166,7 +166,7 @@ const sections: LegalSection[] = [
         <ul>
           <li>
             <strong>KWCA platform administrators</strong> can see learner
-            accounts, enrolments, progress, quiz results, certificates,
+            accounts, enrollments, progress, quiz results, certificates,
             payments and feedback. They use this only to run the platform and
             support learners.
           </li>

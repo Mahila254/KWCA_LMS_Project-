@@ -206,7 +206,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
   const lessonContent = (
     <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-      {/* Opening a lesson enrols the learner (admins previewing aren't). */}
+      {/* Opening a lesson enrolls the learner (admins previewing aren't). */}
       {!isAdminPreview && <AutoEnroll courseSlug={course.slug} />}
 
       {isAdminPreview && (

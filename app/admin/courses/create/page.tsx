@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import CourseImageUpload from "@/components/CourseImageUpload";
 import FormattedTextEditor from "@/components/FormattedTextEditor";
+import ObjectivesInput from "@/components/ObjectivesInput";
 
 export default function CreateCoursePage() {
   const [title, setTitle] = useState("");
@@ -119,7 +120,9 @@ export default function CreateCoursePage() {
               rows={8}
               value={description}
               onChange={setDescription}
-              placeholder="Start with a short intro line, then one point per line starting with - (a dash)"
+              placeholder="In two or three sentences: who the course is for, what it covers and why it matters."
+              previewVariant="intro"
+              hint="Shown as “About this course” at the top of the course page. Keep it to one or two short paragraphs. Lines you type one under another join into one paragraph; leave an empty line to start a new one. Put what learners will be able to do in the Learning Objectives fields below."
             />
 
             <CourseImageUpload value={imageUrl} onChange={setImageUrl} />
@@ -181,13 +184,9 @@ export default function CreateCoursePage() {
               />
             </div>
 
-            <FormattedTextEditor
-              name="learningOutcomes"
-              label="Learning Outcomes"
-              rows={6}
+            <ObjectivesInput
               value={learningOutcomes}
               onChange={setLearningOutcomes}
-              placeholder="By the end of this course, learners should be able to..."
             />
 
             <div className="flex flex-wrap gap-4 pt-4">

@@ -12,7 +12,7 @@ const enrolledThisVisit = new Set<string>();
  * Opening any lesson counts as starting the course: a signed-in learner
  * is enrolled straight away, so their progress is kept from the first
  * lesson on. Enrolling is once-only on the server, so an existing
- * enrolment (and its progress) is never touched. Renders nothing.
+ * enrollment (and its progress) is never touched. Renders nothing.
  * Premium courses still need payment first; that request is refused and
  * quietly ignored here.
  */
@@ -20,7 +20,7 @@ export default function AutoEnroll({ courseSlug }: { courseSlug: string }) {
   useEffect(() => {
     if (enrolledThisVisit.has(courseSlug)) return;
 
-    async function enrol() {
+    async function enroll() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -36,8 +36,8 @@ export default function AutoEnroll({ courseSlug }: { courseSlug: string }) {
       }
     }
 
-    enrol().catch((error) => {
-      console.error("Automatic enrolment failed:", error);
+    enroll().catch((error) => {
+      console.error("Automatic enrollment failed:", error);
     });
   }, [courseSlug]);
 

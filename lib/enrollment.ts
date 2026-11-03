@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 /**
- * Enrols a learner in a course once, and only once. If they are already
+ * Enrolls a learner in a course once, and only once. If they are already
  * enrolled the existing record comes back untouched, so their progress,
  * completion, quiz results and certificate are never reset. The database
  * also refuses a second Enrollment for the same learner and course

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import CourseImageUpload from "@/components/CourseImageUpload";
 import FormattedTextEditor from "@/components/FormattedTextEditor";
+import ObjectivesInput from "@/components/ObjectivesInput";
 
 export default function EditCoursePage() {
   const params = useParams<{ slug: string }>();
@@ -213,7 +214,9 @@ export default function EditCoursePage() {
               rows={8}
               value={description}
               onChange={setDescription}
-              placeholder="Start with a short intro line, then one point per line starting with - (a dash)"
+              placeholder="In two or three sentences: who the course is for, what it covers and why it matters."
+              previewVariant="intro"
+              hint="Shown as “About this course” at the top of the course page. Keep it to one or two short paragraphs. Lines you type one under another join into one paragraph; leave an empty line to start a new one. Put what learners will be able to do in the Learning Objectives fields below."
             />
 
             <CourseImageUpload value={imageUrl} onChange={setImageUrl} />
@@ -272,10 +275,7 @@ export default function EditCoursePage() {
               />
             </div>
 
-            <FormattedTextEditor
-              name="learningOutcomes"
-              label="Learning Outcomes"
-              rows={6}
+            <ObjectivesInput
               value={learningOutcomes}
               onChange={setLearningOutcomes}
             />

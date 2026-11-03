@@ -539,7 +539,7 @@ export default function Home() {
                     href="/courses"
                     className="group inline-flex items-center gap-2 rounded-full bg-[#632854] py-4 pl-7 pr-5 font-bold text-white ring-1 ring-white/20 hover:-translate-y-0.5 hover:bg-[#4F2043]"
                   >
-                    Enrol Now
+                    Enroll Now
                     <ArrowUpRight
                       size={18}
                       className="transition-transform duration-300 group-hover:rotate-45"

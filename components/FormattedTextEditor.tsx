@@ -28,6 +28,8 @@ type FormattedTextEditorProps = {
   rows?: number;
   // Shown under the box. Defaults to the formatting tips.
   hint?: React.ReactNode;
+  // Match the preview to how the text is shown (see FormattedText).
+  previewVariant?: "default" | "intro";
 };
 
 /**
@@ -51,6 +53,7 @@ export default function FormattedTextEditor({
   placeholder,
   rows = 12,
   hint,
+  previewVariant = "default",
 }: FormattedTextEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -285,7 +288,7 @@ export default function FormattedTextEditor({
         {mode === "preview" && (
           <div className="min-h-48 bg-white px-5 py-5">
             {value.trim() ? (
-              <FormattedText text={value} />
+              <FormattedText text={value} variant={previewVariant} />
             ) : (
               <p className="text-gray-400">Nothing to preview yet.</p>
             )}

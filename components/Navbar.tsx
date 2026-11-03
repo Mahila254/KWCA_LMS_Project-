@@ -169,7 +169,7 @@ export default function Navbar() {
                   href="/register"
                   className="group ml-2 inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#632854] py-2.5 pl-5 pr-4 text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(99,40,84,0.8)] hover:bg-[#4F2043] hover:shadow-[0_12px_24px_-8px_rgba(99,40,84,0.9)]"
                 >
-                  Enrol Now
+                  Enroll Now
                   <ArrowRight
                     size={16}
                     className="transition-transform duration-300 group-hover:translate-x-0.5"
@@ -212,7 +212,7 @@ export default function Navbar() {
                   href="/register"
                   className="flex items-center justify-center gap-2 rounded-full bg-[#632854] px-6 py-4 text-center text-base font-bold text-white hover:bg-[#4F2043]"
                 >
-                  Enrol Now
+                  Enroll Now
                   <ArrowRight size={18} />
                 </Link>
                 <Link

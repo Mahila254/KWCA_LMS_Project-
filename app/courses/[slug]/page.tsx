@@ -6,12 +6,12 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isAdminRequest } from "@/lib/isAdminRequest";
-import EnrollCourseButton from "@/components/EnrollCourseButton";
 import CourseLearnerStats from "@/components/CourseLearnerStats";
 import CourseContinueLink from "@/components/CourseContinueLink";
 import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
 import ScrollReveal from "@/components/ScrollReveal";
 import FormattedText from "@/components/FormattedText";
+import { parseObjectives } from "@/lib/objectives";
 import {
   ArrowLeft,
   ArrowRight,
@@ -201,6 +201,8 @@ export default async function CourseDetailsPage({
 
   const firstLesson = course.lessons[0];
 
+  const objectives = parseObjectives(course.learningOutcomes);
+
   return (
     <>
       {isAdminPreview ? <AdminNavbar /> : <Navbar />}
@@ -281,13 +283,17 @@ export default async function CourseDetailsPage({
                 )}
               </div>
 
+              <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#F0A8C4]">
+                About this course
+              </p>
+
               <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
                 {course.title.trim()}
               </h1>
 
               <div className="mt-6">
                 <FormattedText
-                  size="base"
+                  variant="intro"
                   tone="onDark"
                   text={
                     course.description ||
@@ -323,10 +329,6 @@ export default async function CourseDetailsPage({
                   </button>
                 )}
 
-                {!isAdminPreview && (
-                  <EnrollCourseButton courseSlug={course.slug} tone="onDark" />
-                )}
-
                 {isAdminPreview && (
                   <Link
                     href={`/admin/courses/${course.slug}/edit`}
@@ -339,6 +341,50 @@ export default async function CourseDetailsPage({
             </div>
           </ScrollReveal>
         </section>
+
+        {objectives.length > 0 && (
+          <section
+            aria-labelledby="objectives-heading"
+            className="bg-[#F8F4F4] px-6 py-14 md:py-16"
+          >
+            <div className="mx-auto max-w-7xl lg:grid lg:grid-cols-[0.75fr_1.25fr] lg:gap-14">
+              <ScrollReveal className="lg:sticky lg:top-28 lg:self-start">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#632854]">
+                  Learning objectives
+                </p>
+
+                <h2
+                  id="objectives-heading"
+                  className="mt-3 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl"
+                >
+                  By the end of the course,{" "}
+                  <em className="accent text-[#632854]">you will be able to</em>
+                </h2>
+              </ScrollReveal>
+
+              <ol className="mt-8 space-y-3 lg:mt-0">
+                {objectives.map((objective, index) => (
+                  <li key={index}>
+                    <ScrollReveal delay={index * 70}>
+                      <div className="flex items-start gap-4 rounded-2xl border border-[#1E1D59]/10 bg-white p-4 shadow-sm transition-[translate,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-md sm:items-center sm:p-5">
+                        <span
+                          aria-hidden
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#632854] font-extrabold text-white"
+                        >
+                          {index + 1}
+                        </span>
+
+                        <p className="pt-1.5 leading-7 text-gray-700 sm:pt-0 sm:text-lg">
+                          {objective}
+                        </p>
+                      </div>
+                    </ScrollReveal>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+        )}
 
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
@@ -422,16 +468,6 @@ export default async function CourseDetailsPage({
                   icon={<GraduationCap size={22} />}
                 />
               </div>
-
-              {course.learningOutcomes?.trim() && (
-                <div className="mt-8 rounded-2xl bg-gray-50 p-6">
-                  <h3 className="text-2xl font-bold">Learning Outcomes</h3>
-
-                  <div className="mt-4">
-                    <FormattedText size="base" text={course.learningOutcomes} />
-                  </div>
-                </div>
-              )}
             </div>
           </ScrollReveal>
 

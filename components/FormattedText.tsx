@@ -13,7 +13,7 @@ import { Fragment, type ReactNode } from "react";
  *   ![caption](https://...)        image / screenshot on its own line
  *
  * A blank line starts a new paragraph; a single line break stays a line
- * break. Bullets pasted from Word or Google Docs (•, ◦, ▪, –) also work.
+ * break (or, with variant="intro", runs on as one flowing paragraph). Bullets pasted from Word or Google Docs (•, ◦, ▪, –) also work.
  * Built from React elements only, never raw HTML, so lesson text can't
  * inject scripts into the page.
  */
@@ -253,6 +253,7 @@ export default function FormattedText({
   text,
   size = "lg",
   tone = "default",
+  variant = "default",
 }: {
   text: string;
   // "base" is a little smaller and tighter, for course headers and
@@ -261,10 +262,16 @@ export default function FormattedText({
   // "onDark" lightens every colour for text over a dark photo or navy
   // band (the rules are in globals.css, .formatted-on-dark).
   tone?: "default" | "onDark";
+  // "intro" is for a course's About text: lines typed one under another run
+  // together into a single paragraph (an empty line still starts a new one),
+  // and the first paragraph is a little larger, as a lead.
+  variant?: "default" | "intro";
 }) {
   const blocks = parseBlocks(text);
-  const sizeClass =
-    size === "lg"
+  const intro = variant === "intro";
+  const sizeClass = intro
+    ? "space-y-4 text-base leading-7 md:text-lg md:leading-8"
+    : size === "lg"
       ? "space-y-5 text-lg leading-8"
       : "space-y-3 text-base leading-7 md:text-lg md:leading-8";
 
@@ -341,6 +348,25 @@ export default function FormattedText({
             );
 
           default:
+            if (intro) {
+              const lead = index === 0;
+
+              return (
+                <p
+                  key={index}
+                  className={`text-pretty ${
+                    lead
+                      ? `text-lg leading-8 md:text-xl md:leading-9 ${
+                          tone === "onDark" ? "text-white" : "text-gray-800"
+                        }`
+                      : ""
+                  }`}
+                >
+                  {renderInline(block.lines.join(" "))}
+                </p>
+              );
+            }
+
             return (
               <p key={index}>
                 {block.lines.map((line, lineIndex) => (

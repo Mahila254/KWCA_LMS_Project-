@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { PASSWORD_RESET_EMAILS_ENABLED } from "@/lib/features";
 import {
   Lock,
   ShieldCheck,
@@ -154,12 +155,14 @@ export default function AdminLoginPage() {
                   </div>
                 </div>
 
-                <Link
-                  href="/forgot-password"
-                  className="inline-block text-sm font-bold text-[#632854] underline-offset-2 hover:underline"
-                >
-                  Forgot your password?
-                </Link>
+                {PASSWORD_RESET_EMAILS_ENABLED && (
+                  <Link
+                    href="/forgot-password"
+                    className="inline-block text-sm font-bold text-[#632854] underline-offset-2 hover:underline"
+                  >
+                    Forgot your password?
+                  </Link>
+                )}
 
                 {error && (
                   <div className="rounded-2xl bg-red-50 p-4 text-red-700">

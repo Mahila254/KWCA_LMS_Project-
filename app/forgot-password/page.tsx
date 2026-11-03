@@ -6,6 +6,7 @@ import { ArrowLeft, CheckCircle, KeyRound, Loader2, Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/lib/supabase";
+import { PASSWORD_RESET_EMAILS_ENABLED } from "@/lib/features";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -49,7 +50,28 @@ export default function ForgotPasswordPage() {
 
       <main className="min-h-screen bg-gray-50 px-6 py-12 text-[#1E1D59] md:py-16">
         <div className="mx-auto max-w-lg rounded-3xl bg-white p-6 shadow-sm md:p-8">
-          {sent ? (
+          {!PASSWORD_RESET_EMAILS_ENABLED ? (
+            <>
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA]">
+                <KeyRound size={34} />
+              </div>
+
+              <h1 className="text-3xl font-bold">Need help signing in?</h1>
+
+              <p className="mt-3 leading-7 text-gray-600">
+                Resetting your password by email isn&rsquo;t available yet. If
+                you&rsquo;ve forgotten your password, email{" "}
+                <a
+                  href="mailto:info@kwcakenya.com"
+                  className="font-bold text-[#632854] underline-offset-2 hover:underline"
+                >
+                  info@kwcakenya.com
+                </a>{" "}
+                from the address you registered with and we&rsquo;ll help you
+                get back in.
+              </p>
+            </>
+          ) : sent ? (
             <>
               <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-50 text-green-700">
                 <CheckCircle size={34} />

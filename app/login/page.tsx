@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { PASSWORD_RESET_EMAILS_ENABLED } from "@/lib/features";
 import { LogIn, Mail, Lock, CheckCircle } from "lucide-react";
 
 export default function LoginPage() {
@@ -115,12 +116,14 @@ export default function LoginPage() {
                   />
                 </div>
 
-                <Link
-                  href="/forgot-password"
-                  className="mt-2 inline-block text-sm font-bold text-[#632854] underline-offset-2 hover:underline"
-                >
-                  Forgot your password?
-                </Link>
+                {PASSWORD_RESET_EMAILS_ENABLED && (
+                  <Link
+                    href="/forgot-password"
+                    className="mt-2 inline-block text-sm font-bold text-[#632854] underline-offset-2 hover:underline"
+                  >
+                    Forgot your password?
+                  </Link>
+                )}
               </div>
 
               <button

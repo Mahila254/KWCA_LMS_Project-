@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CheckCircle, KeyRound, Loader2, Lock, Pencil } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
+import { PASSWORD_RESET_EMAILS_ENABLED } from "@/lib/features";
 
 type EditProfileCardProps = {
   name: string | null;
@@ -101,13 +102,15 @@ export default function EditProfileCard({
               Edit Details
             </button>
 
-            <Link
-              href="/forgot-password"
-              className="inline-flex items-center gap-2 rounded-full border px-5 py-3 font-bold hover:bg-gray-50"
-            >
-              <KeyRound size={16} />
-              Change Password
-            </Link>
+            {PASSWORD_RESET_EMAILS_ENABLED && (
+              <Link
+                href="/forgot-password"
+                className="inline-flex items-center gap-2 rounded-full border px-5 py-3 font-bold hover:bg-gray-50"
+              >
+                <KeyRound size={16} />
+                Change Password
+              </Link>
+            )}
           </div>
         )}
       </div>

@@ -14,6 +14,7 @@ import {
   GraduationCap,
   MessageCircle,
   FileText,
+  Sparkles,
   Target,
   Users,
   Video,
@@ -287,7 +288,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* KEY LEARNING TOPICS: bento grid, lead module gets the big tile */}
+        {/* KEY LEARNING TOPICS: the lead module gets a full-width picture card, the rest sit below it (two to a row, three on wide screens) */}
         <section id="courses" className="bg-gray-50 px-6 py-16 md:py-20">
           <div className="mx-auto max-w-7xl">
             <ScrollReveal className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
@@ -303,7 +304,7 @@ export default function Home() {
               </p>
             </ScrollReveal>
 
-            {/* Phones: a sideways swipe row. md and up: the bento grid. */}
+            {/* Phones: a sideways swipe row. md and up: the stacked grid. */}
             <div className="no-scrollbar -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-3">
               {modules.map((item, index) => {
                 const lead = index === 0;
@@ -313,7 +314,7 @@ export default function Home() {
                     key={item.slug}
                     delay={(index % 3) * 80}
                     className={`w-[82%] shrink-0 snap-start md:w-auto ${
-                      lead ? "md:col-span-2 xl:row-span-2" : ""
+                      lead ? "md:col-span-2 xl:col-span-3" : ""
                     }`}
                   >
                     {lead ? (
@@ -402,33 +403,41 @@ export default function Home() {
                   </ScrollReveal>
                 );
               })}
-            </div>
 
-            <ScrollReveal className="mt-6">
-              <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-deep px-8 py-8 text-white sm:flex-row sm:items-center">
-                <div>
-                  <h3 className="text-2xl font-bold">
-                    More Modules{" "}
-                    <em className="accent text-on-deep-muted">Coming Soon</em>
-                  </h3>
-                  <p className="mt-1 text-white/70">
-                    We&apos;re expanding the curriculum with new modules, case
-                    studies, and resources every quarter.
-                  </p>
+              {/* Last tile. Fills the empty spot in the three-column row on
+                  wide screens; on tablets it runs full width as a band. */}
+              <ScrollReveal
+                delay={(modules.length % 3) * 80}
+                className="w-[82%] shrink-0 snap-start md:col-span-2 md:w-auto xl:col-span-1"
+              >
+                <div className="flex h-full flex-col justify-between gap-6 rounded-3xl bg-deep p-6 text-white shadow-sm md:flex-row md:items-center md:p-8 xl:flex-col xl:items-start">
+                  <div>
+                    <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-highlight">
+                      <Sparkles size={22} />
+                    </span>
+                    <h3 className="text-2xl font-bold leading-snug">
+                      More Modules{" "}
+                      <em className="accent text-on-deep-muted">Coming Soon</em>
+                    </h3>
+                    <p className="mt-2 max-w-md leading-7 text-white/70">
+                      We&apos;re expanding the curriculum with new modules,
+                      case studies, and resources every quarter.
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/courses"
+                    className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-secondary py-3.5 pl-6 pr-5 font-bold text-white hover:bg-secondary-hover"
+                  >
+                    Explore All Modules
+                    <ArrowRight
+                      size={18}
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    />
+                  </Link>
                 </div>
-
-                <Link
-                  href="/courses"
-                  className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-secondary py-4 pl-6 pr-5 font-bold text-white hover:bg-secondary-hover"
-                >
-                  Explore All Modules
-                  <ArrowRight
-                    size={18}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
-                </Link>
-              </div>
-            </ScrollReveal>
+              </ScrollReveal>
+            </div>
           </div>
         </section>
 

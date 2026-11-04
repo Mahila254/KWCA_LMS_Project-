@@ -8,7 +8,7 @@ export default function Courses() {
       <div className="max-w-7xl mx-auto">
 
         <div className="text-center mb-14">
-          <h2 className="text-4xl font-extrabold mb-4 text-[#1E1D59]">
+          <h2 className="text-4xl font-extrabold mb-4 text-ink">
             Explore Learning Modules
           </h2>
 
@@ -26,17 +26,17 @@ export default function Courses() {
               <Link
                 key={item.slug}
                 href={`/courses/${item.slug}`}
-                className="bg-white rounded-2xl p-7 border border-gray-200 shadow-sm hover:shadow-md transition group block"
+                className="bg-surface rounded-2xl p-7 border border-gray-200 shadow-sm hover:shadow-md transition group block"
               >
                 <div className="flex items-start justify-between gap-4">
 
                   <div className="flex gap-5">
-                    <div className="w-14 h-14 rounded-xl bg-[#632854] text-white flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-xl bg-secondary text-white flex items-center justify-center">
                       <Icon size={28} />
                     </div>
 
                     <div>
-                      <h3 className="text-xl font-bold mb-3 text-[#1E1D59]">
+                      <h3 className="text-xl font-bold mb-3 text-ink">
                         {item.title}
                       </h3>
 
@@ -47,7 +47,7 @@ export default function Courses() {
                     </div>
                   </div>
 
-                  <ArrowRight className="text-gray-400 group-hover:text-[#632854]" />
+                  <ArrowRight className="text-gray-400 group-hover:text-accent" />
 
                 </div>
               </Link>

@@ -1,7 +1,7 @@
 export default function CTA() {
   return (
-    <section className="px-6 py-20 bg-white">
-      <div className="max-w-7xl mx-auto bg-[#4F2043] text-white rounded-3xl p-12 md:p-16">
+    <section className="px-6 py-20 bg-surface">
+      <div className="max-w-7xl mx-auto bg-secondary-hover text-white rounded-3xl p-12 md:p-16">
 
         <h2 className="text-4xl font-extrabold mb-4">
           Ready to Transform Your Conservancy?
@@ -14,7 +14,7 @@ export default function CTA() {
 
         <div className="flex flex-wrap gap-4">
 
-          <button className="bg-white text-[#4F2043] px-7 py-4 rounded-full font-bold">
+          <button className="bg-surface text-lilac-text px-7 py-4 rounded-full font-bold">
             Enroll Now
           </button>
 

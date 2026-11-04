@@ -58,7 +58,7 @@ export function LessonVideo({
       : (source?.src ?? null);
 
   return (
-    <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-[#1E1D59] text-white">
+    <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-primary text-white">
       {embedUrl ? (
         <iframe
           src={embedUrl}
@@ -102,7 +102,7 @@ export function LessonNotes({
       {notes && (
         <div className="mt-8 rounded-2xl bg-gray-50 p-6">
           <div className="mb-4 flex items-center gap-3">
-            <ShieldCheck className="text-[#1E1D59]" size={24} />
+            <ShieldCheck className="text-ink" size={24} />
 
             <h3 className="text-xl font-bold">Key Takeaway</h3>
           </div>

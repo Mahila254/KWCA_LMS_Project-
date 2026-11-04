@@ -76,24 +76,24 @@ export default function VerifyCertificatePage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Home
             </Link>
 
             <div className="mt-8 max-w-4xl">
-              <p className="font-bold text-[#1E1D59]">
+              <p className="font-bold text-ink">
                 Certificate Verification
               </p>
 
               <h1 className="mt-3 text-5xl font-bold">
-                Verify a KWCA LMS <em className="accent text-[#632854]">Certificate</em>
+                Verify a KWCA LMS <em className="accent text-accent">Certificate</em>
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">
@@ -105,8 +105,8 @@ export default function VerifyCertificatePage() {
         </section>
 
         <section className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-3">
-          <div className="rounded-3xl bg-white p-8 shadow-sm lg:col-span-1">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+          <div className="rounded-3xl bg-surface p-8 shadow-sm lg:col-span-1">
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-tint text-ink">
               <ShieldCheck size={34} />
             </div>
 
@@ -132,14 +132,14 @@ export default function VerifyCertificatePage() {
                   value={code}
                   onChange={(event) => setCode(event.target.value)}
                   placeholder="Example: KWCA-ABC123"
-                  className="w-full rounded-xl border px-4 py-3 outline-none focus:border-[#1E1D59]"
+                  className="w-full rounded-xl border px-4 py-3 outline-none focus:border-primary"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={checking}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <Search size={18} />
                 {checking ? "Checking..." : "Verify Certificate"}
@@ -160,10 +160,10 @@ export default function VerifyCertificatePage() {
             )}
           </div>
 
-          <div className="rounded-3xl bg-white p-8 shadow-sm lg:col-span-2">
+          <div className="rounded-3xl bg-surface p-8 shadow-sm lg:col-span-2">
             {!certificate ? (
               <div className="flex min-h-[420px] flex-col items-center justify-center rounded-3xl border border-dashed p-8 text-center">
-                <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+                <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-tint text-ink">
                   <Award size={42} />
                 </div>
 
@@ -178,7 +178,7 @@ export default function VerifyCertificatePage() {
                 </p>
               </div>
             ) : (
-              <div className="rounded-3xl border-2 border-[#1E1D59] bg-[#F1F0FA] p-8">
+              <div className="rounded-3xl border-2 border-primary bg-tint p-8">
                 <div className="flex flex-wrap items-start justify-between gap-6">
                   <div>
                     <div className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 font-bold text-green-700">
@@ -196,14 +196,14 @@ export default function VerifyCertificatePage() {
                     </p>
                   </div>
 
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-[#1E1D59] shadow-sm">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-surface text-ink shadow-sm">
                     <Award size={42} />
                   </div>
                 </div>
 
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
-                  <div className="rounded-2xl bg-white p-5 md:col-span-2">
-                    <div className="mb-3 flex items-center gap-2 text-[#1E1D59]">
+                  <div className="rounded-2xl bg-surface p-5 md:col-span-2">
+                    <div className="mb-3 flex items-center gap-2 text-ink">
                       <User size={20} />
                       <p className="font-bold">Learner Name</p>
                     </div>
@@ -213,8 +213,8 @@ export default function VerifyCertificatePage() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl bg-white p-5">
-                    <div className="mb-3 flex items-center gap-2 text-[#1E1D59]">
+                  <div className="rounded-2xl bg-surface p-5">
+                    <div className="mb-3 flex items-center gap-2 text-ink">
                       <BookOpen size={20} />
                       <p className="font-bold">Course</p>
                     </div>
@@ -228,8 +228,8 @@ export default function VerifyCertificatePage() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl bg-white p-5">
-                    <div className="mb-3 flex items-center gap-2 text-[#1E1D59]">
+                  <div className="rounded-2xl bg-surface p-5">
+                    <div className="mb-3 flex items-center gap-2 text-ink">
                       <CalendarDays size={20} />
                       <p className="font-bold">Issue Date</p>
                     </div>
@@ -238,12 +238,12 @@ export default function VerifyCertificatePage() {
                   </div>
                 </div>
 
-                <div className="mt-6 rounded-2xl bg-white p-5">
+                <div className="mt-6 rounded-2xl bg-surface p-5">
                   <p className="text-sm font-bold text-gray-500">
                     Certificate Code
                   </p>
 
-                  <p className="mt-2 break-words text-2xl font-extrabold text-[#1E1D59]">
+                  <p className="mt-2 break-words text-2xl font-extrabold text-ink">
                     {certificate.code}
                   </p>
                 </div>

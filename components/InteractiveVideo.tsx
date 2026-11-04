@@ -239,7 +239,7 @@ export default function InteractiveVideo({
     >
       <div className={fullscreen ? "relative flex-1" : "relative"}>
         <div
-          className={`relative overflow-hidden bg-[#1E1D59] text-white ${
+          className={`relative overflow-hidden bg-primary text-white ${
             fullscreen ? "h-full" : "aspect-video rounded-3xl"
           }`}
         >
@@ -277,7 +277,7 @@ export default function InteractiveVideo({
 
           {asking && (
             // Covers the video so it can't be played until they answer.
-            <div className="absolute inset-0 flex items-end justify-center bg-[#1E1D59]/85 p-4 backdrop-blur-sm">
+            <div className="absolute inset-0 flex items-end justify-center bg-deep/85 p-4 backdrop-blur-sm">
               <p
                 className={`text-sm font-bold text-white/80 ${
                   fullscreen ? "hidden" : "md:hidden"
@@ -303,9 +303,9 @@ export default function InteractiveVideo({
               role="dialog"
               aria-modal="false"
               aria-labelledby="video-question-text"
-              className="m-auto w-full max-w-xl rounded-3xl bg-white p-5 text-[#1E1D59] shadow-xl outline-none ring-1 ring-[#1E1D59]/10 md:p-7 md:shadow-2xl"
+              className="m-auto w-full max-w-xl rounded-3xl bg-surface p-5 text-ink shadow-xl outline-none ring-1 ring-primary/10 md:p-7 md:shadow-2xl"
             >
-              <p className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-[#632854]">
+              <p className="inline-flex items-center gap-2 rounded-full bg-lilac-tint px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-accent">
                 <HelpCircle size={14} />
                 Quick question &middot; {formatVideoTime(active.timeSeconds)}
               </p>
@@ -327,7 +327,7 @@ export default function InteractiveVideo({
                   const isChoice = index === choice;
 
                   let style =
-                    "border-gray-200 hover:border-[#1E1D59] hover:bg-[#F1F0FA]";
+                    "border-gray-200 hover:border-primary hover:bg-tint";
                   if (answered && isAnswer) {
                     style = "border-green-600 bg-green-50 text-green-800";
                   } else if (answered && isChoice) {
@@ -362,7 +362,7 @@ export default function InteractiveVideo({
                   <div className="mt-4 border-t pt-4">
                     <p
                       className={`flex items-center gap-2 font-extrabold ${
-                        correct ? "text-green-700" : "text-[#632854]"
+                        correct ? "text-green-700" : "text-accent"
                       }`}
                     >
                       {correct ? (
@@ -375,7 +375,7 @@ export default function InteractiveVideo({
 
                     <p className="mt-1 text-gray-700">
                       The answer is{" "}
-                      <strong className="text-[#1E1D59]">
+                      <strong className="text-ink">
                         {active.options[active.correctIndex]}
                       </strong>
                       .
@@ -390,7 +390,7 @@ export default function InteractiveVideo({
                     <button
                       type="button"
                       onClick={continueVideo}
-                      className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#632854] px-5 py-3 font-bold text-white hover:bg-[#4E1F42]"
+                      className="mt-4 inline-flex items-center gap-2 rounded-full bg-secondary px-5 py-3 font-bold text-white hover:bg-secondary-hover"
                     >
                       <Play size={16} />
                       Continue video
@@ -414,7 +414,7 @@ export default function InteractiveVideo({
           }`}
         >
           <p className="inline-flex items-center gap-2 font-semibold">
-            <HelpCircle size={16} className="shrink-0 text-[#632854]" />
+            <HelpCircle size={16} className="shrink-0 text-accent" />
             {count} quick {count === 1 ? "question" : "questions"} in this
             video. It pauses so you can answer.
           </p>

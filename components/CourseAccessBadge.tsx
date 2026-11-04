@@ -69,7 +69,7 @@ export default function CourseAccessBadge({ courseId }: CourseAccessBadgeProps) 
 
   if (!loggedIn) {
     return (
-      <span className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854]">
+      <span className="inline-flex items-center gap-2 rounded-full bg-lilac-tint px-4 py-2 text-sm font-bold text-accent">
         <LogIn size={15} />
         Login to Check Access
       </span>
@@ -86,7 +86,7 @@ export default function CourseAccessBadge({ courseId }: CourseAccessBadgeProps) 
   }
 
   return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854]">
+    <span className="inline-flex items-center gap-2 rounded-full bg-lilac-tint px-4 py-2 text-sm font-bold text-accent">
       <Lock size={15} />
       Premium Access Required
     </span>

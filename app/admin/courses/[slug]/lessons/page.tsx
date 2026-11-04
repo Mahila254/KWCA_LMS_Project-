@@ -74,7 +74,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
       <>
         <AdminNavbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-ink">
           <h1 className="text-4xl font-bold">Course not found</h1>
 
           <p className="mt-4 text-gray-600">
@@ -83,7 +83,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
           <Link
             href="/admin/courses"
-            className="mt-6 inline-block rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+            className="mt-6 inline-block rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
           >
             Back to Courses
           </Link>
@@ -98,12 +98,12 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin/courses"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Course Management
@@ -111,7 +111,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
             <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="font-bold text-[#1E1D59]">Lesson Management</p>
+                <p className="font-bold text-ink">Lesson Management</p>
 
                 <h1 className="mt-3 text-5xl font-bold">{course.title}</h1>
 
@@ -123,7 +123,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
               <Link
                 href={`/admin/courses/${course.slug}/lessons/create`}
-                className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 <Plus size={20} />
                 Add New Lesson
@@ -134,7 +134,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-8 grid gap-6 md:grid-cols-3">
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <p className="text-sm font-bold text-gray-500">Course Status</p>
 
               <p className="mt-2 text-2xl font-bold">
@@ -142,7 +142,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <p className="text-sm font-bold text-gray-500">Total Lessons</p>
 
               <p className="mt-2 text-2xl font-bold">
@@ -150,7 +150,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <p className="text-sm font-bold text-gray-500">Course Access</p>
 
               <p className="mt-2 text-2xl font-bold">
@@ -164,8 +164,8 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
           </div>
 
           {course.lessons.length === 0 ? (
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
                 <BookOpen size={32} />
               </div>
 
@@ -177,14 +177,14 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
               <Link
                 href={`/admin/courses/${course.slug}/lessons/create`}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 <Plus size={18} />
                 Add First Lesson
               </Link>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+            <div className="overflow-hidden rounded-3xl bg-surface shadow-sm">
               <div className="border-b px-6 py-5">
                 <h2 className="text-2xl font-bold">Course Lessons</h2>
 
@@ -202,7 +202,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
                       key={lesson.id}
                       className="grid gap-6 px-6 py-6 lg:grid-cols-[80px_1.5fr_1fr_auto]"
                     >
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-xl font-bold text-[#1E1D59]">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-xl font-bold text-ink">
                         {lesson.order}
                       </div>
 
@@ -214,7 +214,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
                               Free Preview
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-[#F5DCE6] px-3 py-1 text-xs font-bold text-[#632854]">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-lilac-tint px-3 py-1 text-xs font-bold text-accent">
                               <Lock size={13} />
                               Premium Locked
                             </span>
@@ -267,7 +267,7 @@ export default async function AdminCourseLessonsPage({ params }: PageProps) {
 
                         <Link
                           href={`/admin/courses/${course.slug}/lessons/${lesson.slug}/edit`}
-                          className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-4 py-3 font-bold text-white hover:bg-[#14123D]"
+                          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-3 font-bold text-white hover:bg-primary-hover"
                         >
                           <Pencil size={17} />
                           Edit

@@ -347,9 +347,9 @@ export default function FinalQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-20 text-center text-[#1E1D59]">
-          <div className="mx-auto max-w-2xl rounded-3xl bg-white p-10 shadow-sm">
-            <div className="mx-auto mb-6 flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-[#F5DCE6] text-[#632854]">
+        <main className="min-h-screen bg-gray-50 px-6 py-20 text-center text-ink">
+          <div className="mx-auto max-w-2xl rounded-3xl bg-surface p-10 shadow-sm">
+            <div className="mx-auto mb-6 flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-lilac-tint text-accent">
               <ClipboardList size={32} />
             </div>
 
@@ -371,7 +371,7 @@ export default function FinalQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 text-ink">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -380,8 +380,8 @@ export default function FinalQuizPage() {
           />
 
           <section className="mx-auto max-w-3xl px-6 py-10">
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5DCE6] text-[#632854]">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lilac-tint text-accent">
                 <ClipboardList size={32} />
               </div>
 
@@ -393,7 +393,7 @@ export default function FinalQuizPage() {
 
               <Link
                 href={`/courses/${courseSlug}`}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 Back to Course
                 <ArrowRight size={18} />
@@ -420,7 +420,7 @@ export default function FinalQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 text-ink">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -432,7 +432,7 @@ export default function FinalQuizPage() {
             <QuizIntro
               notice={
                 existingResult && (
-                  <div className="mb-8 flex flex-col gap-4 rounded-2xl bg-[#1E1D59] p-6 text-white sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mb-8 flex flex-col gap-4 rounded-2xl bg-primary p-6 text-white sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-4">
                       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10">
                         <Trophy size={24} />
@@ -451,7 +451,7 @@ export default function FinalQuizPage() {
 
                     <Link
                       href={`/courses/${courseSlug}/certificate`}
-                      className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-white px-5 py-3 text-sm font-bold text-[#1E1D59] hover:bg-gray-100 sm:self-auto"
+                      className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-surface px-5 py-3 text-sm font-bold text-ink hover:bg-gray-100 sm:self-auto"
                     >
                       <Award size={17} />
                       View Certificate
@@ -517,7 +517,7 @@ export default function FinalQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 text-ink">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -526,10 +526,10 @@ export default function FinalQuizPage() {
           />
 
           <section className="mx-auto max-w-5xl px-6 py-10">
-            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+            <div className="overflow-hidden rounded-3xl bg-surface shadow-sm">
               <div
                 className={`px-8 py-12 text-center text-white ${
-                  passed ? "bg-[#1E1D59]" : "bg-[#5C1A2E]"
+                  passed ? "bg-primary" : "bg-secondary-hover"
                 }`}
               >
                 <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
@@ -546,7 +546,7 @@ export default function FinalQuizPage() {
 
                 <p
                   className={`mt-6 text-7xl font-extrabold ${
-                    passed ? "text-[#D9D3EC]" : "text-red-200"
+                    passed ? "text-on-deep-muted" : "text-red-200"
                   }`}
                 >
                   {finalPercentage}%
@@ -564,7 +564,7 @@ export default function FinalQuizPage() {
                 )}
 
                 {!savingResult && resultSaved && (
-                  <p className="mt-4 font-bold text-[#D9D3EC]">
+                  <p className="mt-4 font-bold text-on-deep-muted">
                     Your result has been saved to your learner profile.
                   </p>
                 )}
@@ -585,12 +585,12 @@ export default function FinalQuizPage() {
                   <div className="flex items-start gap-4">
                     {passed ? (
                       <CheckCircle
-                        className="mt-1 shrink-0 text-green-600"
+                        className="mt-1 shrink-0 text-green-700"
                         size={30}
                       />
                     ) : (
                       <XCircle
-                        className="mt-1 shrink-0 text-red-600"
+                        className="mt-1 shrink-0 text-red-700"
                         size={30}
                       />
                     )}
@@ -616,7 +616,7 @@ export default function FinalQuizPage() {
                     {feedbackSubmitted ? (
                       <div className="flex items-start gap-4">
                         <CheckCircle
-                          className="mt-1 shrink-0 text-green-600"
+                          className="mt-1 shrink-0 text-green-700"
                           size={28}
                         />
                         <div>
@@ -633,7 +633,7 @@ export default function FinalQuizPage() {
                       <>
                         <div className="flex items-start gap-4">
                           <MessageSquare
-                            className="mt-1 shrink-0 text-[#632854]"
+                            className="mt-1 shrink-0 text-accent"
                             size={28}
                           />
                           <div>
@@ -660,7 +660,7 @@ export default function FinalQuizPage() {
                                 size={36}
                                 className={
                                   star <= feedbackRating
-                                    ? "fill-[#632854] text-[#632854]"
+                                    ? "fill-accent text-accent"
                                     : "fill-transparent text-gray-300"
                                 }
                               />
@@ -676,14 +676,14 @@ export default function FinalQuizPage() {
                           placeholder="Share any feedback about this course (optional)..."
                           rows={4}
                           maxLength={2000}
-                          className="mt-5 w-full rounded-2xl border bg-white p-4 outline-none focus:border-[#1E1D59]"
+                          className="mt-5 w-full rounded-2xl border bg-surface p-4 outline-none focus:border-primary"
                         />
 
                         <div className="mt-4 flex flex-wrap justify-center gap-3">
                           <button
                             type="button"
                             onClick={() => setFeedbackSkipped(true)}
-                            className="rounded-full border px-6 py-3 font-bold hover:bg-white"
+                            className="rounded-full border px-6 py-3 font-bold hover:bg-surface"
                           >
                             Skip
                           </button>
@@ -695,7 +695,7 @@ export default function FinalQuizPage() {
                             className={`rounded-full px-6 py-3 font-bold ${
                               submittingFeedback || feedbackRating < 1
                                 ? "cursor-not-allowed bg-gray-200 text-gray-500"
-                                : "bg-[#632854] text-white hover:bg-[#4F2043]"
+                                : "bg-secondary text-white hover:bg-secondary-hover"
                             }`}
                           >
                             {submittingFeedback
@@ -729,7 +729,7 @@ export default function FinalQuizPage() {
                   {passed && (
                     <Link
                       href={`/courses/${courseSlug}/certificate`}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                      className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                     >
                       Generate Certificate
                       <Award size={18} />
@@ -772,7 +772,7 @@ export default function FinalQuizPage() {
   const timer = (
     <div
       className={`flex items-center justify-between rounded-2xl px-4 py-2.5 ${
-        timeLeft <= 300 ? "bg-red-50 text-red-600" : "bg-gray-50 text-[#1E1D59]"
+        timeLeft <= 300 ? "bg-red-50 text-red-700" : "bg-gray-50 text-ink"
       }`}
     >
       <span className="flex items-center gap-2 text-sm font-bold">
@@ -789,7 +789,7 @@ export default function FinalQuizPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+      <main className="min-h-screen bg-gray-50 text-ink">
         <QuizHero
           courseTitle={course?.title || "Course"}
           courseSlug={courseSlug}
@@ -811,7 +811,7 @@ export default function FinalQuizPage() {
                   {/* Phones: just the timer here, so the question stays on
                       screen; Submit is on the last question's button. */}
                   <p className="hidden items-center gap-2 text-sm font-semibold text-gray-500 lg:flex">
-                    <ShieldCheck size={16} className="text-[#632854]" />
+                    <ShieldCheck size={16} className="text-accent" />
                     Pass mark: {PASS_MARK}%
                   </p>
 
@@ -819,7 +819,7 @@ export default function FinalQuizPage() {
                     type="button"
                     onClick={handleSubmit}
                     disabled={savingResult}
-                    className="hidden w-full rounded-full lg:block bg-[#632854] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#4F2043] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="hidden w-full rounded-full lg:block bg-secondary px-5 py-2.5 text-sm font-bold text-white hover:bg-secondary-hover disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {savingResult ? "Submitting..." : "Submit Quiz"}
                   </button>
@@ -875,7 +875,7 @@ function ResultStat({
     <div className="rounded-2xl bg-gray-50 p-4 text-center sm:p-6">
       <p className="text-sm font-bold text-gray-500">{label}</p>
 
-      <p className="mt-2 text-4xl font-extrabold text-[#1E1D59]">
+      <p className="mt-2 text-4xl font-extrabold text-ink">
         {value}
         {suffix}
       </p>

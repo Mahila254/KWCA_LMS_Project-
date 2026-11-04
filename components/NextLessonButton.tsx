@@ -72,7 +72,7 @@ export default function NextLessonButton({
         className={`inline-flex items-center gap-2 rounded-full px-6 py-3 font-bold text-white disabled:cursor-wait ${
           state === "saved"
             ? "bg-green-600"
-            : "bg-[#1E1D59] hover:bg-[#14123D]"
+            : "bg-primary hover:bg-primary-hover"
         }`}
       >
         {state === "saving" && <Loader2 className="animate-spin" size={18} />}
@@ -83,7 +83,7 @@ export default function NextLessonButton({
 
       {!isAdminPreview && (
         <p className="flex items-center gap-1.5 text-sm text-gray-500">
-          <CheckCircle size={14} className="text-green-600" />
+          <CheckCircle size={14} className="text-green-700" />
           Continuing marks this lesson as complete.
         </p>
       )}

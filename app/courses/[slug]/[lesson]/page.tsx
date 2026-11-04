@@ -117,13 +117,13 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
-          <h1 className="text-4xl font-bold text-[#1E1D59]">
+          <h1 className="text-4xl font-bold text-ink">
             Course not found
           </h1>
 
           <Link
             href={isAdminPreview ? "/admin/courses" : "/courses"}
-            className="mt-6 inline-block font-bold text-[#1E1D59]"
+            className="mt-6 inline-block font-bold text-ink"
           >
             Back to Courses
           </Link>
@@ -144,7 +144,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
         {isAdminPreview ? <AdminNavbar /> : <Navbar />}
 
         <main className="min-h-screen bg-gray-50 px-6 py-24 text-center">
-          <h1 className="text-4xl font-bold text-[#1E1D59]">
+          <h1 className="text-4xl font-bold text-ink">
             Lesson not found
           </h1>
 
@@ -154,7 +154,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                 ? `/admin/courses/${course.slug}/lessons`
                 : `/courses/${slug}`
             }
-            className="mt-6 inline-block font-bold text-[#1E1D59]"
+            className="mt-6 inline-block font-bold text-ink"
           >
             Back to Course
           </Link>
@@ -211,12 +211,12 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
     : `/courses/${course.slug}`;
 
   const lessonContent = (
-    <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+    <main className="min-h-screen bg-gray-50 text-ink">
       {/* Opening a lesson enrolls the learner (admins previewing aren't). */}
       {!isAdminPreview && <AutoEnroll courseSlug={course.slug} />}
 
       {isAdminPreview && (
-        <section className="border-b bg-[#1E1D59] px-6 py-4 text-white">
+        <section className="border-b bg-deep px-6 py-4 text-white">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-sm font-bold text-white/70">
@@ -230,7 +230,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
             <Link
               href={`/admin/courses/${course.slug}/lessons`}
-              className="rounded-full bg-white px-5 py-3 font-bold text-[#1E1D59] hover:bg-gray-100"
+              className="rounded-full bg-surface px-5 py-3 font-bold text-ink hover:bg-gray-100"
             >
               Back to Admin Lessons
             </Link>
@@ -246,17 +246,17 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
           }}
         />
 
-        <div className="absolute inset-0 bg-white/72" />
+        <div className="absolute inset-0 bg-surface/72" />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/90 via-white/80 to-gray-50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-tint/90 via-surface/80 to-gray-50" />
 
-        <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#1E1D59]/20 blur-3xl" />
-        <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#632854]/20 blur-3xl" />
+        <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-deep/20 blur-3xl" />
+        <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-secondary/20 blur-3xl" />
 
         <ScrollReveal className="relative mx-auto max-w-7xl">
           <Link
             href={backToCourseHref}
-            className="mb-8 inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+            className="mb-8 inline-flex items-center gap-2 font-bold text-ink"
           >
             <ArrowLeft size={18} />
             {isAdminPreview ? "Back to Admin Lessons" : "Back to Course"}
@@ -265,7 +265,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
           <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
+                <span className="rounded-full bg-surface px-4 py-2 text-sm font-extrabold text-ink shadow-sm">
                   Lesson {lessonNumber} of {course.lessons.length}
                 </span>
 
@@ -275,14 +275,14 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                     Free Preview
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-extrabold text-[#632854]">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-lilac-tint px-4 py-2 text-sm font-extrabold text-accent">
                     <Lock size={14} />
                     Premium Lesson
                   </span>
                 )}
 
                 {isAdminPreview && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-extrabold text-white">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-extrabold text-white">
                     Admin Preview
                   </span>
                 )}
@@ -302,17 +302,17 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   <span>{progressPercent}%</span>
                 </div>
 
-                <div className="h-3 rounded-full bg-white shadow-sm">
+                <div className="h-3 rounded-full bg-surface shadow-sm">
                   <div
-                    className="h-3 rounded-full bg-[#1E1D59]"
+                    className="h-3 rounded-full bg-primary"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-4 shadow-sm">
-              <div className="relative h-[320px] overflow-hidden rounded-3xl bg-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-4 shadow-sm">
+              <div className="relative h-[320px] overflow-hidden rounded-3xl bg-primary">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imageSource}
@@ -320,7 +320,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   className="h-full w-full object-cover"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1E1D59]/80 via-[#1E1D59]/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-deep/80 via-deep/10 to-transparent" />
 
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <p className="text-sm font-bold text-white/75">
@@ -340,7 +340,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
       <section className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-4">
         {/* order-last: on phones the outline sits below the lesson, not
             ~900px of links before the video. lg: back in the left column. */}
-        <aside className="order-last h-fit rounded-3xl bg-white p-6 shadow-sm lg:order-none lg:col-span-1">
+        <aside className="order-last h-fit rounded-3xl bg-surface p-6 shadow-sm lg:order-none lg:col-span-1">
           <h2 className="text-xl font-bold">Course Outline</h2>
 
           <p className="mt-2 text-sm text-gray-500">
@@ -359,8 +359,8 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   href={lessonHref(item.slug)}
                   className={`block rounded-xl border p-4 transition-all duration-300 hover:shadow-sm ${
                     activeLesson
-                      ? "border-[#1E1D59] bg-[#F1F0FA]"
-                      : "border-gray-200 bg-white hover:border-[#1E1D59]"
+                      ? "border-primary bg-tint"
+                      : "border-gray-200 bg-surface hover:border-primary"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -378,7 +378,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                           <>
                             <CheckCircle
                               size={14}
-                              className="text-green-600"
+                              className="text-green-700"
                             />
                             <span className="font-semibold text-green-700">
                               Completed
@@ -386,15 +386,15 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                           </>
                         ) : itemIsPreview ? (
                           <>
-                            <Eye size={14} className="text-green-600" />
+                            <Eye size={14} className="text-green-700" />
                             <span className="font-semibold text-green-700">
                               Free Preview
                             </span>
                           </>
                         ) : (
                           <>
-                            <Lock size={14} className="text-[#632854]" />
-                            <span className="font-semibold text-[#632854]">
+                            <Lock size={14} className="text-accent" />
+                            <span className="font-semibold text-accent">
                               Premium
                             </span>
                           </>
@@ -403,11 +403,11 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                     </div>
 
                     {itemCompleted ? (
-                      <CheckCircle className="text-green-600" size={18} />
+                      <CheckCircle className="text-green-700" size={18} />
                     ) : itemIsPreview ? (
-                      <Eye className="text-green-600" size={18} />
+                      <Eye className="text-green-700" size={18} />
                     ) : (
-                      <Lock className="text-[#632854]" size={18} />
+                      <Lock className="text-accent" size={18} />
                     )}
                   </div>
                 </Link>
@@ -426,7 +426,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
               <Link
                 href={`/pricing?courseId=${course.id}&courseSlug=${course.slug}`}
-                className="mt-4 inline-block rounded-full bg-[#1E1D59] px-4 py-3 text-sm font-bold text-white hover:bg-[#14123D]"
+                className="mt-4 inline-block rounded-full bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary-hover"
               >
                 View Pricing
               </Link>
@@ -436,7 +436,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
         <section className="space-y-8 lg:col-span-3">
           <ScrollReveal>
-            <div className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm md:p-8">
               {isLocked ? (
                 <PremiumLessonVideo title={currentLesson.title} />
               ) : (
@@ -454,18 +454,18 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                     Free Preview Lesson
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854]">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-lilac-tint px-4 py-2 text-sm font-bold text-accent">
                     <Lock size={15} />
                     Premium Lesson
                   </span>
                 )}
 
-                <span className="inline-flex items-center gap-2 rounded-full bg-[#F1F0FA] px-4 py-2 text-sm font-bold text-[#1E1D59]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-tint px-4 py-2 text-sm font-bold text-ink">
                   <BookOpen size={15} />
                   Reading Included
                 </span>
 
-                <span className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-lilac-tint px-4 py-2 text-sm font-bold text-accent">
                   <HelpCircle size={15} />
                   Quiz at End
                 </span>
@@ -474,9 +474,9 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
           </ScrollReveal>
 
           <ScrollReveal>
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <BookOpen className="text-[#1E1D59]" size={30} />
+                <BookOpen className="text-ink" size={30} />
 
                 <h2 className="text-3xl font-bold">Lesson Notes</h2>
               </div>
@@ -494,9 +494,9 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
           <div className="grid gap-6 md:grid-cols-2">
             <ScrollReveal>
-              <div className="h-full rounded-3xl bg-white p-8 shadow-sm">
+              <div className="h-full rounded-3xl bg-surface p-8 shadow-sm">
                 <div className="mb-4 flex items-center gap-3">
-                  <FileText className="text-[#1E1D59]" size={26} />
+                  <FileText className="text-ink" size={26} />
 
                   <h2 className="text-2xl font-bold">Required Reading</h2>
                 </div>
@@ -515,9 +515,9 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
             </ScrollReveal>
 
             <ScrollReveal>
-              <div className="h-full rounded-3xl bg-white p-8 shadow-sm">
+              <div className="h-full rounded-3xl bg-surface p-8 shadow-sm">
                 <div className="mb-4 flex items-center gap-3">
-                  <ClipboardList className="text-[#632854]" size={26} />
+                  <ClipboardList className="text-accent" size={26} />
 
                   <h2 className="text-2xl font-bold">Practice Activity</h2>
                 </div>
@@ -529,7 +529,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
                 <Link
                   href={`/courses/${slug}/quiz/practice`}
-                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover"
                 >
                   Start Practice Quiz
                   <ArrowRight size={18} />
@@ -539,7 +539,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
           </div>
 
           <ScrollReveal>
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 {previousLesson ? (
                   <Link
@@ -563,7 +563,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   nextLesson ? (
                     <Link
                       href={lessonHref(nextLesson.slug)}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                      className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                     >
                       Next Lesson
                       <ArrowRight size={18} />
@@ -571,7 +571,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
                   ) : (
                     <Link
                       href={`/admin/courses/${course.slug}/lessons`}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                      className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                     >
                       Back to Admin Lessons
                       <ArrowRight size={18} />

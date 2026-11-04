@@ -17,15 +17,15 @@ export default function DashboardPage() {
 
         {/* Hero */}
 
-        <section className="bg-[#F8F4F4] py-16">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
 
-            <p className="font-semibold text-[#1E1D59]">
+            <p className="font-semibold text-ink">
               Learner Dashboard
             </p>
 
-            <h1 className="mt-3 text-6xl font-bold text-slate-900">
-              Welcome <em className="accent text-[#632854]">back</em>
+            <h1 className="mt-3 text-6xl font-bold text-ink">
+              Welcome <em className="accent text-accent">back</em>
             </h1>
 
             <p className="mt-4 text-xl text-gray-600">
@@ -44,11 +44,11 @@ export default function DashboardPage() {
 
             {/* User Profile */}
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
 
               <div className="flex items-center gap-4">
 
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#1E1D59] text-2xl font-bold text-white">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-white">
                   T
                 </div>
 
@@ -73,7 +73,7 @@ export default function DashboardPage() {
 
             {/* Courses */}
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
 
               <p className="text-gray-500">
                 Courses Enrolled
@@ -88,7 +88,7 @@ export default function DashboardPage() {
 
             {/* Lessons */}
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
 
               <p className="text-gray-500">
                 Lessons Completed
@@ -103,7 +103,7 @@ export default function DashboardPage() {
 
             {/* Progress */}
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
 
               <p className="text-gray-500">
                 Overall Progress
@@ -136,9 +136,9 @@ export default function DashboardPage() {
 
             {/* Course 1 */}
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
 
-              <p className="font-bold text-[#1E1D59]">
+              <p className="font-bold text-ink">
                 Module 1
               </p>
 
@@ -147,7 +147,7 @@ export default function DashboardPage() {
               </h3>
 
               <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-full rounded-full bg-[#1E1D59]"></div>
+                <div className="h-3 w-full rounded-full bg-primary"></div>
               </div>
 
               <p className="mt-4 text-gray-500">
@@ -159,9 +159,9 @@ export default function DashboardPage() {
 
             {/* Course 2 */}
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
 
-              <p className="font-bold text-[#1E1D59]">
+              <p className="font-bold text-ink">
                 Module 2
               </p>
 
@@ -170,7 +170,7 @@ export default function DashboardPage() {
               </h3>
 
               <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[25%] rounded-full bg-[#1E1D59]"></div>
+                <div className="h-3 w-[25%] rounded-full bg-primary"></div>
               </div>
 
               <p className="mt-4 text-gray-500">
@@ -182,9 +182,9 @@ export default function DashboardPage() {
 
             {/* Course 3 */}
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
 
-              <p className="font-bold text-[#1E1D59]">
+              <p className="font-bold text-ink">
                 Module 3
               </p>
 
@@ -193,7 +193,7 @@ export default function DashboardPage() {
               </h3>
 
               <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[10%] rounded-full bg-[#1E1D59]"></div>
+                <div className="h-3 w-[10%] rounded-full bg-primary"></div>
               </div>
 
               <p className="mt-4 text-gray-500">

@@ -150,19 +150,19 @@ export default async function AdminLearnersPage({
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Admin Dashboard
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Learner Management</p>
+              <p className="font-bold text-ink">Learner Management</p>
 
               <h1 className="mt-3 text-5xl font-bold">Registered Learners</h1>
 
@@ -176,9 +176,9 @@ export default async function AdminLearnersPage({
 
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-8 grid gap-6 md:grid-cols-4">
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <User className="text-[#1E1D59]" size={28} />
+                <User className="text-ink" size={28} />
 
                 <p className="text-sm font-bold text-gray-500">
                   Total Learners
@@ -188,9 +188,9 @@ export default async function AdminLearnersPage({
               <p className="text-4xl font-bold">{learners.length}</p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <BookOpen className="text-[#1E1D59]" size={28} />
+                <BookOpen className="text-ink" size={28} />
 
                 <p className="text-sm font-bold text-gray-500">
                   Total Enrollments
@@ -200,9 +200,9 @@ export default async function AdminLearnersPage({
               <p className="text-4xl font-bold">{totalEnrollments}</p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <ClipboardList className="text-[#632854]" size={28} />
+                <ClipboardList className="text-accent" size={28} />
 
                 <p className="text-sm font-bold text-gray-500">
                   Quiz Results
@@ -212,9 +212,9 @@ export default async function AdminLearnersPage({
               <p className="text-4xl font-bold">{totalQuizResults}</p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <Award className="text-[#1E1D59]" size={28} />
+                <Award className="text-ink" size={28} />
 
                 <p className="text-sm font-bold text-gray-500">
                   Certificates
@@ -232,8 +232,8 @@ export default async function AdminLearnersPage({
           />
 
           {learners.length === 0 ? (
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
                 <User size={32} />
               </div>
 
@@ -265,12 +265,12 @@ export default async function AdminLearnersPage({
                 return (
                   <div
                     key={learner.id}
-                    className="overflow-hidden rounded-3xl bg-white shadow-sm"
+                    className="overflow-hidden rounded-3xl bg-surface shadow-sm"
                   >
                     <div className="border-b px-6 py-6">
                       <div className="flex flex-wrap items-start justify-between gap-6">
                         <div className="flex gap-4">
-                          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+                          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-tint text-ink">
                             <User size={34} />
                           </div>
 
@@ -338,7 +338,7 @@ export default async function AdminLearnersPage({
                     <div className="grid gap-8 p-6 lg:grid-cols-3">
                       <div>
                         <div className="mb-4 flex items-center gap-2">
-                          <BookOpen className="text-[#1E1D59]" size={22} />
+                          <BookOpen className="text-ink" size={22} />
 
                           <h3 className="text-xl font-bold">Enrollments</h3>
                         </div>
@@ -371,7 +371,7 @@ export default async function AdminLearnersPage({
 
                                   <div className="h-2 rounded-full bg-gray-100">
                                     <div
-                                      className="h-2 rounded-full bg-[#1E1D59]"
+                                      className="h-2 rounded-full bg-primary"
                                       style={{
                                         width: `${enrollment.progress}%`,
                                       }}
@@ -383,7 +383,7 @@ export default async function AdminLearnersPage({
                                   className={`mt-2 text-sm font-bold ${
                                     enrollment.completed
                                       ? "text-green-700"
-                                      : "text-[#632854]"
+                                      : "text-accent"
                                   }`}
                                 >
                                   {enrollment.completed
@@ -399,7 +399,7 @@ export default async function AdminLearnersPage({
                       <div>
                         <div className="mb-4 flex items-center gap-2">
                           <ClipboardList
-                            className="text-[#632854]"
+                            className="text-accent"
                             size={22}
                           />
 
@@ -439,12 +439,12 @@ export default async function AdminLearnersPage({
 
                                     {result.passed ? (
                                       <CheckCircle
-                                        className="shrink-0 text-green-600"
+                                        className="shrink-0 text-green-700"
                                         size={22}
                                       />
                                     ) : (
                                       <XCircle
-                                        className="shrink-0 text-red-600"
+                                        className="shrink-0 text-red-700"
                                         size={22}
                                       />
                                     )}
@@ -453,8 +453,8 @@ export default async function AdminLearnersPage({
                                   <p
                                     className={`mt-3 text-2xl font-extrabold ${
                                       result.passed
-                                        ? "text-[#1E1D59]"
-                                        : "text-red-600"
+                                        ? "text-ink"
+                                        : "text-red-700"
                                     }`}
                                   >
                                     {result.score}%
@@ -464,7 +464,7 @@ export default async function AdminLearnersPage({
                                     className={`mt-1 text-sm font-bold ${
                                       result.passed
                                         ? "text-green-700"
-                                        : "text-red-600"
+                                        : "text-red-700"
                                     }`}
                                   >
                                     {result.passed ? "Passed" : "Not Passed"}
@@ -478,7 +478,7 @@ export default async function AdminLearnersPage({
 
                       <div>
                         <div className="mb-4 flex items-center gap-2">
-                          <Award className="text-[#1E1D59]" size={22} />
+                          <Award className="text-ink" size={22} />
 
                           <h3 className="text-xl font-bold">Certificates</h3>
                         </div>
@@ -507,7 +507,7 @@ export default async function AdminLearnersPage({
                                     {certificate.course.title}
                                   </p>
 
-                                  <p className="mt-2 text-sm font-bold text-[#1E1D59]">
+                                  <p className="mt-2 text-sm font-bold text-ink">
                                     {certificate.certificateCode}
                                   </p>
 
@@ -517,7 +517,7 @@ export default async function AdminLearnersPage({
 
                                   <Link
                                     href={`/admin/certificates/${certificate.id}`}
-                                    className="mt-4 inline-flex rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+                                    className="mt-4 inline-flex rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary-hover"
                                   >
                                     View Certificate
                                   </Link>

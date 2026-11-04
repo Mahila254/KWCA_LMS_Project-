@@ -28,27 +28,27 @@ export default function DashboardProgress() {
 
   return (
     <>
-      <div className="rounded-3xl bg-white p-8 shadow-sm">
+      <div className="rounded-3xl bg-surface p-8 shadow-sm">
         <p className="text-gray-500">Courses Enrolled</p>
-        <h2 className="mt-2 text-4xl font-bold text-[#1E1D59]">1</h2>
+        <h2 className="mt-2 text-4xl font-bold text-ink">1</h2>
       </div>
 
-      <div className="rounded-3xl bg-white p-8 shadow-sm">
+      <div className="rounded-3xl bg-surface p-8 shadow-sm">
         <p className="text-gray-500">Lessons Completed</p>
-        <h2 className="mt-2 text-4xl font-bold text-[#1E1D59]">
+        <h2 className="mt-2 text-4xl font-bold text-ink">
           {completedLessons.length}
         </h2>
       </div>
 
-      <div className="rounded-3xl bg-white p-8 shadow-sm">
+      <div className="rounded-3xl bg-surface p-8 shadow-sm">
         <p className="text-gray-500">Overall Progress</p>
-        <h2 className="mt-2 text-4xl font-bold text-[#1E1D59]">
+        <h2 className="mt-2 text-4xl font-bold text-ink">
           {progressPercent}%
         </h2>
       </div>
 
       <section className="lg:col-span-4 mt-10">
-        <h2 className="mb-6 text-3xl font-bold text-[#1E1D59]">
+        <h2 className="mb-6 text-3xl font-bold text-ink">
           My Courses
         </h2>
 
@@ -77,19 +77,19 @@ export default function DashboardProgress() {
               <Link
                 key={course.slug}
                 href={`/courses/${course.slug}`}
-                className="rounded-3xl bg-white p-7 shadow-sm transition hover:shadow-md"
+                className="rounded-3xl bg-surface p-7 shadow-sm transition hover:shadow-md"
               >
-                <p className="font-bold text-[#1E1D59]">
+                <p className="font-bold text-ink">
                   {course.module}
                 </p>
 
-                <h3 className="mt-3 text-xl font-bold text-[#1E1D59]">
+                <h3 className="mt-3 text-xl font-bold text-ink">
                   {course.title}
                 </h3>
 
                 <div className="mt-6 h-3 overflow-hidden rounded-full bg-gray-200">
                   <div
-                    className="h-full rounded-full bg-[#1E1D59]"
+                    className="h-full rounded-full bg-primary"
                     style={{ width: `${courseProgress}%` }}
                   />
                 </div>

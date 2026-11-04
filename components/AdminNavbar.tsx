@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import AdminLogoutButton from "@/components/AdminLogoutButton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const links = [
   { href: "/admin", label: "Dashboard" },
@@ -45,7 +46,7 @@ export default function AdminNavbar() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 bg-[#1E1D59]/95 text-white shadow-[0_10px_30px_-14px_rgba(30,29,89,0.6)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 bg-deep/95 text-white shadow-[0_10px_30px_-14px_rgba(30,29,89,0.6)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 pt-3 sm:px-6">
         <Link href="/admin" className="flex items-center gap-3">
           <div className="rounded-xl bg-white p-1.5">
@@ -74,6 +75,8 @@ export default function AdminNavbar() {
             <span className="hidden sm:inline">Public Site</span>
           </Link>
 
+          <ThemeToggle />
+
           <AdminLogoutButton />
         </div>
       </div>
@@ -93,13 +96,13 @@ export default function AdminNavbar() {
                   ref={active ? activeRef : undefined}
                   aria-current={active ? "page" : undefined}
                   className={`relative block whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold ${
-                    active ? "text-[#1E1D59]" : "text-white/70 hover:bg-white/10 hover:text-white"
+                    active ? "text-ink" : "text-white/70 hover:bg-white/10 hover:text-white"
                   }`}
                 >
                   {active && (
                     <motion.span
                       layoutId="admin-tab"
-                      className="absolute inset-0 rounded-full bg-white"
+                      className="absolute inset-0 rounded-full bg-surface"
                       transition={{ type: "spring", stiffness: 420, damping: 34 }}
                     />
                   )}

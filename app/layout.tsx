@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Hanken_Grotesk, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { themeScript } from "@/lib/theme";
+import InlineScript from "@/components/InlineScript";
 
 // Hanken Grotesk is the everyday face (body, headings, buttons).
 // Instrument Serif is only for the italic accent words in big headlines.
@@ -42,7 +44,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1E1D59",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#17224D" },
+    { media: "(prefers-color-scheme: dark)", color: "#0C1D24" },
+  ],
   viewportFit: "cover",
 };
 
@@ -52,7 +57,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
+    // suppressHydrationWarning: the theme script sets data-theme on <html>
+    // before React loads, so the server's <html> never matches it.
+    <html
+      lang="en"
+      className={`${sans.variable} ${serif.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <InlineScript html={themeScript} />
+      </head>
       <body>{children}</body>
     </html>
   );

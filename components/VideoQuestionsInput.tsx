@@ -62,7 +62,7 @@ function serialize(drafts: Draft[]) {
 }
 
 const inputClass =
-  "w-full rounded-xl border px-4 py-3 outline-none placeholder:text-gray-400 focus:border-[#1E1D59]";
+  "w-full rounded-xl border px-4 py-3 outline-none placeholder:text-gray-400 focus:border-primary";
 
 /**
  * The admin list of questions that pop up during a lesson video. Each one
@@ -130,7 +130,7 @@ export default function VideoQuestionsInput({
 
       {drafts.length === 0 && (
         <div className="rounded-2xl border border-dashed p-6 text-center text-gray-500">
-          <HelpCircle className="mx-auto mb-2 text-[#632854]" size={28} />
+          <HelpCircle className="mx-auto mb-2 text-accent" size={28} />
           No pop-up questions yet.
         </div>
       )}
@@ -148,7 +148,7 @@ export default function VideoQuestionsInput({
               className="rounded-2xl border border-gray-200 bg-gray-50 p-5"
             >
               <div className="flex flex-wrap items-end gap-4">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#632854] text-sm font-extrabold text-white">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-extrabold text-white">
                   {number + 1}
                 </span>
 
@@ -168,7 +168,7 @@ export default function VideoQuestionsInput({
                     placeholder="1:30"
                     aria-invalid={timeInvalid}
                     title="Minutes and seconds, e.g. 1:30 (or 1:02:30 for hours)"
-                    className={`${inputClass} bg-white ${
+                    className={`${inputClass} bg-surface ${
                       timeInvalid ? "border-red-500" : ""
                     }`}
                   />
@@ -181,7 +181,7 @@ export default function VideoQuestionsInput({
                     onChange={(event) =>
                       setType(draft, event.target.value as VideoQuestionType)
                     }
-                    className={`${inputClass} bg-white`}
+                    className={`${inputClass} bg-surface`}
                   >
                     <option value="TRUE_FALSE">True or False</option>
                     <option value="MULTIPLE_CHOICE">Multiple choice</option>
@@ -195,7 +195,7 @@ export default function VideoQuestionsInput({
                       current.filter((item) => item.key !== draft.key)
                     )
                   }
-                  className="inline-flex items-center gap-2 rounded-full border bg-white px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50"
+                  className="inline-flex items-center gap-2 rounded-full border bg-surface px-4 py-3 text-sm font-bold text-red-700 hover:bg-red-50"
                 >
                   <Trash2 size={16} />
                   Remove
@@ -203,7 +203,7 @@ export default function VideoQuestionsInput({
               </div>
 
               {timeInvalid && (
-                <p className="mt-2 text-sm font-semibold text-red-600">
+                <p className="mt-2 text-sm font-semibold text-red-700">
                   Write the time as minutes:seconds, e.g. 1:30.
                 </p>
               )}
@@ -223,7 +223,7 @@ export default function VideoQuestionsInput({
                       ? "e.g. A conservancy must hold an AGM every year."
                       : "e.g. Who elects the conservancy board?"
                   }
-                  className={`${inputClass} bg-white`}
+                  className={`${inputClass} bg-surface`}
                 />
               </label>
 
@@ -242,7 +242,7 @@ export default function VideoQuestionsInput({
                   {choices.map((option, index) => (
                     <div key={index} className="flex items-center gap-2">
                       <label
-                        className={`flex flex-1 items-center gap-3 rounded-xl border bg-white px-4 py-3 ${
+                        className={`flex flex-1 items-center gap-3 rounded-xl border bg-surface px-4 py-3 ${
                           draft.correctIndex === index
                             ? "border-green-600 ring-1 ring-green-600"
                             : ""
@@ -283,7 +283,7 @@ export default function VideoQuestionsInput({
                             type="button"
                             onClick={() => removeOption(draft, index)}
                             aria-label={`Remove choice ${index + 1}`}
-                            className="rounded-full p-2 text-gray-400 hover:bg-white hover:text-red-600"
+                            className="rounded-full p-2 text-gray-400 hover:bg-surface hover:text-red-700"
                           >
                             <X size={18} />
                           </button>
@@ -301,7 +301,7 @@ export default function VideoQuestionsInput({
                           options: [...draft.options, ""],
                         })
                       }
-                      className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-[#632854] hover:underline"
+                      className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-accent hover:underline"
                     >
                       <Plus size={16} />
                       Add a choice
@@ -324,7 +324,7 @@ export default function VideoQuestionsInput({
                     update(draft.key, { explanation: event.target.value })
                   }
                   placeholder="e.g. The constitution requires a yearly AGM so members can hold the board to account."
-                  className={`${inputClass} bg-white`}
+                  className={`${inputClass} bg-surface`}
                 />
               </label>
             </li>
@@ -339,7 +339,7 @@ export default function VideoQuestionsInput({
             const draft = blankDraft(nextKey.current++);
             setDrafts((current) => [...current, draft]);
           }}
-          className="mt-4 inline-flex items-center gap-2 rounded-full border-2 border-[#632854] px-5 py-3 font-bold text-[#632854] hover:bg-[#F5DCE6]"
+          className="mt-4 inline-flex items-center gap-2 rounded-full border-2 border-accent px-5 py-3 font-bold text-accent hover:bg-lilac-tint"
         >
           <Plus size={18} />
           Add a question

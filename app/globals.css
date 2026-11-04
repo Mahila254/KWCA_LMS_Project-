@@ -1,13 +1,140 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Colour theme, taken from the lilac-breasted roller.
+ * Light is "Cobalt & Lilac"; dark (the device's dark mode) is "Evening
+ * Wing". Pages use these names (text-ink, bg-primary, bg-tint...), never
+ * hex codes, so a colour changes here and nowhere else.
+ */
+:root,
+.theme-light {
+  --ink: #17224d; /* headings and body text */
+  --muted: #55617a;
+  --canvas: #f5f8fc; /* page background */
+  --surface: #ffffff; /* cards, inputs, white sections */
+  --tint: #eaf0fa; /* icon bubbles, soft panels */
+  --tint-strong: #dfe8f7;
+  --line: #dce3ef;
+
+  --primary: #24409b; /* buttons, links, cobalt bands */
+  --primary-hover: #1a2f75;
+  --deep: #17224d; /* dark bands, photo overlays */
+  --on-deep-muted: #c9d3ea; /* soft text on dark bands */
+  --highlight: #d8bce8; /* accent words on dark bands */
+
+  --accent: #17739a; /* eyebrows, icons, small links */
+  --bright: #1c9dc8;
+  --bright-soft: #7fd3ee;
+
+  --secondary: #17739a; /* main calls to action, number circles */
+  --secondary-hover: #125c7b;
+  --lilac-text: #6b4485; /* lilac is only ever a hint: tints, badges */
+  --lilac-tint: #f2ebf6;
+  --lilac-soft: #f8f4fa;
+  --lilac-line: #e3d3ec;
+
+  --warm: #c49a74; /* certificates */
+  --warm-deep: #8e6640;
+  --warm-light: #e8cfb2;
+  --warm-text: #7a5530;
+
+  --background: var(--surface);
+  --foreground: var(--ink);
+  color-scheme: light;
 }
+
+/* Dark mode. The script in app/layout.tsx sets data-theme before the page
+   paints: the visitor's own choice from the sun/moon button, else the
+   device's setting. */
+:root[data-theme="dark"] {
+  --ink: #e6f1f3;
+  --muted: #a9bec6;
+  --canvas: #132a33;
+  --surface: #1c3540;
+  --tint: #21404c;
+  --tint-strong: #284b58;
+  --line: #2c4955;
+
+  --primary: #0e7490;
+  --primary-hover: #0b5f78;
+  --deep: #0c1d24;
+  --on-deep-muted: #cfe7ee;
+  --highlight: #e3b98c;
+
+  --accent: #8fd3ee;
+  --bright: #3db4dd;
+  --bright-soft: #8fd3ee;
+
+  --secondary: #94653a;
+  --secondary-hover: #7e5530;
+  --lilac-text: #e3cfee;
+  --lilac-tint: #3a2e48;
+  --lilac-soft: #2c2c40;
+  --lilac-line: #5a4670;
+
+  --warm: #e3b98c;
+  --warm-deep: #b98458;
+  --warm-light: #f2d6b5;
+  --warm-text: #f2d6b5;
+
+  /* Tailwind's greys and status colours, turned for a dark page. */
+  --color-gray-50: #132a33;
+  --color-gray-100: #1a323c;
+  --color-gray-200: #2c4955;
+  --color-gray-300: #3a5866;
+  --color-gray-400: #7f98a3;
+  --color-gray-500: #a9bec6;
+  --color-gray-600: #b7c9d0;
+  --color-gray-700: #ccdae0;
+  --color-gray-800: #dde7eb;
+  --color-gray-900: #e6f1f3;
+  --color-red-50: #3a1f22;
+  --color-red-100: #4a2427;
+  --color-red-200: #6b3034;
+  --color-red-700: #f5a39c;
+  --color-red-800: #f8bdb7;
+  --color-green-50: #173a2a;
+  --color-green-100: #1d4733;
+  --color-green-700: #8fe0b4;
+  --color-green-800: #a8ebc6;
+  --color-blue-100: #1d3a55;
+  --color-blue-700: #9cc8f0;
+  --color-yellow-700: #f2d27a;
+
+  color-scheme: dark;
+}
+
+/* dark: utilities follow the same switch as the colours above. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-tint: var(--tint);
+  --color-tint-strong: var(--tint-strong);
+  --color-line: var(--line);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-deep: var(--deep);
+  --color-on-deep-muted: var(--on-deep-muted);
+  --color-highlight: var(--highlight);
+  --color-accent: var(--accent);
+  --color-bright: var(--bright);
+  --color-bright-soft: var(--bright-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-lilac-text: var(--lilac-text);
+  --color-lilac-tint: var(--lilac-tint);
+  --color-lilac-soft: var(--lilac-soft);
+  --color-lilac-line: var(--lilac-line);
+  --color-warm: var(--warm);
+  --color-warm-deep: var(--warm-deep);
+  --color-warm-light: var(--warm-light);
+  --color-warm-text: var(--warm-text);
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -72,13 +199,6 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
@@ -125,14 +245,14 @@ html {
   }
 
   :where(a, button, input, select, textarea, summary):focus-visible {
-    outline: 2px solid #632854;
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
     border-radius: 0.5rem;
   }
 
   ::selection {
-    background: #f5dce6;
-    color: #1e1d59;
+    background: var(--lilac-tint);
+    color: var(--ink);
   }
 
   /* Each page's <main> remounts on navigation, so this plays once per
@@ -320,10 +440,10 @@ html {
 
 .formatted-on-dark h3 > span,
 .formatted-on-dark li::marker {
-  color: #f0a8c4;
+  color: var(--highlight);
 }
 
 .formatted-on-dark a {
-  color: #f0a8c4;
-  text-decoration-color: rgb(240 168 196 / 0.4);
+  color: var(--highlight);
+  text-decoration-color: color-mix(in srgb, var(--highlight) 40%, transparent);
 }

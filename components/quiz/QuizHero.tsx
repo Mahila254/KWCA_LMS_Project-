@@ -22,7 +22,7 @@ export default function QuizHero({
   const backLink = (
     <Link
       href={`/courses/${courseSlug}`}
-      className="group inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+      className="group inline-flex items-center gap-2 font-bold text-ink"
     >
       <ArrowLeft
         size={18}
@@ -33,7 +33,7 @@ export default function QuizHero({
   );
 
   const coursePill = (
-    <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
+    <span className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-extrabold text-ink shadow-sm">
       <BookOpen size={15} className="shrink-0" />
       <span className="line-clamp-1">{courseTitle}</span>
     </span>
@@ -60,9 +60,9 @@ export default function QuizHero({
         }}
       />
 
-      <div className="absolute inset-0 bg-white/70" />
+      <div className="absolute inset-0 bg-surface/70" />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/90 via-white/80 to-gray-50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-tint/90 via-surface/80 to-gray-50" />
 
       <div className="relative mx-auto max-w-6xl">
         {backLink}

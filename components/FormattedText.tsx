@@ -142,7 +142,7 @@ function renderInline(text: string): ReactNode[] {
 
     if (match[1]) {
       parts.push(
-        <strong key={index} className="font-bold text-[#1E1D59]">
+        <strong key={index} className="font-bold text-ink">
           {match[2]}
         </strong>
       );
@@ -154,7 +154,7 @@ function renderInline(text: string): ReactNode[] {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-semibold text-[#632854] underline decoration-[#632854]/30 underline-offset-4 hover:decoration-[#632854]"
+          className="font-semibold text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent"
         >
           {match[4] ?? href}
         </a>
@@ -201,7 +201,7 @@ function renderList(items: ListItem[], start: number, level: number): [ReactNode
     );
   }
 
-  const className = `space-y-2 pl-6 marker:text-[#632854] ${
+  const className = `space-y-2 pl-6 marker:text-accent ${
     level > 0 ? "mt-2" : ""
   } ${ordered ? "list-decimal marker:font-bold" : level > 0 ? "list-[circle]" : "list-disc"}`;
 
@@ -287,12 +287,12 @@ export default function FormattedText({
             return block.level === 2 ? (
               <h3
                 key={index}
-                className="pt-3 text-2xl font-extrabold text-[#1E1D59] first:pt-0"
+                className="pt-3 text-2xl font-extrabold text-ink first:pt-0"
               >
                 {renderInline(block.text)}
               </h3>
             ) : (
-              <h4 key={index} className="pt-2 text-xl font-bold text-[#1E1D59]">
+              <h4 key={index} className="pt-2 text-xl font-bold text-ink">
                 {renderInline(block.text)}
               </h4>
             );
@@ -305,9 +305,9 @@ export default function FormattedText({
               return (
                 <h3
                   key={index}
-                  className="flex items-baseline gap-3 pt-3 text-2xl font-extrabold text-[#1E1D59] first:pt-0"
+                  className="flex items-baseline gap-3 pt-3 text-2xl font-extrabold text-ink first:pt-0"
                 >
-                  <span className="font-serif text-3xl font-normal italic text-[#632854]">
+                  <span className="font-serif text-3xl font-normal italic text-accent">
                     {only.number}.
                   </span>
                   <span>{renderInline(only.text)}</span>

@@ -165,7 +165,7 @@ export default function FormattedTextEditor({
   }
 
   const toolbarButton =
-    "flex h-9 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-gray-600 hover:bg-white hover:text-[#1E1D59] disabled:opacity-50";
+    "flex h-9 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-gray-600 hover:bg-surface hover:text-ink disabled:opacity-50";
 
   return (
     <div>
@@ -182,8 +182,8 @@ export default function FormattedTextEditor({
               onClick={() => setMode(option)}
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 ${
                 mode === option
-                  ? "bg-white text-[#1E1D59] shadow-sm"
-                  : "text-gray-500 hover:text-[#1E1D59]"
+                  ? "bg-surface text-ink shadow-sm"
+                  : "text-gray-500 hover:text-ink"
               }`}
             >
               {option === "write" ? <PenLine size={14} /> : <Eye size={14} />}
@@ -194,8 +194,8 @@ export default function FormattedTextEditor({
       </div>
 
       <div
-        className={`overflow-hidden rounded-xl border transition-colors focus-within:border-[#1E1D59] ${
-          dragging ? "border-dashed border-[#632854] bg-[#FBEFF4]" : ""
+        className={`overflow-hidden rounded-xl border transition-colors focus-within:border-primary ${
+          dragging ? "border-dashed border-accent bg-lilac-soft" : ""
         }`}
       >
         {mode === "write" && (
@@ -286,7 +286,7 @@ export default function FormattedTextEditor({
         />
 
         {mode === "preview" && (
-          <div className="min-h-48 bg-white px-5 py-5">
+          <div className="min-h-48 bg-surface px-5 py-5">
             {value.trim() ? (
               <FormattedText text={value} variant={previewVariant} />
             ) : (
@@ -297,7 +297,7 @@ export default function FormattedTextEditor({
       </div>
 
       {error ? (
-        <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>
+        <p className="mt-2 text-sm font-semibold text-red-700">{error}</p>
       ) : hint !== undefined ? (
         <p className="mt-2 text-sm text-gray-500">{hint}</p>
       ) : (

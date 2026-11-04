@@ -171,12 +171,12 @@ export default function ProfilePage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
-            <p className="font-bold text-[#1E1D59]">Learner Profile</p>
+            <p className="font-bold text-ink">Learner Profile</p>
 
-            <h1 className="mt-3 text-5xl font-bold">My Learning <em className="accent text-[#632854]">Dashboard</em></h1>
+            <h1 className="mt-3 text-5xl font-bold">My Learning <em className="accent text-accent">Dashboard</em></h1>
 
             <p className="mt-4 max-w-3xl text-xl text-gray-600">
               Track your enrolled courses, quiz results, certificates, payment
@@ -187,8 +187,8 @@ export default function ProfilePage() {
 
         <section className="mx-auto max-w-7xl px-6 py-12">
           {loading ? (
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
                 <Loader2 className="animate-spin" size={34} />
               </div>
 
@@ -199,8 +199,8 @@ export default function ProfilePage() {
               </p>
             </div>
           ) : error ? (
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-700">
                 <XCircle size={34} />
               </div>
 
@@ -210,17 +210,17 @@ export default function ProfilePage() {
 
               <Link
                 href="/login"
-                className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 Login
               </Link>
             </div>
           ) : learner ? (
             <div className="space-y-8">
-              <div className="rounded-3xl bg-white p-8 shadow-sm">
+              <div className="rounded-3xl bg-surface p-8 shadow-sm">
                 <div className="flex flex-wrap items-start justify-between gap-6">
                   <div className="flex gap-4">
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-tint text-ink">
                       <User size={42} />
                     </div>
 
@@ -234,7 +234,7 @@ export default function ProfilePage() {
                         {learner.email}
                       </p>
 
-                      <p className="mt-2 text-sm font-bold text-[#1E1D59]">
+                      <p className="mt-2 text-sm font-bold text-ink">
                         Role: {learner.role}
                       </p>
 
@@ -249,7 +249,7 @@ export default function ProfilePage() {
                   <div className="flex flex-wrap gap-3">
                     <Link
                       href="/courses"
-                      className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                      className="rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                     >
                       Browse Courses
                     </Link>
@@ -309,7 +309,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="grid gap-8 lg:grid-cols-2">
-                <section className="rounded-3xl bg-white p-8 shadow-sm">
+                <section className="rounded-3xl bg-surface p-8 shadow-sm">
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <h2 className="text-3xl font-bold">My Courses</h2>
@@ -319,7 +319,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    <GraduationCap className="text-[#1E1D59]" size={34} />
+                    <GraduationCap className="text-ink" size={34} />
                   </div>
 
                   {learner.enrollments.length === 0 ? (
@@ -351,7 +351,7 @@ export default function ProfilePage() {
                               className={`rounded-full px-3 py-1 text-sm font-bold ${
                                 enrollment.completed
                                   ? "bg-green-100 text-green-700"
-                                  : "bg-[#F5DCE6] text-[#632854]"
+                                  : "bg-lilac-tint text-accent"
                               }`}
                             >
                               {enrollment.completed
@@ -368,7 +368,7 @@ export default function ProfilePage() {
 
                             <div className="h-3 rounded-full bg-gray-100">
                               <div
-                                className="h-3 rounded-full bg-[#1E1D59]"
+                                className="h-3 rounded-full bg-primary"
                                 style={{ width: `${enrollment.progress}%` }}
                               />
                             </div>
@@ -379,7 +379,7 @@ export default function ProfilePage() {
                   )}
                 </section>
 
-                <section className="rounded-3xl bg-white p-8 shadow-sm">
+                <section className="rounded-3xl bg-surface p-8 shadow-sm">
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <h2 className="text-3xl font-bold">My Payments</h2>
@@ -389,26 +389,26 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    <CreditCard className="text-[#1E1D59]" size={34} />
+                    <CreditCard className="text-ink" size={34} />
                   </div>
 
                   <div className="mb-5 grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-2xl bg-[#FBEFF4] p-5">
+                    <div className="rounded-2xl bg-lilac-soft p-5">
                       <p className="text-sm font-bold text-gray-500">
                         Pending Payments
                       </p>
 
-                      <p className="mt-2 text-3xl font-bold text-[#632854]">
+                      <p className="mt-2 text-3xl font-bold text-accent">
                         {pendingPayments}
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-[#F1F0FA] p-5">
+                    <div className="rounded-2xl bg-tint p-5">
                       <p className="text-sm font-bold text-gray-500">
                         Paid Payments
                       </p>
 
-                      <p className="mt-2 text-3xl font-bold text-[#1E1D59]">
+                      <p className="mt-2 text-3xl font-bold text-ink">
                         {paidPayments}
                       </p>
                     </div>
@@ -459,7 +459,7 @@ export default function ProfilePage() {
                                     ? "bg-green-100 text-green-700"
                                     : payment.status === "FAILED"
                                     ? "bg-red-100 text-red-700"
-                                    : "bg-[#F5DCE6] text-[#632854]"
+                                    : "bg-lilac-tint text-accent"
                                 }`}
                               >
                                 {payment.status}
@@ -493,7 +493,7 @@ export default function ProfilePage() {
                             <div className="mt-4 flex flex-wrap gap-3">
                               <Link
                                 href={`/payment-confirmation?paymentId=${payment.id}`}
-                                className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+                                className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary-hover"
                               >
                                 View Payment
                               </Link>
@@ -516,7 +516,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="grid gap-8 lg:grid-cols-2">
-                <section className="rounded-3xl bg-white p-8 shadow-sm">
+                <section className="rounded-3xl bg-surface p-8 shadow-sm">
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <h2 className="text-3xl font-bold">Quiz Results</h2>
@@ -526,7 +526,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    <ClipboardList className="text-[#632854]" size={34} />
+                    <ClipboardList className="text-accent" size={34} />
                   </div>
 
                   {learner.quizResults.length === 0 ? (
@@ -562,19 +562,19 @@ export default function ProfilePage() {
 
                               {result.passed ? (
                                 <CheckCircle
-                                  className="text-green-600"
+                                  className="text-green-700"
                                   size={24}
                                 />
                               ) : (
-                                <XCircle className="text-red-600" size={24} />
+                                <XCircle className="text-red-700" size={24} />
                               )}
                             </div>
 
                             <p
                               className={`mt-4 text-4xl font-extrabold ${
                                 result.passed
-                                  ? "text-[#1E1D59]"
-                                  : "text-red-600"
+                                  ? "text-ink"
+                                  : "text-red-700"
                               }`}
                             >
                               {result.score}%
@@ -584,7 +584,7 @@ export default function ProfilePage() {
                               className={`mt-1 font-bold ${
                                 result.passed
                                   ? "text-green-700"
-                                  : "text-red-600"
+                                  : "text-red-700"
                               }`}
                             >
                               {result.passed ? "Passed" : "Not Passed"}
@@ -596,7 +596,7 @@ export default function ProfilePage() {
                   )}
                 </section>
 
-                <section className="rounded-3xl bg-white p-8 shadow-sm">
+                <section className="rounded-3xl bg-surface p-8 shadow-sm">
                   <div className="mb-6 flex items-center justify-between gap-4">
                     <div>
                       <h2 className="text-3xl font-bold">Certificates</h2>
@@ -606,7 +606,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    <Award className="text-[#1E1D59]" size={34} />
+                    <Award className="text-ink" size={34} />
                   </div>
 
                   {learner.certificates.length === 0 ? (
@@ -633,7 +633,7 @@ export default function ProfilePage() {
                               {certificate.course.title}
                             </h3>
 
-                            <p className="mt-2 font-bold text-[#1E1D59]">
+                            <p className="mt-2 font-bold text-ink">
                               {certificate.certificateCode}
                             </p>
 
@@ -644,7 +644,7 @@ export default function ProfilePage() {
                             <div className="mt-4 flex flex-wrap gap-3">
                               <Link
                                 href={`/courses/${certificate.course.slug}/certificate`}
-                                className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+                                className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary-hover"
                               >
                                 View Certificate
                               </Link>
@@ -664,7 +664,7 @@ export default function ProfilePage() {
                 </section>
               </div>
 
-              <section className="flex flex-col gap-5 rounded-3xl bg-[#1E1D59] p-8 text-white md:flex-row md:items-center md:justify-between">
+              <section className="flex flex-col gap-5 rounded-3xl bg-primary p-8 text-white md:flex-row md:items-center md:justify-between">
                 <div className="flex gap-4">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10">
                     <MessageSquareWarning size={22} />
@@ -684,7 +684,7 @@ export default function ProfilePage() {
                 <div className="flex shrink-0 flex-wrap gap-3">
                   <a
                     href="mailto:complaints@kwcakenya.com"
-                    className="rounded-full bg-white px-6 py-3 font-bold text-[#1E1D59] hover:bg-[#F1F0FA]"
+                    className="rounded-full bg-surface px-6 py-3 font-bold text-ink hover:bg-tint"
                   >
                     complaints@kwcakenya.com
                   </a>
@@ -717,10 +717,10 @@ function SummaryCard({
   value: string;
   tone: "green" | "orange";
 }) {
-  const toneClass = tone === "green" ? "text-[#1E1D59]" : "text-[#632854]";
+  const toneClass = tone === "green" ? "text-ink" : "text-accent";
 
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-surface p-6 shadow-sm">
       <div className="mb-4 flex items-center gap-3">
         <div className={toneClass}>{icon}</div>
         <p className="text-sm font-bold text-gray-500">{label}</p>
@@ -746,7 +746,7 @@ function EmptyState({
 
       <Link
         href={href}
-        className="mt-5 inline-flex rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+        className="mt-5 inline-flex rounded-full bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover"
       >
         {label}
       </Link>

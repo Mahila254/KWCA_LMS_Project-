@@ -69,8 +69,8 @@ export default function ObjectivesInput({
               aria-hidden
               className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-extrabold ${
                 item.trim()
-                  ? "bg-[#632854] text-white"
-                  : "bg-[#F1F0FA] text-[#1E1D59]/60"
+                  ? "bg-secondary text-white"
+                  : "bg-tint text-ink/60"
               }`}
             >
               {index + 1}

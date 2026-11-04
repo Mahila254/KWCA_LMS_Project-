@@ -86,19 +86,19 @@ export default async function AdminQuizResultsPage({
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Admin Dashboard
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Quiz Results</p>
+              <p className="font-bold text-ink">Quiz Results</p>
 
               <h1 className="mt-3 text-5xl font-bold">
                 Practice &amp; Final Quiz Results
@@ -113,8 +113,8 @@ export default async function AdminQuizResultsPage({
 
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-8 grid gap-6 md:grid-cols-3">
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3 text-ink">
                 <ClipboardList size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Total Results
@@ -123,7 +123,7 @@ export default async function AdminQuizResultsPage({
               <p className="text-4xl font-bold">{totalResults}</p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3 text-green-700">
                 <CheckCircle size={28} />
                 <p className="text-sm font-bold text-gray-500">Passed</p>
@@ -131,8 +131,8 @@ export default async function AdminQuizResultsPage({
               <p className="text-4xl font-bold">{passedResults}</p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3 text-[#632854]">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3 text-accent">
                 <TrendingUp size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Average Score
@@ -149,8 +149,8 @@ export default async function AdminQuizResultsPage({
           />
 
           {quizResults.length === 0 ? (
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
                 <ClipboardList size={32} />
               </div>
 
@@ -165,7 +165,7 @@ export default async function AdminQuizResultsPage({
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+            <div className="overflow-hidden rounded-3xl bg-surface shadow-sm">
               <div className="border-b px-6 py-5">
                 <h2 className="text-2xl font-bold">Quiz Result Records</h2>
 
@@ -195,7 +195,7 @@ export default async function AdminQuizResultsPage({
                         </p>
 
                         <h3 className="mt-1 flex items-center gap-2 text-xl font-bold">
-                          <User size={18} className="text-[#1E1D59]" />
+                          <User size={18} className="text-ink" />
                           {result.user.name || "Unnamed Learner"}
                         </h3>
 
@@ -211,7 +211,7 @@ export default async function AdminQuizResultsPage({
                         </p>
 
                         <h3 className="mt-1 flex items-center gap-2 text-xl font-bold">
-                          <BookOpen size={18} className="text-[#632854]" />
+                          <BookOpen size={18} className="text-accent" />
                           {result.course.title}
                         </h3>
 
@@ -224,7 +224,7 @@ export default async function AdminQuizResultsPage({
                       <div>
                         <p
                           className={`text-3xl font-extrabold ${
-                            result.passed ? "text-[#1E1D59]" : "text-red-600"
+                            result.passed ? "text-ink" : "text-red-700"
                           }`}
                         >
                           {result.score}%
@@ -232,7 +232,7 @@ export default async function AdminQuizResultsPage({
 
                         <p
                           className={`mt-2 flex items-center gap-2 text-sm font-bold ${
-                            result.passed ? "text-green-700" : "text-red-600"
+                            result.passed ? "text-green-700" : "text-red-700"
                           }`}
                         >
                           {result.passed ? (

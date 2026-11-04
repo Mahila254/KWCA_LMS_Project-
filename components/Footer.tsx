@@ -39,21 +39,21 @@ const contactDetails = [
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-[#1E1D59] px-6 pt-12 text-white md:pt-16">
+    <footer className="relative overflow-hidden bg-deep px-6 pt-12 text-white md:pt-16">
       <div className="mx-auto max-w-7xl">
         {/* Big closing statement */}
         <div className="flex flex-col gap-8 border-b border-white/10 pb-10 md:flex-row md:items-end md:justify-between">
           <h2 className="max-w-3xl text-4xl font-bold leading-[1.05] md:text-5xl">
             Living Nature.{" "}
-            <em className="accent text-[#F0A8C4]">Living People.</em>
+            <em className="accent text-highlight">Living People.</em>
           </h2>
 
           <Link
             href="/courses"
-            className="group inline-flex shrink-0 items-center gap-3 self-start rounded-full border border-white/25 py-3 pl-6 pr-3 text-sm font-bold hover:border-white hover:bg-white hover:text-[#1E1D59] md:self-auto"
+            className="group inline-flex shrink-0 items-center gap-3 self-start rounded-full border border-white/25 py-3 pl-6 pr-3 text-sm font-bold hover:border-white hover:bg-surface hover:text-ink md:self-auto"
           >
             Browse courses
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition-transform duration-300 group-hover:rotate-45 group-hover:bg-[#1E1D59] group-hover:text-white">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition-transform duration-300 group-hover:rotate-45 group-hover:bg-primary group-hover:text-white">
               <ArrowUpRight size={17} />
             </span>
           </Link>

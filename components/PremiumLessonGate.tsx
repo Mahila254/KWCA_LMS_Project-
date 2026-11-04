@@ -102,12 +102,12 @@ export default function PremiumLessonGate({
   if (checking) {
     return (
       <main className="min-h-screen bg-gray-50 px-6 py-24">
-        <section className="mx-auto max-w-3xl rounded-3xl bg-white p-10 text-center shadow-sm">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+        <section className="mx-auto max-w-3xl rounded-3xl bg-surface p-10 text-center shadow-sm">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
             <Loader2 className="animate-spin" size={34} />
           </div>
 
-          <h1 className="text-4xl font-bold text-[#1E1D59]">
+          <h1 className="text-4xl font-bold text-ink">
             Checking Premium Access
           </h1>
 
@@ -122,12 +122,12 @@ export default function PremiumLessonGate({
   if (!hasAccess) {
     return (
       <main className="min-h-screen bg-gray-50 px-6 py-24">
-        <section className="mx-auto max-w-3xl rounded-3xl bg-white p-10 text-center shadow-sm">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F5DCE6] text-[#632854]">
+        <section className="mx-auto max-w-3xl rounded-3xl bg-surface p-10 text-center shadow-sm">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-lilac-tint text-accent">
             <Lock size={32} />
           </div>
 
-          <h1 className="text-4xl font-bold text-[#1E1D59]">
+          <h1 className="text-4xl font-bold text-ink">
             Premium Lesson Locked
           </h1>
 
@@ -139,7 +139,7 @@ export default function PremiumLessonGate({
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
               href={`/pricing?courseId=${courseId}&courseSlug=${courseSlug}`}
-              className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+              className="rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
             >
               Unlock Course
             </Link>

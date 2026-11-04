@@ -50,10 +50,10 @@ export default function QuizIntro({
   next?: QuizLink | null;
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm sm:p-10">
+    <div className="rounded-3xl bg-surface p-6 shadow-sm sm:p-10">
       {notice}
 
-      <ul className="space-y-3 pl-5 text-lg leading-8 text-gray-700 marker:text-[#632854] [list-style-type:disc]">
+      <ul className="space-y-3 pl-5 text-lg leading-8 text-gray-700 marker:text-accent [list-style-type:disc]">
         {rules.map((rule, index) => (
           <li key={index} className="pl-1">
             {rule}
@@ -65,7 +65,7 @@ export default function QuizIntro({
         <button
           type="button"
           onClick={onStart}
-          className="group inline-flex items-center gap-2 rounded-full bg-[#1E1D59] py-4 pl-6 pr-7 font-bold text-white shadow-[0_12px_26px_-12px_rgba(30,29,89,0.8)] hover:-translate-y-0.5 hover:bg-[#14123D]"
+          className="group inline-flex items-center gap-2 rounded-full bg-primary py-4 pl-6 pr-7 font-bold text-white shadow-[0_12px_26px_-12px_rgba(30,29,89,0.8)] hover:-translate-y-0.5 hover:bg-primary-hover"
         >
           <Play
             size={18}
@@ -76,7 +76,7 @@ export default function QuizIntro({
 
         {!signedIn && (
           <p className="text-sm text-gray-500">
-            <Link href={loginHref} className="font-bold text-[#632854] underline">
+            <Link href={loginHref} className="font-bold text-accent underline">
               Log in
             </Link>{" "}
             {onReview
@@ -89,7 +89,7 @@ export default function QuizIntro({
       {signedIn && (
         <div className="mt-10 overflow-hidden rounded-2xl border border-gray-200">
           <table className="w-full text-left">
-            <thead className="bg-gray-50 text-sm font-bold text-[#1E1D59]">
+            <thead className="bg-gray-50 text-sm font-bold text-ink">
               <tr>
                 <th className="px-4 py-3 sm:px-5">Submitted</th>
                 <th className="px-4 py-3 sm:px-5">Grade</th>
@@ -128,7 +128,7 @@ export default function QuizIntro({
                             type="button"
                             onClick={() => onReview(attempt.id)}
                             disabled={reviewingId === attempt.id}
-                            className="rounded-full bg-[#1E1D59] px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-[#14123D] disabled:opacity-60"
+                            className="rounded-full bg-primary px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-primary-hover disabled:opacity-60"
                           >
                             {reviewingId === attempt.id ? "Opening..." : "Review"}
                           </button>
@@ -162,7 +162,7 @@ export default function QuizIntro({
           {previous ? (
             <Link
               href={previous.href}
-              className="group inline-flex items-center gap-2 text-lg text-gray-700 hover:text-[#1E1D59]"
+              className="group inline-flex items-center gap-2 text-lg text-gray-700 hover:text-ink"
             >
               <ChevronLeft
                 size={24}
@@ -177,7 +177,7 @@ export default function QuizIntro({
           {next && (
             <Link
               href={next.href}
-              className="group inline-flex items-center gap-2 self-end text-lg text-gray-700 hover:text-[#1E1D59] sm:self-auto"
+              className="group inline-flex items-center gap-2 self-end text-lg text-gray-700 hover:text-ink sm:self-auto"
             >
               {next.label}
               <ChevronRight

@@ -115,19 +115,19 @@ export default async function AdminPaymentsPage({
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Admin Dashboard
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Payment Management</p>
+              <p className="font-bold text-ink">Payment Management</p>
 
               <h1 className="mt-3 text-5xl font-bold">Payment Records</h1>
 
@@ -171,12 +171,12 @@ export default async function AdminPaymentsPage({
           </div>
 
           <div className="mb-8 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <p className="text-sm font-bold text-gray-500">
                 Pending Payment Value
               </p>
 
-              <p className="mt-2 text-4xl font-extrabold text-[#632854]">
+              <p className="mt-2 text-4xl font-extrabold text-accent">
                 KES {totalPendingAmount.toLocaleString()}
               </p>
 
@@ -185,12 +185,12 @@ export default async function AdminPaymentsPage({
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <p className="text-sm font-bold text-gray-500">
                 Confirmed Payment Value
               </p>
 
-              <p className="mt-2 text-4xl font-extrabold text-[#1E1D59]">
+              <p className="mt-2 text-4xl font-extrabold text-ink">
                 KES {totalPaidAmount.toLocaleString()}
               </p>
 
@@ -207,8 +207,8 @@ export default async function AdminPaymentsPage({
           />
 
           {payments.length === 0 ? (
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
                 <CreditCard size={34} />
               </div>
 
@@ -225,14 +225,14 @@ export default async function AdminPaymentsPage({
               {!query && (
                 <Link
                   href="/pricing"
-                  className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                 >
                   View Pricing Page
                 </Link>
               )}
             </div>
           ) : (
-            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+            <div className="overflow-hidden rounded-3xl bg-surface shadow-sm">
               <div className="border-b p-6">
                 <h2 className="text-2xl font-bold">All Payment Records</h2>
 
@@ -263,7 +263,7 @@ export default async function AdminPaymentsPage({
                       <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr_1fr_230px]">
                         <div>
                           <div className="flex gap-4">
-                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-tint text-ink">
                               <User size={28} />
                             </div>
 
@@ -299,7 +299,7 @@ export default async function AdminPaymentsPage({
                           </p>
 
                           <p className="mt-2 flex items-center gap-2 font-bold">
-                            <BookOpen size={16} className="text-[#1E1D59]" />
+                            <BookOpen size={16} className="text-ink" />
                             {payment.course?.title ||
                               "Subscription / General Access"}
                           </p>
@@ -320,7 +320,7 @@ export default async function AdminPaymentsPage({
                           </p>
 
                           <p className="mt-2 flex items-center gap-2 break-words text-sm font-bold text-gray-700">
-                            <Hash size={15} className="text-[#1E1D59]" />
+                            <Hash size={15} className="text-ink" />
                             {payment.providerRef || "Not available"}
                           </p>
                         </div>
@@ -332,7 +332,7 @@ export default async function AdminPaymentsPage({
                                 ? "bg-green-100 text-green-700"
                                 : payment.status === "FAILED"
                                 ? "bg-red-100 text-red-700"
-                                : "bg-[#F5DCE6] text-[#632854]"
+                                : "bg-lilac-tint text-accent"
                             }`}
                           >
                             {payment.status}
@@ -346,7 +346,7 @@ export default async function AdminPaymentsPage({
 
                           <div className="mt-5 rounded-2xl bg-gray-50 p-4 text-left">
                             <div className="mb-3 flex items-center gap-2">
-                              <RefreshCw size={16} className="text-[#1E1D59]" />
+                              <RefreshCw size={16} className="text-ink" />
 
                               <p className="text-sm font-bold text-gray-600">
                                 Update Status
@@ -402,13 +402,13 @@ function SummaryCard({
 }) {
   const toneClass =
     tone === "green"
-      ? "text-[#1E1D59]"
+      ? "text-ink"
       : tone === "orange"
-      ? "text-[#632854]"
-      : "text-red-600";
+      ? "text-accent"
+      : "text-red-700";
 
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-surface p-6 shadow-sm">
       <div className="mb-4 flex items-center gap-3">
         <div className={toneClass}>{icon}</div>
 

@@ -292,9 +292,9 @@ export default function PracticeQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-20 text-center text-[#1E1D59]">
-          <div className="mx-auto max-w-2xl rounded-3xl bg-white p-10 shadow-sm">
-            <div className="mx-auto mb-6 flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 px-6 py-20 text-center text-ink">
+          <div className="mx-auto max-w-2xl rounded-3xl bg-surface p-10 shadow-sm">
+            <div className="mx-auto mb-6 flex h-16 w-16 animate-pulse items-center justify-center rounded-full bg-tint text-ink">
               <ClipboardList size={32} />
             </div>
 
@@ -316,7 +316,7 @@ export default function PracticeQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 text-ink">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -325,8 +325,8 @@ export default function PracticeQuizPage() {
           />
 
           <section className="mx-auto max-w-3xl px-6 py-10">
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
                 <HelpCircle size={32} />
               </div>
 
@@ -338,7 +338,7 @@ export default function PracticeQuizPage() {
 
               <Link
                 href={`/courses/${courseSlug}`}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 Back to Course
                 <ArrowRight size={18} />
@@ -357,7 +357,7 @@ export default function PracticeQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 text-ink">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -402,7 +402,7 @@ export default function PracticeQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 text-ink">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -420,7 +420,7 @@ export default function PracticeQuizPage() {
                   <button
                     type="button"
                     onClick={() => setStage("intro")}
-                    className="inline-flex items-center gap-2 rounded-full border bg-white px-6 py-3 font-bold hover:bg-gray-50"
+                    className="inline-flex items-center gap-2 rounded-full border bg-surface px-6 py-3 font-bold hover:bg-gray-50"
                   >
                     <ArrowLeft size={18} />
                     Back to Quiz Overview
@@ -429,7 +429,7 @@ export default function PracticeQuizPage() {
                   <button
                     type="button"
                     onClick={startQuiz}
-                    className="inline-flex items-center gap-2 rounded-full border bg-white px-6 py-3 font-bold hover:bg-gray-50"
+                    className="inline-flex items-center gap-2 rounded-full border bg-surface px-6 py-3 font-bold hover:bg-gray-50"
                   >
                     <RotateCcw size={18} />
                     Retake Quiz
@@ -437,7 +437,7 @@ export default function PracticeQuizPage() {
 
                   <Link
                     href={nextLink.href}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                   >
                     Continue to Final Quiz
                     <ArrowRight size={18} />
@@ -460,7 +460,7 @@ export default function PracticeQuizPage() {
       <>
         <Navbar />
 
-        <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 text-ink">
           <QuizHero
             courseTitle={course?.title || "Course"}
             courseSlug={courseSlug}
@@ -469,15 +469,15 @@ export default function PracticeQuizPage() {
           />
 
           <section className="mx-auto max-w-4xl px-6 pb-16 pt-4">
-            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-              <div className="bg-[#1E1D59] px-8 py-10 text-center text-white">
+            <div className="overflow-hidden rounded-3xl bg-surface shadow-sm">
+              <div className="bg-primary px-8 py-10 text-center text-white">
                 <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
                   <Trophy size={42} />
                 </div>
 
                 <h2 className="text-4xl font-extrabold">Your Score</h2>
 
-                <p className="mt-6 text-7xl font-extrabold text-[#D9D3EC]">
+                <p className="mt-6 text-7xl font-extrabold text-on-deep-muted">
                   {review.score}%
                 </p>
 
@@ -511,7 +511,7 @@ export default function PracticeQuizPage() {
                     setStage("review");
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#632854] px-6 py-3 font-bold text-white hover:bg-[#4F2043]"
+                  className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-3 font-bold text-white hover:bg-secondary-hover"
                 >
                   <Eye size={18} />
                   Review Answers
@@ -536,7 +536,7 @@ export default function PracticeQuizPage() {
 
                 <Link
                   href={nextLink.href}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                 >
                   Continue to Final Quiz
                   <ArrowRight size={18} />
@@ -589,7 +589,7 @@ export default function PracticeQuizPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
+      <main className="min-h-screen bg-gray-50 text-ink">
         <QuizHero
           courseTitle={course?.title || "Course"}
           courseSlug={courseSlug}
@@ -607,7 +607,7 @@ export default function PracticeQuizPage() {
               footer={
                 <p className="text-sm font-semibold text-gray-500">
                   Score so far:{" "}
-                  <span className="text-[#1E1D59]">
+                  <span className="text-ink">
                     {score} / {questions.length}
                   </span>
                 </p>
@@ -648,7 +648,7 @@ function ResultStat({ label, value }: { label: string; value: number }) {
     <div className="rounded-2xl bg-gray-50 p-4 text-center sm:p-6">
       <p className="text-sm font-bold text-gray-500">{label}</p>
 
-      <p className="mt-2 text-4xl font-extrabold text-[#1E1D59]">{value}</p>
+      <p className="mt-2 text-4xl font-extrabold text-ink">{value}</p>
     </div>
   );
 }

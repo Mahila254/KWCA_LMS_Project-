@@ -128,7 +128,7 @@ export default async function EditLessonPage({ params }: PageProps) {
       <>
         <AdminNavbar />
 
-        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-ink">
           <h1 className="text-4xl font-bold">Lesson not found</h1>
 
           <p className="mt-4 text-gray-600">
@@ -137,7 +137,7 @@ export default async function EditLessonPage({ params }: PageProps) {
 
           <Link
             href={`/admin/courses/${slug}/lessons`}
-            className="mt-6 inline-block rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+            className="mt-6 inline-block rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
           >
             Back to Lessons
           </Link>
@@ -154,26 +154,26 @@ export default async function EditLessonPage({ params }: PageProps) {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href={`/admin/courses/${course.slug}/lessons`}
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Lessons
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Edit Lesson</p>
+              <p className="font-bold text-ink">Edit Lesson</p>
 
               <h1 className="mt-3 text-5xl font-bold">Edit Lesson</h1>
 
               <p className="mt-4 max-w-3xl text-xl text-gray-600">
                 Update lesson content, access level, video, readings, and notes
                 for{" "}
-                <span className="font-bold text-[#1E1D59]">
+                <span className="font-bold text-ink">
                   {course.title}
                 </span>
                 .
@@ -185,13 +185,13 @@ export default async function EditLessonPage({ params }: PageProps) {
         <section className="mx-auto max-w-5xl px-6 py-12">
           <form
             action={updateLesson}
-            className="rounded-3xl bg-white p-8 shadow-sm"
+            className="rounded-3xl bg-surface p-8 shadow-sm"
           >
             <input type="hidden" name="lessonId" value={lesson.id} />
             <input type="hidden" name="courseSlug" value={course.slug} />
 
             <div className="mb-8 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-tint text-ink">
                 <BookOpen size={26} />
               </div>
 
@@ -212,7 +212,7 @@ export default async function EditLessonPage({ params }: PageProps) {
                   type="text"
                   required
                   defaultValue={lesson.title}
-                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#1E1D59]"
+                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-primary"
                 />
               </div>
 
@@ -223,7 +223,7 @@ export default async function EditLessonPage({ params }: PageProps) {
                   name="slug"
                   type="text"
                   defaultValue={lesson.slug}
-                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#1E1D59]"
+                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-primary"
                 />
 
                 <p className="mt-2 text-sm text-gray-500">
@@ -240,7 +240,7 @@ export default async function EditLessonPage({ params }: PageProps) {
                     type="number"
                     min="1"
                     defaultValue={lesson.order}
-                    className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#1E1D59]"
+                    className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-primary"
                   />
                 </div>
 
@@ -250,7 +250,7 @@ export default async function EditLessonPage({ params }: PageProps) {
                   <select
                     name="accessType"
                     defaultValue={lesson.accessType}
-                    className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#1E1D59]"
+                    className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-primary"
                   >
                     <option value="PREVIEW">Free Preview</option>
                     <option value="PREMIUM">Premium Locked</option>
@@ -266,7 +266,7 @@ export default async function EditLessonPage({ params }: PageProps) {
                   type="url"
                   defaultValue={lesson.videoUrl || ""}
                   placeholder="Example: https://www.youtube.com/embed/ogaR6G9Cm7M"
-                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#1E1D59]"
+                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-primary"
                 />
 
                 <p className="mt-2 text-sm text-gray-500">
@@ -288,7 +288,7 @@ export default async function EditLessonPage({ params }: PageProps) {
                   type="url"
                   defaultValue={lesson.readingUrl || ""}
                   placeholder="Optional reading or downloadable file link"
-                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-[#1E1D59]"
+                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-primary"
                 />
               </div>
 
@@ -310,7 +310,7 @@ export default async function EditLessonPage({ params }: PageProps) {
             <div className="mt-8 flex flex-wrap gap-4">
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 <Save size={18} />
                 Save Changes

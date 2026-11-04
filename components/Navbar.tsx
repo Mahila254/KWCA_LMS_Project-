@@ -10,6 +10,7 @@ import { useLearner } from "@/lib/useLearner";
 import AdminBackToAdminBar from "@/components/AdminBackToAdminBar";
 import MobileMenu from "@/components/MobileMenu";
 import MobileTabBar from "@/components/MobileTabBar";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const links = [
   { href: "/#about", label: "About" },
@@ -55,8 +56,8 @@ export default function Navbar() {
       <header
         className={`sticky top-0 z-50 border-b transition-[background-color,box-shadow,border-color] duration-500 ${
           scrolled
-            ? "border-white/10 bg-[#1E1D59]/85 shadow-[0_10px_30px_-12px_rgba(30,29,89,0.45)] backdrop-blur-xl backdrop-saturate-150"
-            : "border-transparent bg-[#1E1D59]"
+            ? "border-white/10 bg-deep/85 shadow-[0_10px_30px_-12px_rgba(30,29,89,0.45)] backdrop-blur-xl backdrop-saturate-150"
+            : "border-transparent bg-primary"
         }`}
       >
         <div
@@ -108,6 +109,8 @@ export default function Navbar() {
               </Link>
             ))}
 
+            <ThemeToggle />
+
             <span className="mx-3 h-6 w-px bg-white/15" />
 
             {learner === undefined ? (
@@ -136,7 +139,7 @@ export default function Navbar() {
                       : "border-white/15 text-white/85"
                   }`}
                 >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F0A8C4] text-sm font-extrabold uppercase text-[#1E1D59]">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-highlight text-sm font-extrabold uppercase text-ink">
                     {learner.firstName.charAt(0)}
                   </span>
                   <span className="max-w-[9rem] truncate">{learner.firstName}</span>
@@ -167,7 +170,7 @@ export default function Navbar() {
 
                 <Link
                   href="/register"
-                  className="group ml-2 inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#632854] py-2.5 pl-5 pr-4 text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(99,40,84,0.8)] hover:bg-[#4F2043] hover:shadow-[0_12px_24px_-8px_rgba(99,40,84,0.9)]"
+                  className="group ml-2 inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-secondary py-2.5 pl-5 pr-4 text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(99,40,84,0.8)] hover:bg-secondary-hover hover:shadow-[0_12px_24px_-8px_rgba(99,40,84,0.9)]"
                 >
                   Enroll Now
                   <ArrowRight
@@ -179,52 +182,56 @@ export default function Navbar() {
             )}
           </nav>
 
-          <MobileMenu
-            links={[
-              ...links,
-              ...(learner
-                ? [
-                    { href: "/dashboard", label: "My Learning" },
-                    { href: "/profile", label: "My Profile" },
-                  ]
-                : []),
-              { href: "/verify-certificate", label: "Verify a Certificate" },
-            ]}
-          >
-            {learner ? (
-              <>
-                <p className="text-sm text-white/60">
-                  Signed in as{" "}
-                  <span className="font-semibold text-white">{learner.email}</span>
-                </p>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-4 text-base font-bold text-white hover:border-white hover:bg-white/10"
-                >
-                  <LogOut size={18} />
-                  Log out
-                </button>
-              </>
-            ) : learner === null ? (
-              <>
-                <Link
-                  href="/register"
-                  className="flex items-center justify-center gap-2 rounded-full bg-[#632854] px-6 py-4 text-center text-base font-bold text-white hover:bg-[#4F2043]"
-                >
-                  Enroll Now
-                  <ArrowRight size={18} />
-                </Link>
-                <Link
-                  href="/login"
-                  className="flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-4 text-center text-base font-bold text-white hover:border-white hover:bg-white/10"
-                >
-                  <LogIn size={18} />
-                  Log in
-                </Link>
-              </>
-            ) : null}
-          </MobileMenu>
+          <div className="flex items-center gap-1 md:hidden">
+            <ThemeToggle />
+
+            <MobileMenu
+              links={[
+                ...links,
+                ...(learner
+                  ? [
+                      { href: "/dashboard", label: "My Learning" },
+                      { href: "/profile", label: "My Profile" },
+                    ]
+                  : []),
+                { href: "/verify-certificate", label: "Verify a Certificate" },
+              ]}
+            >
+              {learner ? (
+                <>
+                  <p className="text-sm text-white/60">
+                    Signed in as{" "}
+                    <span className="font-semibold text-white">{learner.email}</span>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-4 text-base font-bold text-white hover:border-white hover:bg-white/10"
+                  >
+                    <LogOut size={18} />
+                    Log out
+                  </button>
+                </>
+              ) : learner === null ? (
+                <>
+                  <Link
+                    href="/register"
+                    className="flex items-center justify-center gap-2 rounded-full bg-secondary px-6 py-4 text-center text-base font-bold text-white hover:bg-secondary-hover"
+                  >
+                    Enroll Now
+                    <ArrowRight size={18} />
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-4 text-center text-base font-bold text-white hover:border-white hover:bg-white/10"
+                  >
+                    <LogIn size={18} />
+                    Log in
+                  </Link>
+                </>
+              ) : null}
+            </MobileMenu>
+          </div>
         </div>
       </header>
 

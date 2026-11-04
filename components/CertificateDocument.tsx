@@ -236,7 +236,7 @@ export default function CertificateDocument({
         }
       `}</style>
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59] print:min-h-0 print:bg-white">
+      <main className="min-h-screen bg-gray-50 text-ink print:min-h-0 print:bg-surface">
         <section className="certificate-page-hero relative overflow-hidden px-6 py-14 print:hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -245,24 +245,24 @@ export default function CertificateDocument({
             }}
           />
 
-          <div className="absolute inset-0 bg-white/72" />
+          <div className="absolute inset-0 bg-surface/72" />
 
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F1F0FA]/90 via-white/85 to-gray-50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-tint/90 via-surface/85 to-gray-50" />
 
-          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-[#1E1D59]/20 blur-3xl" />
-          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-[#632854]/20 blur-3xl" />
+          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-deep/20 blur-3xl" />
+          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-secondary/20 blur-3xl" />
 
           <div className="relative mx-auto max-w-6xl">
             <Link
               href={backHref}
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               {backLabel}
             </Link>
 
             <div className="mt-8 max-w-4xl">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-extrabold text-[#1E1D59] shadow-sm">
+              <span className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-extrabold text-ink shadow-sm">
                 <img
                   src="/logo.png"
                   alt=""
@@ -287,7 +287,7 @@ export default function CertificateDocument({
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
             <Link
               href={backHref}
-              className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3 font-bold hover:bg-gray-50"
+              className="inline-flex items-center gap-2 rounded-xl border bg-surface px-6 py-3 font-bold hover:bg-gray-50"
             >
               <ArrowLeft size={18} />
               {backLabel}
@@ -297,7 +297,7 @@ export default function CertificateDocument({
               {showVerifyLink && (
                 <Link
                   href={`/verify-certificate?code=${certificateCode}`}
-                  className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3 font-bold hover:bg-gray-50"
+                  className="inline-flex items-center gap-2 rounded-xl border bg-surface px-6 py-3 font-bold hover:bg-gray-50"
                 >
                   <ShieldCheck size={18} />
                   Verify Certificate
@@ -307,7 +307,7 @@ export default function CertificateDocument({
               <button
                 type="button"
                 onClick={handlePrintCertificate}
-                className="inline-flex items-center gap-2 rounded-xl border bg-white px-6 py-3 font-bold hover:bg-gray-50"
+                className="inline-flex items-center gap-2 rounded-xl border bg-surface px-6 py-3 font-bold hover:bg-gray-50"
               >
                 <Printer size={18} />
                 Print
@@ -316,7 +316,7 @@ export default function CertificateDocument({
               <button
                 type="button"
                 onClick={handlePrintCertificate}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 <Download size={18} />
                 Download PDF
@@ -326,16 +326,16 @@ export default function CertificateDocument({
         </section>
 
         <section className="certificate-print-area mx-auto max-w-6xl px-6 pb-12 print:px-0 print:py-0">
-          <div className="rounded-3xl bg-white p-6 shadow-sm print:rounded-none print:p-0 print:shadow-none">
-            <div className="certificate-print-box relative overflow-hidden rounded-[2rem] border-[10px] border-[#1E1D59] bg-white p-8 shadow-[inset_0_0_0_4px_rgba(176,141,87,0.5)] print:rounded-none">
-              <div className="absolute left-0 top-0 h-40 w-40 rounded-br-full bg-[#F1F0FA]" />
-              <div className="absolute bottom-0 right-0 h-40 w-40 rounded-tl-full bg-[#FBEFF4]" />
+          <div className="rounded-3xl bg-surface p-6 shadow-sm print:rounded-none print:p-0 print:shadow-none">
+            <div className="certificate-print-box relative overflow-hidden rounded-[2rem] border-[10px] border-primary bg-surface p-8 shadow-[inset_0_0_0_4px_rgba(176,141,87,0.5)] print:rounded-none">
+              <div className="absolute left-0 top-0 h-40 w-40 rounded-br-full bg-tint" />
+              <div className="absolute bottom-0 right-0 h-40 w-40 rounded-tl-full bg-lilac-soft" />
 
-              <div className="certificate-inner-box relative border-2 border-[#632854] px-8 py-14 text-center">
-                <span className="certificate-corner absolute left-3 top-3 h-9 w-9 rounded-tl-2xl border-l-4 border-t-4 border-[#B08D57]/70 md:left-5 md:top-5" />
-                <span className="certificate-corner absolute right-3 top-3 h-9 w-9 rounded-tr-2xl border-r-4 border-t-4 border-[#B08D57]/70 md:right-5 md:top-5" />
-                <span className="certificate-corner absolute bottom-3 left-3 h-9 w-9 rounded-bl-2xl border-b-4 border-l-4 border-[#B08D57]/70 md:bottom-5 md:left-5" />
-                <span className="certificate-corner absolute bottom-3 right-3 h-9 w-9 rounded-br-2xl border-b-4 border-r-4 border-[#B08D57]/70 md:bottom-5 md:right-5" />
+              <div className="certificate-inner-box relative border-2 border-accent px-8 py-14 text-center">
+                <span className="certificate-corner absolute left-3 top-3 h-9 w-9 rounded-tl-2xl border-l-4 border-t-4 border-warm/70 md:left-5 md:top-5" />
+                <span className="certificate-corner absolute right-3 top-3 h-9 w-9 rounded-tr-2xl border-r-4 border-t-4 border-warm/70 md:right-5 md:top-5" />
+                <span className="certificate-corner absolute bottom-3 left-3 h-9 w-9 rounded-bl-2xl border-b-4 border-l-4 border-warm/70 md:bottom-5 md:left-5" />
+                <span className="certificate-corner absolute bottom-3 right-3 h-9 w-9 rounded-br-2xl border-b-4 border-r-4 border-warm/70 md:bottom-5 md:right-5" />
 
                 <img
                   src="/logo.png"
@@ -345,9 +345,9 @@ export default function CertificateDocument({
                 />
 
                 <div className="certificate-icon relative mx-auto mb-8 flex h-28 w-28 items-center justify-center">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#1E1D59] via-[#632854] to-[#4F2043] shadow-lg" />
-                  <div className="absolute inset-[3px] rounded-full border-2 border-dashed border-[#B08D57]/70" />
-                  <div className="absolute inset-[9px] flex items-center justify-center overflow-hidden rounded-full bg-white">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-deep via-secondary to-secondary-hover shadow-lg" />
+                  <div className="absolute inset-[3px] rounded-full border-2 border-dashed border-warm/70" />
+                  <div className="absolute inset-[9px] flex items-center justify-center overflow-hidden rounded-full bg-surface">
                     <img
                       src="/logo.png"
                       alt="KWCA Logo"
@@ -356,17 +356,17 @@ export default function CertificateDocument({
                   </div>
                 </div>
 
-                <p className="certificate-kicker tracking-[0.45em] text-sm font-extrabold text-[#4F2043]">
+                <p className="certificate-kicker tracking-[0.45em] text-sm font-extrabold text-lilac-text">
                   KWCA LEARNING HUB
                 </p>
 
                 <div className="certificate-divider mx-auto mt-4 flex items-center justify-center gap-3">
-                  <span className="certificate-divider-line h-px w-10 bg-[#B08D57]" />
-                  <span className="certificate-divider-dot h-1.5 w-1.5 rotate-45 bg-[#B08D57]" />
-                  <span className="certificate-divider-line h-px w-10 bg-[#B08D57]" />
+                  <span className="certificate-divider-line h-px w-10 bg-warm" />
+                  <span className="certificate-divider-dot h-1.5 w-1.5 rotate-45 bg-warm" />
+                  <span className="certificate-divider-line h-px w-10 bg-warm" />
                 </div>
 
-                <h2 className="certificate-title mt-8 text-5xl font-extrabold text-[#1E1D59]">
+                <h2 className="certificate-title mt-8 text-5xl font-extrabold text-ink">
                   Certificate of Completion
                 </h2>
 
@@ -374,7 +374,7 @@ export default function CertificateDocument({
                   This certificate is proudly presented to
                 </p>
 
-                <h3 className="certificate-name mx-auto mt-6 max-w-4xl border-b-2 border-[#1E1D59]/20 pb-4 text-5xl font-extrabold text-[#1E1D59]">
+                <h3 className="certificate-name mx-auto mt-6 max-w-4xl border-b-2 border-primary/20 pb-4 text-5xl font-extrabold text-ink">
                   {learnerName}
                 </h3>
 
@@ -382,11 +382,11 @@ export default function CertificateDocument({
                   For successfully completing the course
                 </p>
 
-                <h4 className="certificate-course-title mx-auto mt-4 max-w-4xl text-3xl font-extrabold text-[#1E1D59]">
+                <h4 className="certificate-course-title mx-auto mt-4 max-w-4xl text-3xl font-extrabold text-ink">
                   {courseTitle}
                 </h4>
 
-                <div className="certificate-status mx-auto mt-8 flex max-w-xl items-center justify-center gap-3 rounded-2xl border border-[#B08D57]/30 bg-[#F1F0FA] px-6 py-4 text-[#1E1D59]">
+                <div className="certificate-status mx-auto mt-8 flex max-w-xl items-center justify-center gap-3 rounded-2xl border border-warm/30 bg-tint px-6 py-4 text-ink">
                   <CheckCircle size={24} />
 
                   <p className="font-bold">
@@ -413,31 +413,31 @@ export default function CertificateDocument({
 
                 <div className="certificate-seal mx-auto mt-12 flex flex-col items-center gap-2">
                   <div className="relative flex h-20 w-20 items-center justify-center">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#B08D57] via-[#E4C89A] to-[#8C6A3E] shadow-md" />
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-warm via-warm-light to-warm-deep shadow-md" />
                     <div className="absolute inset-[4px] rounded-full border-2 border-dashed border-white/80" />
-                    <div className="absolute inset-[10px] flex items-center justify-center rounded-full bg-white">
-                      <BadgeCheck size={26} className="text-[#1E1D59]" />
+                    <div className="absolute inset-[10px] flex items-center justify-center rounded-full bg-surface">
+                      <BadgeCheck size={26} className="text-ink" />
                     </div>
                   </div>
 
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#8C6A3E]">
+                  <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-warm-text">
                     Official KWCA Seal
                   </p>
                 </div>
 
                 <div className="certificate-signatures mx-auto mt-16 grid max-w-4xl gap-12 md:grid-cols-2">
                   <div>
-                    <div className="mx-auto h-px w-64 bg-[#B08D57]" />
+                    <div className="mx-auto h-px w-64 bg-warm" />
                     <p className="mt-3 font-bold">Course Coordinator</p>
                   </div>
 
                   <div>
-                    <div className="mx-auto h-px w-64 bg-[#B08D57]" />
+                    <div className="mx-auto h-px w-64 bg-warm" />
                     <p className="mt-3 font-bold">KWCA Representative</p>
                   </div>
                 </div>
 
-                <div className="certificate-note mx-auto mt-12 max-w-3xl rounded-2xl bg-gray-50 p-5 text-sm leading-7 text-gray-600 print:bg-white">
+                <div className="certificate-note mx-auto mt-12 max-w-3xl rounded-2xl bg-gray-50 p-5 text-sm leading-7 text-gray-600 print:bg-surface">
                   This certificate can be verified using the Certificate ID
                   above through the KWCA LMS certificate verification page.
                 </div>
@@ -498,8 +498,8 @@ function InfoCard({
   description: string;
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#F1F0FA] text-[#1E1D59]">
+    <div className="rounded-3xl bg-surface p-6 shadow-sm">
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-tint text-ink">
         {icon}
       </div>
 

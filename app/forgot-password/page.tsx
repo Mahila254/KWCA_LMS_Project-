@@ -48,11 +48,11 @@ export default function ForgotPasswordPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 px-6 py-12 text-[#1E1D59] md:py-16">
-        <div className="mx-auto max-w-lg rounded-3xl bg-white p-6 shadow-sm md:p-8">
+      <main className="min-h-screen bg-gray-50 px-6 py-12 text-ink md:py-16">
+        <div className="mx-auto max-w-lg rounded-3xl bg-surface p-6 shadow-sm md:p-8">
           {!PASSWORD_RESET_EMAILS_ENABLED ? (
             <>
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA]">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-tint">
                 <KeyRound size={34} />
               </div>
 
@@ -63,7 +63,7 @@ export default function ForgotPasswordPage() {
                 you&rsquo;ve forgotten your password, email{" "}
                 <a
                   href="mailto:info@kwcakenya.com"
-                  className="font-bold text-[#632854] underline-offset-2 hover:underline"
+                  className="font-bold text-accent underline-offset-2 hover:underline"
                 >
                   info@kwcakenya.com
                 </a>{" "}
@@ -91,19 +91,19 @@ export default function ForgotPasswordPage() {
               <button
                 type="button"
                 onClick={() => setSent(false)}
-                className="mt-6 font-bold text-[#632854] underline-offset-2 hover:underline"
+                className="mt-6 font-bold text-accent underline-offset-2 hover:underline"
               >
                 Use a different email
               </button>
             </>
           ) : (
             <>
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA]">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-tint">
                 <KeyRound size={34} />
               </div>
 
               <h1 className="text-3xl font-bold">
-                Forgot your <em className="accent text-[#632854]">password?</em>
+                Forgot your <em className="accent text-accent">password?</em>
               </h1>
 
               <p className="mt-3 leading-7 text-gray-600">
@@ -117,7 +117,7 @@ export default function ForgotPasswordPage() {
                     Email Address
                   </label>
 
-                  <div className="flex items-center rounded-xl border bg-white px-4">
+                  <div className="flex items-center rounded-xl border bg-surface px-4">
                     <Mail size={19} className="shrink-0 text-gray-400" />
 
                     <input
@@ -141,7 +141,7 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={sending}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {sending && <Loader2 size={18} className="animate-spin" />}
                   {sending ? "Sending..." : "Send Reset Link"}
@@ -152,7 +152,7 @@ export default function ForgotPasswordPage() {
 
           <Link
             href="/login"
-            className="mt-6 flex items-center gap-2 font-bold text-[#1E1D59]"
+            className="mt-6 flex items-center gap-2 font-bold text-ink"
           >
             <ArrowLeft size={18} />
             Back to Login

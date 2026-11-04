@@ -376,19 +376,19 @@ export default async function AdminReportsPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Admin Dashboard
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Platform Reports</p>
+              <p className="font-bold text-ink">Platform Reports</p>
 
               <h1 className="mt-3 text-5xl font-bold">KWCA LMS Reports</h1>
 
@@ -432,7 +432,7 @@ export default async function AdminReportsPage() {
             />
           </div>
 
-          <div className="mb-8 rounded-3xl bg-white p-8 shadow-sm">
+          <div className="mb-8 rounded-3xl bg-surface p-8 shadow-sm">
             <h2 className="text-3xl font-bold">Learners by Gender</h2>
 
             <div className="mt-6 grid gap-4 md:grid-cols-4">
@@ -529,7 +529,7 @@ export default async function AdminReportsPage() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-2">
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <h2 className="text-3xl font-bold">Course Overview</h2>
 
               <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -563,15 +563,15 @@ export default async function AdminReportsPage() {
                         </div>
 
                         <div className="flex flex-wrap gap-3">
-                          <span className="rounded-full bg-[#F1F0FA] px-3 py-1 text-sm font-bold text-[#1E1D59]">
+                          <span className="rounded-full bg-tint px-3 py-1 text-sm font-bold text-ink">
                             {course.lessons.length} Lessons
                           </span>
 
-                          <span className="rounded-full bg-[#FBEFF4] px-3 py-1 text-sm font-bold text-[#632854]">
+                          <span className="rounded-full bg-lilac-soft px-3 py-1 text-sm font-bold text-accent">
                             {course.quizQuestions.length} Questions
                           </span>
 
-                          <span className="rounded-full bg-[#E4E1F5] px-3 py-1 text-sm font-bold text-[#1E1D59]">
+                          <span className="rounded-full bg-tint-strong px-3 py-1 text-sm font-bold text-ink">
                             {course.enrollments.length} Learners Enrolled
                           </span>
                         </div>
@@ -589,7 +589,7 @@ export default async function AdminReportsPage() {
             </div>
           </div>
 
-          <div className="mt-8 rounded-3xl bg-[#1E1D59] p-8 text-white">
+          <div className="mt-8 rounded-3xl bg-primary p-8 text-white">
             <h2 className="text-3xl font-bold">Report Summary</h2>
 
             <p className="mt-3 max-w-4xl leading-7 text-white/70">
@@ -622,10 +622,10 @@ function SummaryCard({
 }) {
   const toneClass =
     tone === "green"
-      ? "text-[#1E1D59]"
+      ? "text-ink"
       : tone === "orange"
-      ? "text-[#632854]"
-      : "text-red-600";
+      ? "text-accent"
+      : "text-red-700";
 
   const cardContent = (
     <>
@@ -642,7 +642,7 @@ function SummaryCard({
     return (
       <Link
         href={href}
-        className="block rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+        className="block rounded-3xl bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
       >
         {cardContent}
       </Link>
@@ -650,7 +650,7 @@ function SummaryCard({
   }
 
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">{cardContent}</div>
+    <div className="rounded-3xl bg-surface p-6 shadow-sm">{cardContent}</div>
   );
 }
 
@@ -667,10 +667,10 @@ function MetricCard({
   description: string;
   tone: "green" | "orange";
 }) {
-  const toneClass = tone === "green" ? "text-[#1E1D59]" : "text-[#632854]";
+  const toneClass = tone === "green" ? "text-ink" : "text-accent";
 
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm">
+    <div className="rounded-3xl bg-surface p-8 shadow-sm">
       <div className="mb-5 flex items-center gap-3">
         <div className={toneClass}>{icon}</div>
         <h2 className="text-2xl font-bold">{title}</h2>
@@ -696,13 +696,13 @@ function PaymentValueCard({
 }) {
   const toneClass =
     tone === "green"
-      ? "text-[#1E1D59]"
+      ? "text-ink"
       : tone === "orange"
-      ? "text-[#632854]"
-      : "text-[#1E1D59]";
+      ? "text-accent"
+      : "text-ink";
 
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm">
+    <div className="rounded-3xl bg-surface p-8 shadow-sm">
       <p className="text-sm font-bold text-gray-500">{label}</p>
 
       <p className={`mt-2 text-4xl font-extrabold ${toneClass}`}>{value}</p>
@@ -716,20 +716,20 @@ function SmallStat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-2xl bg-gray-50 p-5">
       <p className="text-sm font-bold text-gray-500">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-[#1E1D59]">{value}</p>
+      <p className="mt-2 text-3xl font-bold text-ink">{value}</p>
     </div>
   );
 }
 
 function RecentPayments({ payments }: { payments: PaymentRecord[] }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm">
+    <div className="rounded-3xl bg-surface p-8 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-3xl font-bold">Recent Payments</h2>
 
         <Link
           href="/admin/payments"
-          className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+          className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary-hover"
         >
           View All Payments
         </Link>
@@ -780,8 +780,8 @@ function RecentPayments({ payments }: { payments: PaymentRecord[] }) {
                         payment.status === "PAID"
                           ? "text-green-700"
                           : payment.status === "FAILED"
-                          ? "text-red-600"
-                          : "text-[#632854]"
+                          ? "text-red-700"
+                          : "text-accent"
                       }`}
                     >
                       {payment.status}
@@ -803,13 +803,13 @@ function RecentQuizResults({
   quizResults: QuizResultRecord[];
 }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm">
+    <div className="rounded-3xl bg-surface p-8 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-3xl font-bold">Recent Quiz Results</h2>
 
         <Link
           href="/admin/quiz-results"
-          className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+          className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary-hover"
         >
           View All Quiz Results
         </Link>
@@ -849,7 +849,7 @@ function RecentQuizResults({
                   <div className="text-right">
                     <p
                       className={`text-2xl font-extrabold ${
-                        result.passed ? "text-[#1E1D59]" : "text-red-600"
+                        result.passed ? "text-ink" : "text-red-700"
                       }`}
                     >
                       {result.score}%
@@ -857,7 +857,7 @@ function RecentQuizResults({
 
                     <p
                       className={`text-sm font-bold ${
-                        result.passed ? "text-green-700" : "text-red-600"
+                        result.passed ? "text-green-700" : "text-red-700"
                       }`}
                     >
                       {result.passed ? "Passed" : "Not Passed"}
@@ -879,13 +879,13 @@ function RecentCertificates({
   certificates: CertificateRecord[];
 }) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm">
+    <div className="rounded-3xl bg-surface p-8 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-3xl font-bold">Recent Certificates</h2>
 
         <Link
           href="/admin/certificates"
-          className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+          className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary-hover"
         >
           View All Certificates
         </Link>
@@ -918,7 +918,7 @@ function RecentCertificates({
                       {certificate.course.title}
                     </p>
 
-                    <p className="mt-1 text-sm font-bold text-[#1E1D59]">
+                    <p className="mt-1 text-sm font-bold text-ink">
                       {certificate.certificateCode}
                     </p>
 
@@ -927,7 +927,7 @@ function RecentCertificates({
 
                   <Link
                     href={`/admin/certificates/${certificate.id}`}
-                    className="rounded-full bg-[#1E1D59] px-4 py-2 text-sm font-bold text-white hover:bg-[#14123D]"
+                    className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary-hover"
                   >
                     View
                   </Link>

@@ -56,13 +56,13 @@ export default function LoginPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F1F0FA] px-6 py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-tint px-6 py-16">
           <div className="mx-auto max-w-5xl">
-            <p className="font-bold text-[#1E1D59]">Learner Login</p>
+            <p className="font-bold text-ink">Learner Login</p>
 
             <h1 className="mt-4 text-5xl font-extrabold">
-              Login to Your KWCA LMS <em className="accent text-[#632854]">Account</em>
+              Login to Your KWCA LMS <em className="accent text-accent">Account</em>
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
@@ -73,8 +73,8 @@ export default function LoginPage() {
         </section>
 
         <section className="mx-auto grid max-w-6xl gap-8 px-6 py-12 lg:grid-cols-2">
-          <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+          <div className="rounded-3xl bg-surface p-8 shadow-sm">
+            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-tint text-ink">
               <LogIn size={34} />
             </div>
 
@@ -88,7 +88,7 @@ export default function LoginPage() {
               <div>
                 <label className="mb-2 block font-bold">Email Address</label>
 
-                <div className="flex items-center rounded-xl border bg-white px-4">
+                <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Mail size={19} className="text-gray-400" />
 
                   <input
@@ -104,7 +104,7 @@ export default function LoginPage() {
               <div>
                 <label className="mb-2 block font-bold">Password</label>
 
-                <div className="flex items-center rounded-xl border bg-white px-4">
+                <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Lock size={19} className="text-gray-400" />
 
                   <input
@@ -119,7 +119,7 @@ export default function LoginPage() {
                 {PASSWORD_RESET_EMAILS_ENABLED && (
                   <Link
                     href="/forgot-password"
-                    className="mt-2 inline-block text-sm font-bold text-[#632854] underline-offset-2 hover:underline"
+                    className="mt-2 inline-block text-sm font-bold text-accent underline-offset-2 hover:underline"
                   >
                     Forgot your password?
                   </Link>
@@ -130,26 +130,26 @@ export default function LoginPage() {
                 type="button"
                 onClick={handleLogin}
                 disabled={loading}
-                className="w-full rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Logging In..." : "Login"}
               </button>
 
               <p className="text-center text-gray-600">
                 Do not have an account?{" "}
-                <Link href="/register" className="font-bold text-[#1E1D59]">
+                <Link href="/register" className="font-bold text-ink">
                   Register here
                 </Link>
               </p>
             </div>
           </div>
 
-          <div className="rounded-3xl bg-[#1E1D59] p-8 text-white">
+          <div className="rounded-3xl bg-primary p-8 text-white">
             <h2 className="text-3xl font-bold">Your learner account helps you</h2>
 
             <div className="mt-8 space-y-6">
               <div className="flex gap-4">
-                <CheckCircle className="mt-1 shrink-0 text-[#632854]" />
+                <CheckCircle className="mt-1 shrink-0 text-accent" />
                 <div>
                   <h3 className="text-xl font-bold">Continue learning</h3>
                   <p className="mt-2 leading-7 text-white/70">
@@ -159,7 +159,7 @@ export default function LoginPage() {
               </div>
 
               <div className="flex gap-4">
-                <CheckCircle className="mt-1 shrink-0 text-[#632854]" />
+                <CheckCircle className="mt-1 shrink-0 text-accent" />
                 <div>
                   <h3 className="text-xl font-bold">Track quiz results</h3>
                   <p className="mt-2 leading-7 text-white/70">
@@ -170,7 +170,7 @@ export default function LoginPage() {
               </div>
 
               <div className="flex gap-4">
-                <CheckCircle className="mt-1 shrink-0 text-[#632854]" />
+                <CheckCircle className="mt-1 shrink-0 text-accent" />
                 <div>
                   <h3 className="text-xl font-bold">Access certificates</h3>
                   <p className="mt-2 leading-7 text-white/70">

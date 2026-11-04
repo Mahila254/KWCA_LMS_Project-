@@ -45,7 +45,7 @@ export default function LegalPage({
         <li key={section.id}>
           <a
             href={`#${section.id}`}
-            className="flex gap-3 rounded-lg px-3 py-1.5 text-gray-600 hover:bg-[#F1F0FA] hover:text-[#1E1D59]"
+            className="flex gap-3 rounded-lg px-3 py-1.5 text-gray-600 hover:bg-tint hover:text-ink"
           >
             <span className="w-5 shrink-0 tabular-nums text-gray-400">
               {index + 1}.
@@ -61,15 +61,15 @@ export default function LegalPage({
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-12 md:py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-12 md:py-16">
           <div className="mx-auto max-w-6xl px-6">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#632854]">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">
               {eyebrow}
             </p>
 
             <h1 className="mt-3 text-4xl font-bold md:text-5xl">
-              {title} <em className="accent text-[#632854]">{accent}</em>
+              {title} <em className="accent text-accent">{accent}</em>
             </h1>
 
             <div className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
@@ -84,7 +84,7 @@ export default function LegalPage({
 
         <section className="mx-auto grid max-w-6xl gap-8 px-6 py-10 md:py-14 lg:grid-cols-[260px_1fr] lg:gap-12">
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <details className="group rounded-2xl bg-white p-4 shadow-sm lg:hidden">
+            <details className="group rounded-2xl bg-surface p-4 shadow-sm lg:hidden">
               <summary className="flex cursor-pointer list-none items-center justify-between font-bold">
                 Contents
                 <ChevronDown
@@ -108,14 +108,14 @@ export default function LegalPage({
               <article
                 key={section.id}
                 id={section.id}
-                className="scroll-mt-28 rounded-3xl bg-white p-6 shadow-sm md:p-8"
+                className="scroll-mt-28 rounded-3xl bg-surface p-6 shadow-sm md:p-8"
               >
                 <h2 className="flex gap-3 text-2xl font-bold">
-                  <span className="text-[#632854]">{index + 1}.</span>
+                  <span className="text-accent">{index + 1}.</span>
                   {section.title}
                 </h2>
 
-                <div className="mt-4 space-y-3 leading-7 text-gray-700 [&_h3]:pt-2 [&_h3]:font-bold [&_h3]:text-[#1E1D59] [&_li]:pl-1 [&_strong]:text-[#1E1D59] [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5 [&_ul_ul]:mt-2 [&_ul_ul]:list-[circle] [&_a]:font-semibold [&_a]:text-[#632854] [&_a]:underline [&_a]:underline-offset-2">
+                <div className="mt-4 space-y-3 leading-7 text-gray-700 [&_h3]:pt-2 [&_h3]:font-bold [&_h3]:text-ink [&_li]:pl-1 [&_strong]:text-ink [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5 [&_ul_ul]:mt-2 [&_ul_ul]:list-[circle] [&_a]:font-semibold [&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2">
                   {section.content}
                 </div>
               </article>
@@ -123,15 +123,15 @@ export default function LegalPage({
 
             <div
               id="contact"
-              className="scroll-mt-28 rounded-3xl bg-[#1E1D59] p-6 text-white md:p-8"
+              className="scroll-mt-28 rounded-3xl bg-primary p-6 text-white md:p-8"
             >
               <h2 className="text-2xl font-bold">Contact us</h2>
 
               <a
                 href="mailto:complaints@kwcakenya.com"
-                className="group mt-5 flex items-start gap-4 rounded-2xl bg-white p-5 text-[#1E1D59] hover:bg-[#FBEFF4]"
+                className="group mt-5 flex items-start gap-4 rounded-2xl bg-surface p-5 text-ink hover:bg-lilac-soft"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#FBEFF4] text-[#632854] group-hover:bg-white">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-lilac-soft text-accent group-hover:bg-surface">
                   <MessageSquareWarning size={20} />
                 </span>
                 <span className="min-w-0">
@@ -143,7 +143,7 @@ export default function LegalPage({
                     deletion of your data, email us from the address on your
                     account.
                   </span>
-                  <span className="mt-2 block break-words font-bold text-[#632854]">
+                  <span className="mt-2 block break-words font-bold text-accent">
                     complaints@kwcakenya.com
                   </span>
                 </span>

@@ -83,8 +83,8 @@ export default function ResetPasswordPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 px-6 py-12 text-[#1E1D59] md:py-16">
-        <div className="mx-auto max-w-lg rounded-3xl bg-white p-6 shadow-sm md:p-8">
+      <main className="min-h-screen bg-gray-50 px-6 py-12 text-ink md:py-16">
+        <div className="mx-auto max-w-lg rounded-3xl bg-surface p-6 shadow-sm md:p-8">
           {stage === "checking" && (
             <p aria-busy="true" className="flex items-center gap-3 font-bold">
               <Loader2 size={22} className="animate-spin" />
@@ -107,7 +107,7 @@ export default function ResetPasswordPage() {
 
               <Link
                 href="/forgot-password"
-                className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 Request a New Link
               </Link>
@@ -116,12 +116,12 @@ export default function ResetPasswordPage() {
 
           {stage === "ready" && (
             <>
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA]">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-tint">
                 <KeyRound size={34} />
               </div>
 
               <h1 className="text-3xl font-bold">
-                Choose a new <em className="accent text-[#632854]">password</em>
+                Choose a new <em className="accent text-accent">password</em>
               </h1>
 
               <form onSubmit={handleSubmit} className="mt-6 space-y-5">
@@ -130,7 +130,7 @@ export default function ResetPasswordPage() {
                     New Password
                   </label>
 
-                  <div className="flex items-center rounded-xl border bg-white px-4">
+                  <div className="flex items-center rounded-xl border bg-surface px-4">
                     <Lock size={19} className="shrink-0 text-gray-400" />
 
                     <input
@@ -154,7 +154,7 @@ export default function ResetPasswordPage() {
                     Confirm New Password
                   </label>
 
-                  <div className="flex items-center rounded-xl border bg-white px-4">
+                  <div className="flex items-center rounded-xl border bg-surface px-4">
                     <Lock size={19} className="shrink-0 text-gray-400" />
 
                     <input
@@ -178,7 +178,7 @@ export default function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {saving && <Loader2 size={18} className="animate-spin" />}
                   {saving ? "Saving..." : "Save New Password"}
@@ -201,7 +201,7 @@ export default function ResetPasswordPage() {
 
               <Link
                 href="/dashboard"
-                className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 Go to My Learning
               </Link>

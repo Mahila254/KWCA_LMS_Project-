@@ -74,11 +74,11 @@ export default async function AdminCertificateViewPage({
       <div className="print-hidden print:hidden">
         <AdminNavbar />
 
-        <div className="border-b bg-white px-6 py-4">
+        <div className="border-b bg-surface px-6 py-4">
           <div className="mx-auto max-w-6xl">
             <Link
               href="/admin/certificates"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Certificates

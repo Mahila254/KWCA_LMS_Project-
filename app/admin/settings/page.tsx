@@ -22,19 +22,19 @@ export default function AdminSettingsPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Admin Dashboard
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Platform Settings</p>
+              <p className="font-bold text-ink">Platform Settings</p>
 
               <h1 className="mt-3 text-5xl font-bold">LMS Settings</h1>
 
@@ -48,9 +48,9 @@ export default function AdminSettingsPage() {
 
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-8 grid gap-6 md:grid-cols-4">
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <Settings className="text-[#1E1D59]" size={28} />
+                <Settings className="text-ink" size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Platform Mode
                 </p>
@@ -63,9 +63,9 @@ export default function AdminSettingsPage() {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <CreditCard className="text-[#632854]" size={28} />
+                <CreditCard className="text-accent" size={28} />
                 <p className="text-sm font-bold text-gray-500">Payments</p>
               </div>
 
@@ -76,9 +76,9 @@ export default function AdminSettingsPage() {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <ShieldCheck className="text-[#1E1D59]" size={28} />
+                <ShieldCheck className="text-ink" size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Access Rules
                 </p>
@@ -91,9 +91,9 @@ export default function AdminSettingsPage() {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
               <div className="mb-4 flex items-center gap-3">
-                <Award className="text-[#1E1D59]" size={28} />
+                <Award className="text-ink" size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Certificates
                 </p>
@@ -108,9 +108,9 @@ export default function AdminSettingsPage() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-2">
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <CreditCard className="text-[#1E1D59]" size={30} />
+                <CreditCard className="text-ink" size={30} />
 
                 <div>
                   <h2 className="text-3xl font-bold">Payment Setup</h2>
@@ -126,7 +126,7 @@ export default function AdminSettingsPage() {
                 <div className="rounded-2xl border p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                         <Smartphone size={24} />
                       </div>
 
@@ -139,7 +139,7 @@ export default function AdminSettingsPage() {
                       </div>
                     </div>
 
-                    <span className="rounded-full bg-[#FBEFF4] px-3 py-1 text-sm font-bold text-[#632854]">
+                    <span className="rounded-full bg-lilac-soft px-3 py-1 text-sm font-bold text-accent">
                       Coming Soon
                     </span>
                   </div>
@@ -148,7 +148,7 @@ export default function AdminSettingsPage() {
                 <div className="rounded-2xl border p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                         <CreditCard size={24} />
                       </div>
 
@@ -162,7 +162,7 @@ export default function AdminSettingsPage() {
                       </div>
                     </div>
 
-                    <span className="rounded-full bg-[#FBEFF4] px-3 py-1 text-sm font-bold text-[#632854]">
+                    <span className="rounded-full bg-lilac-soft px-3 py-1 text-sm font-bold text-accent">
                       Coming Soon
                     </span>
                   </div>
@@ -171,7 +171,7 @@ export default function AdminSettingsPage() {
                 <div className="rounded-2xl border p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                         <Globe size={24} />
                       </div>
 
@@ -187,7 +187,7 @@ export default function AdminSettingsPage() {
                       </div>
                     </div>
 
-                    <span className="rounded-full bg-[#FBEFF4] px-3 py-1 text-sm font-bold text-[#632854]">
+                    <span className="rounded-full bg-lilac-soft px-3 py-1 text-sm font-bold text-accent">
                       Coming Soon
                     </span>
                   </div>
@@ -195,9 +195,9 @@ export default function AdminSettingsPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <Lock className="text-[#1E1D59]" size={30} />
+                <Lock className="text-ink" size={30} />
 
                 <div>
                   <h2 className="text-3xl font-bold">Course Access Rules</h2>
@@ -209,9 +209,9 @@ export default function AdminSettingsPage() {
               </div>
 
               <div className="space-y-4">
-                <div className="rounded-2xl bg-[#F1F0FA] p-5">
+                <div className="rounded-2xl bg-tint p-5">
                   <div className="flex gap-3">
-                    <CheckCircle className="mt-1 text-[#1E1D59]" size={22} />
+                    <CheckCircle className="mt-1 text-ink" size={22} />
 
                     <div>
                       <h3 className="font-bold">Free Preview Lessons</h3>
@@ -224,9 +224,9 @@ export default function AdminSettingsPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-[#F1F0FA] p-5">
+                <div className="rounded-2xl bg-tint p-5">
                   <div className="flex gap-3">
-                    <CheckCircle className="mt-1 text-[#1E1D59]" size={22} />
+                    <CheckCircle className="mt-1 text-ink" size={22} />
 
                     <div>
                       <h3 className="font-bold">Premium Lessons</h3>
@@ -239,9 +239,9 @@ export default function AdminSettingsPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-[#F1F0FA] p-5">
+                <div className="rounded-2xl bg-tint p-5">
                   <div className="flex gap-3">
-                    <CheckCircle className="mt-1 text-[#1E1D59]" size={22} />
+                    <CheckCircle className="mt-1 text-ink" size={22} />
 
                     <div>
                       <h3 className="font-bold">Certificates</h3>
@@ -254,9 +254,9 @@ export default function AdminSettingsPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-[#FBEFF4] p-5">
+                <div className="rounded-2xl bg-lilac-soft p-5">
                   <div className="flex gap-3">
-                    <AlertCircle className="mt-1 text-[#632854]" size={22} />
+                    <AlertCircle className="mt-1 text-accent" size={22} />
 
                     <div>
                       <h3 className="font-bold">Next Upgrade</h3>
@@ -271,9 +271,9 @@ export default function AdminSettingsPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <Award className="text-[#1E1D59]" size={30} />
+                <Award className="text-ink" size={30} />
 
                 <div>
                   <h2 className="text-3xl font-bold">
@@ -317,7 +317,7 @@ export default function AdminSettingsPage() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl bg-[#F1F0FA] p-5">
+                <div className="rounded-2xl bg-tint p-5">
                   <p className="text-sm font-bold text-gray-500">
                     Public Verification
                   </p>
@@ -333,7 +333,7 @@ export default function AdminSettingsPage() {
 
                   <Link
                     href="/verify-certificate"
-                    className="mt-5 inline-flex rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                    className="mt-5 inline-flex rounded-full bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover"
                   >
                     Open Certificate Verification
                   </Link>
@@ -341,9 +341,9 @@ export default function AdminSettingsPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <div className="mb-6 flex items-center gap-3">
-                <CalendarDays className="text-[#1E1D59]" size={30} />
+                <CalendarDays className="text-ink" size={30} />
 
                 <div>
                   <h2 className="text-3xl font-bold">Development Roadmap</h2>
@@ -388,7 +388,7 @@ export default function AdminSettingsPage() {
             </div>
           </div>
 
-          <div className="mt-8 rounded-3xl bg-[#1E1D59] p-8 text-white">
+          <div className="mt-8 rounded-3xl bg-primary p-8 text-white">
             <h2 className="text-3xl font-bold">Settings Summary</h2>
 
             <p className="mt-3 max-w-4xl leading-7 text-white/70">

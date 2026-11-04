@@ -79,7 +79,7 @@ export default function CourseLearnerStats({
           <>
             <div className="h-1.5 overflow-hidden rounded-full bg-gray-100">
               <div
-                className="h-full rounded-full bg-[#1E1D59]"
+                className="h-full rounded-full bg-primary"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -89,7 +89,7 @@ export default function CourseLearnerStats({
           </>
         ) : status === null ? (
           <p>
-            <Link href="/login" className="font-bold text-[#632854] underline-offset-2 hover:underline">
+            <Link href="/login" className="font-bold text-accent underline-offset-2 hover:underline">
               Log in
             </Link>{" "}
             to save your progress.
@@ -115,7 +115,7 @@ export default function CourseLearnerStats({
         {status?.certificate || status?.finalQuizResult ? (
           <Link
             href={`/courses/${courseSlug}/certificate`}
-            className="font-bold text-[#632854] underline-offset-2 hover:underline"
+            className="font-bold text-accent underline-offset-2 hover:underline"
           >
             {status.certificate ? "View certificate" : "Get your certificate"}
           </Link>
@@ -144,8 +144,8 @@ function StatusCard({
 }) {
   return (
     <ScrollReveal>
-      <div className="h-full rounded-3xl bg-white p-4 shadow-sm sm:p-6">
-        <div className="mb-3 flex items-center gap-2 text-[#1E1D59] sm:mb-4 sm:gap-3">
+      <div className="h-full rounded-3xl bg-surface p-4 shadow-sm sm:p-6">
+        <div className="mb-3 flex items-center gap-2 text-ink sm:mb-4 sm:gap-3">
           {icon}
           <p className="text-xs font-bold text-gray-500 sm:text-sm">{label}</p>
         </div>

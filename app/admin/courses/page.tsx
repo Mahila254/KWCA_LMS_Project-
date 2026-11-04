@@ -82,14 +82,14 @@ export default async function AdminCoursesPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <div className="flex flex-wrap items-start justify-between gap-6">
               <div>
                 <Link
                   href="/admin"
-                  className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+                  className="inline-flex items-center gap-2 font-bold text-ink"
                 >
                   <ArrowLeft size={18} />
                   Back to Admin Dashboard
@@ -106,7 +106,7 @@ export default async function AdminCoursesPage() {
 
               <Link
                 href="/admin/courses/create"
-                className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 <Plus size={18} />
                 Add New Course
@@ -116,7 +116,7 @@ export default async function AdminCoursesPage() {
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-12">
-          <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+          <div className="overflow-hidden rounded-3xl bg-surface shadow-sm">
             <div className="border-b p-6">
               <h2 className="text-2xl font-bold">All Courses</h2>
 
@@ -127,7 +127,7 @@ export default async function AdminCoursesPage() {
 
             {courses.length === 0 ? (
               <div className="p-10 text-center">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
                   <BookOpen size={34} />
                 </div>
 
@@ -139,7 +139,7 @@ export default async function AdminCoursesPage() {
 
                 <Link
                   href="/admin/courses/create"
-                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                 >
                   <Plus size={18} />
                   Add New Course
@@ -153,7 +153,7 @@ export default async function AdminCoursesPage() {
                     className="grid gap-6 border-b p-6 last:border-b-0 lg:grid-cols-[280px_190px_190px_1fr]"
                   >
                     <div className="flex gap-4">
-                      <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+                      <div className="flex h-20 w-24 shrink-0 items-center justify-center rounded-2xl bg-tint text-ink">
                         {course.imageUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
@@ -208,7 +208,7 @@ export default async function AdminCoursesPage() {
                         className={`mt-2 inline-flex rounded-full px-3 py-1 text-sm font-bold ${
                           course.status === "PUBLISHED"
                             ? "bg-green-100 text-green-700"
-                            : "bg-[#F5DCE6] text-[#632854]"
+                            : "bg-lilac-tint text-accent"
                         }`}
                       >
                         {course.status === "PUBLISHED"
@@ -240,7 +240,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/lessons`}
-                        className="inline-flex items-center gap-2 rounded-full border border-[#1E1D59] px-5 py-3 font-bold text-[#1E1D59] hover:bg-[#F1F0FA]"
+                        className="inline-flex items-center gap-2 rounded-full border border-primary px-5 py-3 font-bold text-ink hover:bg-tint"
                       >
                         <ListChecks size={17} />
                         Lessons
@@ -248,7 +248,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/quiz-questions`}
-                        className="inline-flex items-center gap-2 rounded-full border border-[#632854] px-5 py-3 font-bold text-[#632854] hover:bg-[#FBEFF4]"
+                        className="inline-flex items-center gap-2 rounded-full border border-accent px-5 py-3 font-bold text-accent hover:bg-lilac-soft"
                       >
                         <HelpCircle size={17} />
                         Quiz
@@ -256,7 +256,7 @@ export default async function AdminCoursesPage() {
 
                       <Link
                         href={`/admin/courses/${course.slug}/edit`}
-                        className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+                        className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover"
                       >
                         <Pencil size={17} />
                         Edit
@@ -267,7 +267,7 @@ export default async function AdminCoursesPage() {
 
                         <button
                           type="submit"
-                          className="inline-flex items-center gap-2 rounded-full border border-red-200 px-5 py-3 font-bold text-red-600 hover:bg-red-50"
+                          className="inline-flex items-center gap-2 rounded-full border border-red-200 px-5 py-3 font-bold text-red-700 hover:bg-red-50"
                         >
                           <Trash2 size={17} />
                           Delete

@@ -68,10 +68,10 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#1E1D59] px-6 py-12 text-white">
+    <main className="min-h-screen bg-deep px-6 py-12 text-white">
       <div className="mx-auto flex min-h-[85vh] max-w-6xl items-center justify-center">
-        <div className="grid w-full overflow-hidden rounded-3xl bg-white shadow-2xl lg:grid-cols-2">
-          <section className="bg-[#1E1D59] p-10 text-white">
+        <div className="grid w-full overflow-hidden rounded-3xl bg-surface shadow-2xl lg:grid-cols-2">
+          <section className="bg-deep p-10 text-white">
             <Link
               href="/"
               className="inline-flex items-center gap-2 font-bold text-white/80 hover:text-white"
@@ -85,7 +85,7 @@ export default function AdminLoginPage() {
                 <ShieldCheck size={34} />
               </div>
 
-              <p className="font-bold text-[#D9D3EC]">KWCA LMS Admin</p>
+              <p className="font-bold text-on-deep-muted">KWCA LMS Admin</p>
 
               <h1 className="mt-4 text-5xl font-extrabold leading-tight">
                 Secure Admin Login
@@ -98,9 +98,9 @@ export default function AdminLoginPage() {
             </div>
           </section>
 
-          <section className="p-10 text-[#1E1D59]">
+          <section className="p-10 text-ink">
             <div className="mx-auto max-w-md">
-              <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-tint text-ink">
                 <Lock size={34} />
               </div>
 
@@ -128,7 +128,7 @@ export default function AdminLoginPage() {
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
                       placeholder="admin@example.com"
-                      className="w-full rounded-xl border px-12 py-4 outline-none focus:border-[#1E1D59]"
+                      className="w-full rounded-xl border px-12 py-4 outline-none focus:border-primary"
                     />
                   </div>
                 </div>
@@ -150,7 +150,7 @@ export default function AdminLoginPage() {
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
                       placeholder="Enter password"
-                      className="w-full rounded-xl border px-12 py-4 outline-none focus:border-[#1E1D59]"
+                      className="w-full rounded-xl border px-12 py-4 outline-none focus:border-primary"
                     />
                   </div>
                 </div>
@@ -158,7 +158,7 @@ export default function AdminLoginPage() {
                 {PASSWORD_RESET_EMAILS_ENABLED && (
                   <Link
                     href="/forgot-password"
-                    className="inline-block text-sm font-bold text-[#632854] underline-offset-2 hover:underline"
+                    className="inline-block text-sm font-bold text-accent underline-offset-2 hover:underline"
                   >
                     Forgot your password?
                   </Link>
@@ -177,7 +177,7 @@ export default function AdminLoginPage() {
                 <button
                   type="submit"
                   disabled={loggingIn}
-                  className="w-full rounded-full bg-[#1E1D59] px-6 py-4 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full rounded-full bg-primary px-6 py-4 font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loggingIn ? "Checking Admin Access..." : "Login as Admin"}
                 </button>

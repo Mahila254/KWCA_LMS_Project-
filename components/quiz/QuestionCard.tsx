@@ -58,7 +58,7 @@ export default function QuestionCard({
   const isCorrect = revealed && selected === correctAnswer;
 
   return (
-    <div className="rounded-3xl bg-white p-4 shadow-sm sm:p-7">
+    <div className="rounded-3xl bg-surface p-4 shadow-sm sm:p-7">
       <div className="grid gap-2 sm:grid-cols-[6.5rem_1fr] sm:gap-6">
         <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-500 sm:block sm:border-r sm:border-gray-200 sm:pt-1">
           <span className="flex items-center gap-1.5">
@@ -80,7 +80,7 @@ export default function QuestionCard({
               const wrongPick = revealed && picked && !isAnswer;
 
               let row = "border-transparent hover:border-gray-200 hover:bg-gray-50";
-              let bubble = "bg-[#F1F0FA] text-[#1E1D59]";
+              let bubble = "bg-tint text-ink";
 
               if (isAnswer) {
                 row = "border-green-500 bg-green-50";
@@ -91,8 +91,8 @@ export default function QuestionCard({
               } else if (revealed) {
                 row = "border-transparent opacity-60";
               } else if (picked) {
-                row = "border-[#1E1D59] bg-[#F1F0FA]";
-                bubble = "bg-[#1E1D59] text-white";
+                row = "border-primary bg-tint";
+                bubble = "bg-primary text-white";
               }
 
               return (
@@ -115,10 +115,10 @@ export default function QuestionCard({
                     </span>
 
                     {isAnswer && (
-                      <Check className="ml-auto mt-0.5 shrink-0 text-green-600" size={20} />
+                      <Check className="ml-auto mt-0.5 shrink-0 text-green-700" size={20} />
                     )}
                     {wrongPick && (
-                      <X className="ml-auto mt-0.5 shrink-0 text-red-600" size={20} />
+                      <X className="ml-auto mt-0.5 shrink-0 text-red-700" size={20} />
                     )}
                   </button>
                 </li>
@@ -130,9 +130,9 @@ export default function QuestionCard({
             <div className="mt-3 animate-page-enter px-1">
               <p className="flex items-center gap-2 font-semibold text-gray-800">
                 {isCorrect ? (
-                  <Check className="text-green-600" size={22} strokeWidth={3} />
+                  <Check className="text-green-700" size={22} strokeWidth={3} />
                 ) : (
-                  <X className="text-red-600" size={22} strokeWidth={3} />
+                  <X className="text-red-700" size={22} strokeWidth={3} />
                 )}
                 {isCorrect
                   ? "This is correct!"
@@ -164,8 +164,8 @@ export default function QuestionCard({
               disabled={nextDisabled}
               className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60 ${
                 nextAccent
-                  ? "bg-[#632854] hover:bg-[#4F2043]"
-                  : "bg-[#1E1D59] hover:bg-[#14123D]"
+                  ? "bg-secondary hover:bg-secondary-hover"
+                  : "bg-primary hover:bg-primary-hover"
               }`}
             >
               {nextLabel}

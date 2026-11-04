@@ -37,7 +37,7 @@ export default function QuizReview({
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[1fr_17rem]">
       <div className="order-2 space-y-5 lg:order-1">
-        <div className="flex flex-col gap-4 rounded-3xl bg-[#1E1D59] p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <div className="flex flex-col gap-4 rounded-3xl bg-primary p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/60">
               Review mode
@@ -58,14 +58,14 @@ export default function QuizReview({
               )}
             </p>
           </div>
-          <p className="text-6xl font-extrabold text-[#D9D3EC]">{score}%</p>
+          <p className="text-6xl font-extrabold text-on-deep-muted">{score}%</p>
         </div>
 
         {results.map((item, index) => (
           <article
             key={item.questionId}
             id={`review-question-${index}`}
-            className="scroll-mt-28 rounded-3xl border border-gray-200 bg-white p-6 sm:p-8"
+            className="scroll-mt-28 rounded-3xl border border-gray-200 bg-surface p-6 sm:p-8"
           >
             <div className="grid gap-4 sm:grid-cols-[7rem_1fr] sm:gap-6">
               <p className="text-sm font-semibold text-gray-500 sm:border-r sm:border-gray-200 sm:pt-1">
@@ -73,7 +73,7 @@ export default function QuizReview({
               </p>
 
               <div>
-                <h3 className="text-xl font-semibold leading-8 text-[#1E1D59]">
+                <h3 className="text-xl font-semibold leading-8 text-ink">
                   {item.question}
                 </h3>
 
@@ -116,10 +116,10 @@ export default function QuizReview({
                         </span>
 
                         {isAnswer && (
-                          <Check className="ml-auto mt-1.5 shrink-0 text-green-600" size={20} />
+                          <Check className="ml-auto mt-1.5 shrink-0 text-green-700" size={20} />
                         )}
                         {picked && !isAnswer && (
-                          <X className="ml-auto mt-1.5 shrink-0 text-red-600" size={20} />
+                          <X className="ml-auto mt-1.5 shrink-0 text-red-700" size={20} />
                         )}
                       </li>
                     );
@@ -129,12 +129,12 @@ export default function QuizReview({
                 <div className="mt-5">
                   {item.isCorrect ? (
                     <p className="flex items-center gap-2 text-lg font-semibold text-gray-800">
-                      <Check className="text-green-600" size={26} strokeWidth={3} />
+                      <Check className="text-green-700" size={26} strokeWidth={3} />
                       This is correct!
                     </p>
                   ) : (
                     <p className="flex items-center gap-2 text-lg font-semibold text-gray-800">
-                      <X className="text-red-600" size={26} strokeWidth={3} />
+                      <X className="text-red-700" size={26} strokeWidth={3} />
                       {item.selectedAnswer
                         ? "This is incorrect."
                         : "This question was not answered."}{" "}

@@ -18,10 +18,10 @@ export default function AdminDashboardPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
-            <p className="font-bold text-[#1E1D59]">Admin Dashboard</p>
+            <p className="font-bold text-ink">Admin Dashboard</p>
 
             <h1 className="mt-4 text-5xl font-bold">
               KWCA LMS Management
@@ -38,9 +38,9 @@ export default function AdminDashboardPage() {
           <div className="mb-10 grid gap-6 md:grid-cols-3 lg:grid-cols-7">
             <Link
               href="/admin/courses"
-              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                 <BookOpen size={26} />
               </div>
 
@@ -53,9 +53,9 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/learners"
-              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                 <Users size={26} />
               </div>
 
@@ -68,9 +68,9 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/payments"
-              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                 <CreditCard size={26} />
               </div>
 
@@ -83,9 +83,9 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/reports"
-              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                 <BarChart3 size={26} />
               </div>
 
@@ -98,9 +98,9 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/certificates"
-              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                 <Award size={26} />
               </div>
 
@@ -113,9 +113,9 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/settings"
-              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                 <Settings size={26} />
               </div>
 
@@ -128,9 +128,9 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/admin/feedback"
-              className="rounded-3xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-tint text-ink">
                 <MessageSquare size={26} />
               </div>
 
@@ -145,13 +145,13 @@ export default function AdminDashboardPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <Link
               href="/admin/courses"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-ink">
                 <BookOpen size={30} />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E1D59]">
+              <h2 className="text-2xl font-bold text-ink">
                 Manage Courses
               </h2>
 
@@ -160,20 +160,20 @@ export default function AdminDashboardPage() {
                 lessons, quizzes, and learning content.
               </p>
 
-              <p className="mt-5 font-bold text-[#1E1D59]">
+              <p className="mt-5 font-bold text-ink">
                 Open Courses →
               </p>
             </Link>
 
             <Link
               href="/admin/courses/create"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-ink">
                 <PlusCircle size={30} />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E1D59]">
+              <h2 className="text-2xl font-bold text-ink">
                 Add New Course
               </h2>
 
@@ -182,20 +182,20 @@ export default function AdminDashboardPage() {
                 category, description, access type, and learning outcomes.
               </p>
 
-              <p className="mt-5 font-bold text-[#1E1D59]">
+              <p className="mt-5 font-bold text-ink">
                 Create Course →
               </p>
             </Link>
 
             <Link
               href="/admin/learners"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-ink">
                 <Users size={30} />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E1D59]">
+              <h2 className="text-2xl font-bold text-ink">
                 Learners
               </h2>
 
@@ -204,20 +204,20 @@ export default function AdminDashboardPage() {
                 progress, and issued certificates.
               </p>
 
-              <p className="mt-5 font-bold text-[#1E1D59]">
+              <p className="mt-5 font-bold text-ink">
                 View Learners →
               </p>
             </Link>
 
             <Link
               href="/admin/payments"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-ink">
                 <CreditCard size={30} />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E1D59]">
+              <h2 className="text-2xl font-bold text-ink">
                 Payments
               </h2>
 
@@ -226,20 +226,20 @@ export default function AdminDashboardPage() {
                 status, and provider references.
               </p>
 
-              <p className="mt-5 font-bold text-[#1E1D59]">
+              <p className="mt-5 font-bold text-ink">
                 View Payments →
               </p>
             </Link>
 
             <Link
               href="/admin/certificates"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-ink">
                 <Award size={30} />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E1D59]">
+              <h2 className="text-2xl font-bold text-ink">
                 Certificates
               </h2>
 
@@ -248,20 +248,20 @@ export default function AdminDashboardPage() {
                 titles, learner emails, and issue dates.
               </p>
 
-              <p className="mt-5 font-bold text-[#1E1D59]">
+              <p className="mt-5 font-bold text-ink">
                 View Certificates →
               </p>
             </Link>
 
             <Link
               href="/admin/reports"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-ink">
                 <BarChart3 size={30} />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E1D59]">
+              <h2 className="text-2xl font-bold text-ink">
                 Reports
               </h2>
 
@@ -270,20 +270,20 @@ export default function AdminDashboardPage() {
                 completion rates, and certificate summaries.
               </p>
 
-              <p className="mt-5 font-bold text-[#1E1D59]">
+              <p className="mt-5 font-bold text-ink">
                 View Reports →
               </p>
             </Link>
 
             <Link
               href="/admin/feedback"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-ink">
                 <MessageSquare size={30} />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E1D59]">
+              <h2 className="text-2xl font-bold text-ink">
                 Feedback
               </h2>
 
@@ -292,20 +292,20 @@ export default function AdminDashboardPage() {
                 completing a course&apos;s final quiz.
               </p>
 
-              <p className="mt-5 font-bold text-[#1E1D59]">
+              <p className="mt-5 font-bold text-ink">
                 View Feedback →
               </p>
             </Link>
 
             <Link
               href="/admin/settings"
-              className="rounded-3xl bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="rounded-3xl bg-surface p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-tint text-ink">
                 <Settings size={30} />
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E1D59]">
+              <h2 className="text-2xl font-bold text-ink">
                 Settings
               </h2>
 
@@ -314,13 +314,13 @@ export default function AdminDashboardPage() {
                 system configuration.
               </p>
 
-              <p className="mt-5 font-bold text-[#1E1D59]">
+              <p className="mt-5 font-bold text-ink">
                 Open Settings →
               </p>
             </Link>
           </div>
 
-          <div className="mt-12 rounded-3xl bg-[#1E1D59] p-8 text-white">
+          <div className="mt-12 rounded-3xl bg-primary p-8 text-white">
             <div className="flex flex-wrap items-center justify-between gap-6">
               <div>
                 <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white">
@@ -341,7 +341,7 @@ export default function AdminDashboardPage() {
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/admin/courses"
-                  className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                  className="rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                 >
                   Manage Courses
                 </Link>

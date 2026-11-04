@@ -85,22 +85,22 @@ export default function Home() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-white text-[#1E1D59]">
+      <main className="min-h-screen bg-surface text-ink">
         {/* HERO: full-bleed photo, headline anchored bottom-left */}
         <section className="relative isolate flex min-h-[calc(100svh-4.5rem)] flex-col overflow-hidden">
           <div
             className="absolute inset-0 -z-10 animate-ken-burns bg-cover bg-center"
             style={{ backgroundImage: "url('/images/hero-background.jpg')" }}
           />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-[#1E1D59]/10 to-[#1E1D59]/55" />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#1E1D59]/45 via-[#1E1D59]/10 to-transparent" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-deep/10 to-deep/55" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-deep/45 via-deep/10 to-transparent" />
 
           <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-6 pb-10 pt-24 md:pb-14">
             <span
               className="mb-6 inline-flex w-fit animate-fade items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white/90 backdrop-blur-md"
               style={{ animationDelay: "100ms" }}
             >
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#F0A8C4]" />
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-highlight" />
               KWCF Learning Platform
             </span>
 
@@ -116,7 +116,7 @@ export default function Home() {
                 </span>
                 <span className="line-mask">
                   <span style={{ "--line-delay": "280ms" } as CSSProperties}>
-                    <em className="accent text-[#C9C4EE]">Learning Hub</em>
+                    <em className="accent text-on-deep-muted">Learning Hub</em>
                   </span>
                 </span>
               </h1>
@@ -134,7 +134,7 @@ export default function Home() {
                 <div className="flex flex-wrap items-center gap-3">
                   <Link
                     href="/courses"
-                    className="group inline-flex items-center gap-2 rounded-full bg-[#632854] py-4 pl-7 pr-5 text-base font-bold text-white shadow-[0_14px_30px_-10px_rgba(99,40,84,0.9)] hover:-translate-y-0.5 hover:bg-[#4F2043]"
+                    className="group inline-flex items-center gap-2 rounded-full bg-secondary py-4 pl-7 pr-5 text-base font-bold text-white shadow-[0_14px_30px_-10px_rgba(99,40,84,0.9)] hover:-translate-y-0.5 hover:bg-secondary-hover"
                   >
                     Start Learning
                     <ArrowRight
@@ -159,7 +159,7 @@ export default function Home() {
 
             {/* Stats ride along the bottom of the hero */}
             <div
-              className="mt-10 grid animate-rise grid-cols-3 divide-x divide-white/15 rounded-3xl border border-white/15 bg-[#1E1D59]/35 py-5 text-white backdrop-blur-md md:mt-12"
+              className="mt-10 grid animate-rise grid-cols-3 divide-x divide-white/15 rounded-3xl border border-white/15 bg-deep/35 py-5 text-white backdrop-blur-md md:mt-12"
               style={{ animationDelay: "650ms" }}
             >
               {stats.map((stat) => (
@@ -187,7 +187,7 @@ export default function Home() {
         {/* TOPIC STRIP */}
         <section
           aria-label="Topics covered"
-          className="overflow-hidden bg-gradient-to-r from-[#1E1D59] to-[#302A57] py-5"
+          className="overflow-hidden bg-gradient-to-r from-deep to-deep py-5"
         >
           <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
             {[0, 1].map((copy) => (
@@ -202,7 +202,7 @@ export default function Home() {
                     className="flex items-center gap-6 pr-6 text-lg font-semibold text-white/85 md:text-xl"
                   >
                     {topic}
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#F0A8C4]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-highlight" />
                   </li>
                 ))}
               </ul>
@@ -211,16 +211,16 @@ export default function Home() {
         </section>
 
         {/* ABOUT */}
-        <section id="about" className="bg-white px-6 py-16 md:py-20">
+        <section id="about" className="bg-surface px-6 py-16 md:py-20">
           <div className="mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2 lg:gap-14">
             <ScrollReveal>
-              <span className="mb-5 inline-block rounded-full bg-[#FBE4EA] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#632854]">
+              <span className="mb-5 inline-block rounded-full bg-lilac-tint px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-accent">
                 About the Hub
               </span>
 
               <h2 className="mb-6 text-4xl font-bold leading-[1.05] md:text-5xl lg:text-6xl">
                 Building Stronger{" "}
-                <em className="accent text-[#632854]">
+                <em className="accent text-accent">
                   Conservancies Across Kenya
                 </em>
               </h2>
@@ -239,8 +239,8 @@ export default function Home() {
                     <div
                       className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-105 ${
                         point.tone === "pink"
-                          ? "bg-[#F5DCE6] text-[#632854]"
-                          : "bg-[#E4E1F5] text-[#1E1D59]"
+                          ? "bg-lilac-tint text-accent"
+                          : "bg-tint-strong text-ink"
                       }`}
                     >
                       <point.icon size={22} />
@@ -261,7 +261,7 @@ export default function Home() {
 
               <Link
                 href="/courses"
-                className="group mt-8 inline-flex items-center gap-2 font-bold text-[#632854] hover:gap-3"
+                className="group mt-8 inline-flex items-center gap-2 font-bold text-accent hover:gap-3"
               >
                 Learn more about KWCF
                 <ArrowRight size={18} />
@@ -277,7 +277,7 @@ export default function Home() {
                 />
               </div>
 
-              <div className="absolute -bottom-6 left-6 animate-float rounded-2xl bg-[#1E1D59] px-6 py-4 text-white shadow-xl">
+              <div className="absolute -bottom-6 left-6 animate-float rounded-2xl bg-primary px-6 py-4 text-white shadow-xl">
                 <p className="text-3xl font-bold">{modules.length}+</p>
                 <p className="text-sm font-semibold text-white/70">
                   Learning Modules
@@ -294,7 +294,7 @@ export default function Home() {
               <h2 className="text-4xl font-bold leading-[1.05] md:text-5xl lg:text-6xl">
                 Key Learning
                 <br />
-                <em className="accent text-[#632854]">Topics</em>
+                <em className="accent text-accent">Topics</em>
               </h2>
 
               <p className="max-w-md text-lg leading-8 text-gray-600">
@@ -319,21 +319,21 @@ export default function Home() {
                     {lead ? (
                       <Link
                         href="/courses"
-                        className="group relative flex h-full min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl bg-[#1E1D59] p-6 text-white shadow-sm hover:shadow-xl md:p-10"
+                        className="group relative flex h-full min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl bg-primary p-6 text-white shadow-sm hover:shadow-xl md:p-10"
                       >
                         <img
                           src={item.image}
                           alt={item.title}
                           className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#1E1D59] via-[#1E1D59]/40 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-deep via-deep/40 to-transparent" />
 
                         <div className="relative">
                           <div className="mb-4 flex items-center gap-2">
                             <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold backdrop-blur-md">
                               {item.category}
                             </span>
-                            <span className="rounded-full bg-[#632854] px-3 py-1 text-xs font-bold">
+                            <span className="rounded-full bg-secondary px-3 py-1 text-xs font-bold">
                               Start here
                             </span>
                           </div>
@@ -345,7 +345,7 @@ export default function Home() {
                             {item.description}
                           </p>
 
-                          <span className="inline-flex items-center gap-2 rounded-full bg-white py-3 pl-5 pr-4 text-sm font-bold text-[#1E1D59] transition-[gap] duration-300 group-hover:gap-3">
+                          <span className="inline-flex items-center gap-2 rounded-full bg-surface py-3 pl-5 pr-4 text-sm font-bold text-ink transition-[gap] duration-300 group-hover:gap-3">
                             Start module
                             <ArrowRight size={16} />
                           </span>
@@ -354,7 +354,7 @@ export default function Home() {
                     ) : (
                       <Link
                         href="/courses"
-                        className="group flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/[0.03] hover:-translate-y-1.5 hover:shadow-xl"
+                        className="group flex h-full flex-col overflow-hidden rounded-3xl bg-surface shadow-sm ring-1 ring-black/[0.03] hover:-translate-y-1.5 hover:shadow-xl"
                       >
                         <div className="relative h-44 overflow-hidden">
                           <img
@@ -364,17 +364,17 @@ export default function Home() {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
-                          <span className="absolute left-4 top-4 rounded-full bg-[#1E1D59] px-3 py-1 text-xs font-bold text-white">
+                          <span className="absolute left-4 top-4 rounded-full bg-primary px-3 py-1 text-xs font-bold text-white">
                             {item.category}
                           </span>
 
-                          <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#632854] text-xs font-bold text-white">
+                          <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-xs font-bold text-white">
                             {index + 1}
                           </span>
                         </div>
 
                         <div className="flex flex-1 flex-col p-6">
-                          <h3 className="mb-2 text-xl font-bold leading-snug group-hover:text-[#632854]">
+                          <h3 className="mb-2 text-xl font-bold leading-snug group-hover:text-accent">
                             {item.title}
                           </h3>
 
@@ -388,7 +388,7 @@ export default function Home() {
                               Self-paced
                             </span>
 
-                            <span className="flex items-center gap-1 font-bold text-[#632854]">
+                            <span className="flex items-center gap-1 font-bold text-accent">
                               Start module
                               <ArrowRight
                                 size={15}
@@ -405,11 +405,11 @@ export default function Home() {
             </div>
 
             <ScrollReveal className="mt-6">
-              <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-[#1E1D59] px-8 py-8 text-white sm:flex-row sm:items-center">
+              <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-deep px-8 py-8 text-white sm:flex-row sm:items-center">
                 <div>
                   <h3 className="text-2xl font-bold">
                     More Modules{" "}
-                    <em className="accent text-[#C9C4EE]">Coming Soon</em>
+                    <em className="accent text-on-deep-muted">Coming Soon</em>
                   </h3>
                   <p className="mt-1 text-white/70">
                     We&apos;re expanding the curriculum with new modules, case
@@ -419,7 +419,7 @@ export default function Home() {
 
                 <Link
                   href="/courses"
-                  className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-[#632854] py-4 pl-6 pr-5 font-bold text-white hover:bg-[#4F2043]"
+                  className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-secondary py-4 pl-6 pr-5 font-bold text-white hover:bg-secondary-hover"
                 >
                   Explore All Modules
                   <ArrowRight
@@ -433,16 +433,16 @@ export default function Home() {
         </section>
 
         {/* WHY THIS PLATFORM */}
-        <section id="why-platform" className="bg-[#F8F4F4] px-6 py-16 md:py-20">
+        <section id="why-platform" className="bg-canvas px-6 py-16 md:py-20">
           <div className="mx-auto grid max-w-7xl items-start gap-10 md:grid-cols-2 lg:gap-14">
             <ScrollReveal className="md:sticky md:top-28">
-              <span className="mb-5 inline-block rounded-full bg-[#E4E1F5] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#1E1D59]">
+              <span className="mb-5 inline-block rounded-full bg-tint-strong px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-ink">
                 Why This Platform
               </span>
 
               <h2 className="mb-6 text-4xl font-bold leading-[1.05] md:text-5xl lg:text-6xl">
                 Built for Kenya&apos;s{" "}
-                <em className="accent text-[#632854]">
+                <em className="accent text-accent">
                   Conservation Landscape
                 </em>
               </h2>
@@ -464,14 +464,14 @@ export default function Home() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/courses"
-                  className="rounded-full bg-[#1E1D59] px-7 py-4 font-bold text-white hover:-translate-y-0.5 hover:bg-[#14123D]"
+                  className="rounded-full bg-primary px-7 py-4 font-bold text-white hover:-translate-y-0.5 hover:bg-primary-hover"
                 >
                   Get Started
                 </Link>
 
                 <Link
                   href="/#about"
-                  className="rounded-full border border-[#1E1D59] px-7 py-4 font-bold text-[#1E1D59] hover:bg-[#1E1D59] hover:text-white"
+                  className="rounded-full border border-primary px-7 py-4 font-bold text-ink hover:bg-primary hover:text-white"
                 >
                   Learn More
                 </Link>
@@ -481,13 +481,13 @@ export default function Home() {
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
               {platformFeatures.map((feature, index) => (
                 <ScrollReveal key={feature.title} delay={(index % 2) * 90}>
-                  <div className="group h-full rounded-3xl bg-white p-7 shadow-sm ring-1 ring-black/[0.03] hover:-translate-y-1 hover:shadow-lg lg:min-h-[260px]">
+                  <div className="group h-full rounded-3xl bg-surface p-7 shadow-sm ring-1 ring-black/[0.03] hover:-translate-y-1 hover:shadow-lg lg:min-h-[260px]">
                     <div className="mb-10 flex items-start justify-between">
                       <div
                         className={`flex h-12 w-12 items-center justify-center rounded-2xl text-white transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110 ${
                           feature.tone === "navy"
-                            ? "bg-[#1E1D59]"
-                            : "bg-[#632854]"
+                            ? "bg-primary"
+                            : "bg-secondary"
                         }`}
                       >
                         <feature.icon size={22} />
@@ -508,9 +508,9 @@ export default function Home() {
         </section>
 
         {/* CTA */}
-        <section className="bg-white px-6 py-16 md:py-20">
+        <section className="bg-surface px-6 py-16 md:py-20">
           <ScrollReveal>
-            <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#1E1D59] to-[#632854] p-8 text-white shadow-xl md:p-12">
+            <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-deep to-secondary p-8 text-white shadow-xl md:p-12">
               <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 animate-float rounded-full bg-white/10" />
               <div
                 className="pointer-events-none absolute -bottom-16 left-1/3 h-48 w-48 animate-float rounded-full bg-white/10"
@@ -525,7 +525,7 @@ export default function Home() {
 
                   <h2 className="mb-4 text-4xl font-bold leading-[1.05] md:text-6xl">
                     Ready to Transform{" "}
-                    <em className="accent text-[#F0A8C4]">Your Conservancy?</em>
+                    <em className="accent text-highlight">Your Conservancy?</em>
                   </h2>
 
                   <p className="max-w-xl text-lg leading-8 text-white/85">
@@ -537,7 +537,7 @@ export default function Home() {
                 <div className="flex flex-wrap gap-3 lg:justify-end">
                   <Link
                     href="/courses"
-                    className="group inline-flex items-center gap-2 rounded-full bg-[#632854] py-4 pl-7 pr-5 font-bold text-white ring-1 ring-white/20 hover:-translate-y-0.5 hover:bg-[#4F2043]"
+                    className="group inline-flex items-center gap-2 rounded-full bg-secondary py-4 pl-7 pr-5 font-bold text-white ring-1 ring-white/20 hover:-translate-y-0.5 hover:bg-secondary-hover"
                   >
                     Enroll Now
                     <ArrowUpRight
@@ -549,7 +549,7 @@ export default function Home() {
                   <a
                     href={BROCHURE_URL}
                     download
-                    className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-4 font-bold hover:bg-white hover:text-[#1E1D59]"
+                    className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-4 font-bold hover:bg-surface hover:text-ink"
                   >
                     <Download size={18} />
                     Download Brochure

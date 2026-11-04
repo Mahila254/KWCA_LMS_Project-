@@ -73,8 +73,8 @@ export default function CourseImageUpload({ value, onChange }: CourseImageUpload
           />
 
           {uploading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/70">
-              <Loader2 className="animate-spin text-[#1E1D59]" size={32} />
+            <div className="absolute inset-0 flex items-center justify-center bg-surface/70">
+              <Loader2 className="animate-spin text-ink" size={32} />
             </div>
           )}
 
@@ -83,7 +83,7 @@ export default function CourseImageUpload({ value, onChange }: CourseImageUpload
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-[#1E1D59] shadow-md hover:bg-gray-50"
+              className="inline-flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-sm font-bold text-ink shadow-md hover:bg-gray-50"
             >
               <RefreshCw size={15} />
               Replace
@@ -94,7 +94,7 @@ export default function CourseImageUpload({ value, onChange }: CourseImageUpload
               onClick={() => onChange("")}
               disabled={uploading}
               aria-label="Remove picture"
-              className="rounded-full bg-white p-2 text-red-600 shadow-md hover:bg-red-50"
+              className="rounded-full bg-surface p-2 text-red-700 shadow-md hover:bg-red-50"
             >
               <X size={18} />
             </button>
@@ -117,17 +117,17 @@ export default function CourseImageUpload({ value, onChange }: CourseImageUpload
           disabled={uploading}
           className={`flex min-h-[220px] w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-8 text-center transition-colors ${
             dragging
-              ? "border-[#632854] bg-[#FBEFF4]"
-              : "border-gray-300 bg-gray-50 hover:border-[#1E1D59] hover:bg-[#F1EFFA]"
+              ? "border-accent bg-lilac-soft"
+              : "border-gray-300 bg-gray-50 hover:border-primary hover:bg-tint"
           }`}
         >
           {uploading ? (
-            <Loader2 className="mb-3 animate-spin text-[#1E1D59]" size={42} />
+            <Loader2 className="mb-3 animate-spin text-ink" size={42} />
           ) : (
-            <ImagePlus className="mb-3 text-[#1E1D59]" size={42} />
+            <ImagePlus className="mb-3 text-ink" size={42} />
           )}
 
-          <span className="font-bold text-[#1E1D59]">
+          <span className="font-bold text-ink">
             {uploading ? "Uploading..." : "Upload course picture"}
           </span>
 
@@ -139,7 +139,7 @@ export default function CourseImageUpload({ value, onChange }: CourseImageUpload
       )}
 
       {error && (
-        <p className="mt-2 text-sm font-semibold text-red-600">{error}</p>
+        <p className="mt-2 text-sm font-semibold text-red-700">{error}</p>
       )}
 
       <div className="mt-3">

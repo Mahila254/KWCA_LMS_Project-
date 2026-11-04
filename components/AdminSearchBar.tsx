@@ -16,7 +16,7 @@ export default function AdminSearchBar({
     <form
       action={action}
       method="GET"
-      className="mb-6 flex items-center gap-3 rounded-2xl border bg-white px-4 py-3"
+      className="mb-6 flex items-center gap-3 rounded-2xl border bg-surface px-4 py-3"
     >
       <Search size={19} className="shrink-0 text-gray-400" />
 
@@ -30,7 +30,7 @@ export default function AdminSearchBar({
 
       <button
         type="submit"
-        className="shrink-0 rounded-full bg-[#1E1D59] px-5 py-2 font-bold text-white hover:bg-[#14123D]"
+        className="shrink-0 rounded-full bg-primary px-5 py-2 font-bold text-white hover:bg-primary-hover"
       >
         Search
       </button>

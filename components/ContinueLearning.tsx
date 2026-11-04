@@ -20,7 +20,7 @@ export default function ContinueLearning() {
   }, []);
 
   return (
-    <div className="rounded-3xl bg-[#1E1D59] p-8 text-white">
+    <div className="rounded-3xl bg-primary p-8 text-white">
       <p className="text-sm opacity-80">
         Continue Learning
       </p>
@@ -35,7 +35,7 @@ export default function ContinueLearning() {
 
       <Link
         href={`/courses/what-is-a-conservancy/${lesson}`}
-        className="mt-6 inline-block rounded-full bg-white px-6 py-3 font-semibold text-[#1E1D59]"
+        className="mt-6 inline-block rounded-full bg-surface px-6 py-3 font-semibold text-ink"
       >
         Continue →
       </Link>

@@ -101,13 +101,13 @@ export default function RegisterPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F1F0FA] px-6 py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-tint px-6 py-16">
           <div className="mx-auto max-w-5xl">
-            <p className="font-bold text-[#1E1D59]">Learner Registration</p>
+            <p className="font-bold text-ink">Learner Registration</p>
 
             <h1 className="mt-4 text-5xl font-extrabold">
-              Create Your KWCA LMS <em className="accent text-[#632854]">Account</em>
+              Create Your KWCA LMS <em className="accent text-accent">Account</em>
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
@@ -118,8 +118,8 @@ export default function RegisterPage() {
         </section>
 
         <section className="mx-auto grid max-w-6xl gap-8 px-6 py-12 lg:grid-cols-2">
-          <div className="rounded-3xl bg-white p-8 shadow-sm">
-            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F1F0FA] text-[#1E1D59]">
+          <div className="rounded-3xl bg-surface p-8 shadow-sm">
+            <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-2xl bg-tint text-ink">
               <UserPlus size={34} />
             </div>
 
@@ -133,7 +133,7 @@ export default function RegisterPage() {
               <div>
                 <label className="mb-2 block font-bold">Full Name</label>
 
-                <div className="flex items-center rounded-xl border bg-white px-4">
+                <div className="flex items-center rounded-xl border bg-surface px-4">
                   <User size={19} className="text-gray-400" />
 
                   <input
@@ -149,7 +149,7 @@ export default function RegisterPage() {
               <div>
                 <label className="mb-2 block font-bold">Email Address</label>
 
-                <div className="flex items-center rounded-xl border bg-white px-4">
+                <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Mail size={19} className="text-gray-400" />
 
                   <input
@@ -165,7 +165,7 @@ export default function RegisterPage() {
               <div>
                 <label className="mb-2 block font-bold">Gender</label>
 
-                <div className="flex items-center rounded-xl border bg-white px-4">
+                <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Users size={19} className="text-gray-400" />
 
                   <select
@@ -187,7 +187,7 @@ export default function RegisterPage() {
               <div>
                 <label className="mb-2 block font-bold">Password</label>
 
-                <div className="flex items-center rounded-xl border bg-white px-4">
+                <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Lock size={19} className="text-gray-400" />
 
                   <input
@@ -204,18 +204,18 @@ export default function RegisterPage() {
                 </p>
               </div>
 
-              <div className="flex items-start gap-3 rounded-xl bg-[#F1F0FA] p-4">
+              <div className="flex items-start gap-3 rounded-xl bg-tint p-4">
                 <input
                   id="consent"
                   type="checkbox"
                   checked={consent}
                   onChange={(event) => setConsent(event.target.checked)}
                   required
-                  className="mt-1 h-4 w-4 shrink-0 accent-[#1E1D59]"
+                  className="mt-1 h-4 w-4 shrink-0 accent-primary"
                 />
 
                 <label htmlFor="consent" className="text-sm leading-6 text-gray-700">
-                  <span className="mb-1 flex items-center gap-2 font-bold text-[#1E1D59]">
+                  <span className="mb-1 flex items-center gap-2 font-bold text-ink">
                     <ShieldCheck size={16} />
                     Data consent
                   </span>
@@ -227,7 +227,7 @@ export default function RegisterPage() {
                   <Link
                     href="/privacy"
                     target="_blank"
-                    className="font-semibold text-[#632854] underline underline-offset-2"
+                    className="font-semibold text-accent underline underline-offset-2"
                   >
                     Privacy Policy
                   </Link>
@@ -235,7 +235,7 @@ export default function RegisterPage() {
                   <Link
                     href="/terms"
                     target="_blank"
-                    className="font-semibold text-[#632854] underline underline-offset-2"
+                    className="font-semibold text-accent underline underline-offset-2"
                   >
                     Terms and Conditions
                   </Link>
@@ -247,21 +247,21 @@ export default function RegisterPage() {
                 type="button"
                 onClick={handleRegister}
                 disabled={loading}
-                className="w-full rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Creating Account..." : "Create Account"}
               </button>
 
               <p className="text-center text-gray-600">
                 Already have an account?{" "}
-                <Link href="/login" className="font-bold text-[#1E1D59]">
+                <Link href="/login" className="font-bold text-ink">
                   Login here
                 </Link>
               </p>
             </div>
           </div>
 
-          <div className="rounded-3xl bg-[#1E1D59] p-8 text-white">
+          <div className="rounded-3xl bg-primary p-8 text-white">
             <h2 className="text-3xl font-bold">Why create an account?</h2>
 
             <div className="mt-8 space-y-6">

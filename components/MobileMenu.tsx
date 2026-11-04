@@ -88,7 +88,7 @@ export default function MobileMenu({ links, children }: MobileMenuProps) {
             animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
             exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.45, ease }}
-            className="absolute left-0 right-0 top-full flex h-[calc(100dvh-100%)] flex-col overflow-y-auto bg-[#1E1D59] px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4"
+            className="absolute left-0 right-0 top-full flex h-[calc(100dvh-100%)] flex-col overflow-y-auto bg-primary px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-4"
           >
             <ul className="flex flex-col">
               {links.map((link, index) => {
@@ -111,7 +111,7 @@ export default function MobileMenu({ links, children }: MobileMenuProps) {
                     >
                       <span className="flex items-center gap-3">
                         {active && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#F0A8C4]" />
+                          <span className="h-1.5 w-1.5 rounded-full bg-highlight" />
                         )}
                         {link.label}
                       </span>

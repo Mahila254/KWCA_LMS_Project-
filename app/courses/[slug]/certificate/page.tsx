@@ -133,9 +133,9 @@ export default function CertificatePage() {
           <Navbar />
         </div>
 
-        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-[#1E1D59]">
-          <div className="mx-auto max-w-2xl rounded-3xl bg-white p-10 shadow-sm">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F1F0FA] text-[#1E1D59]">
+        <main className="min-h-screen bg-gray-50 px-6 py-24 text-center text-ink">
+          <div className="mx-auto max-w-2xl rounded-3xl bg-surface p-10 shadow-sm">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-tint text-ink">
               <Loader2 className="animate-spin" size={32} />
             </div>
 

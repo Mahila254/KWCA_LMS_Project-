@@ -48,22 +48,22 @@ export default async function PaymentConfirmationPage({
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Pricing
             </Link>
 
             <div className="mt-8 max-w-4xl">
-              <p className="font-bold text-[#1E1D59]">Payment Confirmation</p>
+              <p className="font-bold text-ink">Payment Confirmation</p>
 
               <h1 className="mt-3 text-5xl font-bold">
-                Payment Record <em className="accent text-[#632854]">Created</em>
+                Payment Record <em className="accent text-accent">Created</em>
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">
@@ -76,8 +76,8 @@ export default async function PaymentConfirmationPage({
 
         <section className="mx-auto max-w-5xl px-6 py-12">
           {!payment ? (
-            <div className="rounded-3xl bg-white p-10 text-center shadow-sm">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600">
+            <div className="rounded-3xl bg-surface p-10 text-center shadow-sm">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-700">
                 <AlertCircle size={34} />
               </div>
 
@@ -89,20 +89,20 @@ export default async function PaymentConfirmationPage({
 
               <Link
                 href="/pricing"
-                className="mt-6 inline-flex rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
               >
                 Back to Pricing
               </Link>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+            <div className="overflow-hidden rounded-3xl bg-surface shadow-sm">
               <div
                 className={`p-8 text-white ${
                   payment.status === "PAID"
-                    ? "bg-[#1E1D59]"
+                    ? "bg-primary"
                     : payment.status === "FAILED"
                     ? "bg-red-700"
-                    : "bg-[#1E1D59]"
+                    : "bg-primary"
                 }`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-6">
@@ -185,9 +185,9 @@ export default async function PaymentConfirmationPage({
               </div>
 
               <div className="border-t p-8">
-                <div className="rounded-2xl bg-[#FBEFF4] p-6">
+                <div className="rounded-2xl bg-lilac-soft p-6">
                   <div className="flex gap-3">
-                    <Smartphone className="mt-1 text-[#632854]" size={24} />
+                    <Smartphone className="mt-1 text-accent" size={24} />
 
                     <div>
                       <h3 className="text-xl font-bold">
@@ -227,7 +227,7 @@ export default async function PaymentConfirmationPage({
 
                   <Link
                     href="/profile"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D]"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
                   >
                     <CheckCircle size={18} />
                     View Profile

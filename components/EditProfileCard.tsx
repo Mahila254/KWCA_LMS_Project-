@@ -73,7 +73,7 @@ export default function EditProfileCard({
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
+    <section className="rounded-3xl bg-surface p-6 shadow-sm md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">My Details</h2>
@@ -96,7 +96,7 @@ export default function EditProfileCard({
                 setSaved(false);
                 setEditing(true);
               }}
-              className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-5 py-3 font-bold text-white hover:bg-[#14123D]"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover"
             >
               <Pencil size={16} />
               Edit Details
@@ -141,7 +141,7 @@ export default function EditProfileCard({
                   changed here. To correct it, email{" "}
                   <a
                     href="mailto:complaints@kwcakenya.com"
-                    className="font-bold text-[#632854] underline-offset-2 hover:underline"
+                    className="font-bold text-accent underline-offset-2 hover:underline"
                   >
                     complaints@kwcakenya.com
                   </a>
@@ -162,7 +162,7 @@ export default function EditProfileCard({
               id="profile-gender"
               value={genderInput}
               onChange={(event) => setGenderInput(event.target.value)}
-              className="w-full rounded-xl border bg-white px-4 py-3 outline-none"
+              className="w-full rounded-xl border bg-surface px-4 py-3 outline-none"
             >
               <option value="" disabled>
                 Choose an option
@@ -189,7 +189,7 @@ export default function EditProfileCard({
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex items-center gap-2 rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving && <Loader2 size={18} className="animate-spin" />}
                 {saving ? "Saving..." : "Save Changes"}

@@ -71,8 +71,8 @@ export default function AdminGuard({
   if (!isAdmin) {
     return (
       <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
-        <div className="max-w-md rounded-3xl bg-white p-8 shadow-sm text-center">
-          <h1 className="text-3xl font-bold text-[#1E1D59]">
+        <div className="max-w-md rounded-3xl bg-surface p-8 shadow-sm text-center">
+          <h1 className="text-3xl font-bold text-ink">
             Admin Access Required
           </h1>
 
@@ -82,7 +82,7 @@ export default function AdminGuard({
 
           <Link
             href="/admin/login"
-            className="mt-6 inline-block rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white"
+            className="mt-6 inline-block rounded-full bg-primary px-6 py-3 font-bold text-white"
           >
             Go to Admin Login
           </Link>

@@ -113,19 +113,19 @@ export default async function AdminFeedbackPage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-7xl px-6">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 font-bold text-[#1E1D59]"
+              className="inline-flex items-center gap-2 font-bold text-ink"
             >
               <ArrowLeft size={18} />
               Back to Admin Dashboard
             </Link>
 
             <div className="mt-8">
-              <p className="font-bold text-[#1E1D59]">Course Feedback</p>
+              <p className="font-bold text-ink">Course Feedback</p>
 
               <h1 className="mt-3 text-5xl font-bold">Learner Feedback</h1>
 
@@ -139,8 +139,8 @@ export default async function AdminFeedbackPage() {
 
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-8 grid gap-6 md:grid-cols-3">
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3 text-ink">
                 <MessageSquare size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Total Feedback
@@ -149,8 +149,8 @@ export default async function AdminFeedbackPage() {
               <p className="text-4xl font-bold">{totalFeedback}</p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3 text-[#632854]">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3 text-accent">
                 <Star size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   Average Rating
@@ -161,8 +161,8 @@ export default async function AdminFeedbackPage() {
               </p>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center gap-3 text-[#1E1D59]">
+            <div className="rounded-3xl bg-surface p-6 shadow-sm">
+              <div className="mb-4 flex items-center gap-3 text-ink">
                 <TrendingUp size={28} />
                 <p className="text-sm font-bold text-gray-500">
                   With Written Comments
@@ -173,7 +173,7 @@ export default async function AdminFeedbackPage() {
           </div>
 
           <div className="mb-8 grid gap-8 lg:grid-cols-2">
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <h2 className="text-2xl font-bold">Rating Breakdown</h2>
 
               <div className="mt-6 space-y-3">
@@ -187,12 +187,12 @@ export default async function AdminFeedbackPage() {
                     <div key={stars} className="flex items-center gap-4">
                       <span className="flex w-16 shrink-0 items-center gap-1 font-bold">
                         {stars}
-                        <Star size={16} className="fill-[#632854] text-[#632854]" />
+                        <Star size={16} className="fill-accent text-accent" />
                       </span>
 
                       <div className="h-3 flex-1 rounded-full bg-gray-100">
                         <div
-                          className="h-3 rounded-full bg-[#632854]"
+                          className="h-3 rounded-full bg-secondary"
                           style={{ width: `${percent}%` }}
                         />
                       </div>
@@ -206,7 +206,7 @@ export default async function AdminFeedbackPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-surface p-8 shadow-sm">
               <h2 className="text-2xl font-bold">Average by Course</h2>
 
               {courseAverages.length === 0 ? (
@@ -219,7 +219,7 @@ export default async function AdminFeedbackPage() {
                     <Link
                       key={course.id}
                       href={`/admin/feedback/course/${course.id}`}
-                      className="flex items-center justify-between rounded-2xl border p-4 transition hover:border-[#632854] hover:bg-[#FBEFF4]"
+                      className="flex items-center justify-between rounded-2xl border p-4 transition hover:border-accent hover:bg-lilac-soft"
                     >
                       <div>
                         <p className="font-bold">{course.title}</p>
@@ -230,11 +230,11 @@ export default async function AdminFeedbackPage() {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <span className="flex items-center gap-1 text-lg font-extrabold text-[#632854]">
+                        <span className="flex items-center gap-1 text-lg font-extrabold text-accent">
                           {course.average}
                           <Star
                             size={18}
-                            className="fill-[#632854] text-[#632854]"
+                            className="fill-accent text-accent"
                           />
                         </span>
 
@@ -247,7 +247,7 @@ export default async function AdminFeedbackPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl bg-white p-8 shadow-sm">
+          <div className="rounded-3xl bg-surface p-8 shadow-sm">
             <h2 className="text-3xl font-bold">All Feedback</h2>
 
             {feedback.length === 0 ? (
@@ -289,7 +289,7 @@ export default async function AdminFeedbackPage() {
                               size={18}
                               className={
                                 star <= item.rating
-                                  ? "fill-[#632854] text-[#632854]"
+                                  ? "fill-accent text-accent"
                                   : "fill-transparent text-gray-300"
                               }
                             />

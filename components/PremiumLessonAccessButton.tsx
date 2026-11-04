@@ -72,7 +72,7 @@ export default function PremiumLessonAccessButton({
       type="button"
       onClick={handleAccessPremiumLesson}
       disabled={checking}
-      className="inline-flex items-center gap-2 rounded-full bg-[#F5DCE6] px-4 py-2 text-sm font-bold text-[#632854] hover:bg-[#F0C7D8] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center gap-2 rounded-full bg-lilac-tint px-4 py-2 text-sm font-bold text-accent hover:bg-lilac-tint disabled:cursor-not-allowed disabled:opacity-60"
     >
       {checking ? (
         <>

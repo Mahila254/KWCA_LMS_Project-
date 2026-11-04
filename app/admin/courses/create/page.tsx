@@ -68,10 +68,10 @@ export default function CreateCoursePage() {
     <>
       <AdminNavbar />
 
-      <main className="min-h-screen bg-gray-50 text-[#1E1D59]">
-        <section className="bg-[#F8F4F4] py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-16">
           <div className="mx-auto max-w-5xl px-6">
-            <Link href="/admin/courses" className="font-bold text-[#1E1D59]">
+            <Link href="/admin/courses" className="font-bold text-ink">
               ← Back to Course Management
             </Link>
 
@@ -84,7 +84,7 @@ export default function CreateCoursePage() {
         </section>
 
         <section className="mx-auto max-w-5xl px-6 py-12">
-          <form className="space-y-6 rounded-3xl bg-white p-8 shadow-sm">
+          <form className="space-y-6 rounded-3xl bg-surface p-8 shadow-sm">
             <div>
               <label className="mb-2 block font-bold">Course Title</label>
 
@@ -194,7 +194,7 @@ export default function CreateCoursePage() {
                 type="button"
                 onClick={handleCreateCourse}
                 disabled={saving}
-                className="rounded-full bg-[#1E1D59] px-6 py-3 font-bold text-white hover:bg-[#14123D] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving ? "Creating..." : "Create Course"}
               </button>

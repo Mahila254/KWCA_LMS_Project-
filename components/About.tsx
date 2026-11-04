@@ -3,12 +3,12 @@ import { Award, ShieldCheck, Users } from "lucide-react";
 function InfoItem({ icon: Icon, title, text }: any) {
   return (
     <div className="flex gap-4">
-      <div className="w-12 h-12 rounded-xl bg-[#F5DCE6] text-[#632854] flex items-center justify-center">
+      <div className="w-12 h-12 rounded-xl bg-lilac-tint text-accent flex items-center justify-center">
         <Icon size={24} />
       </div>
 
       <div>
-        <h3 className="font-bold text-lg text-[#1E1D59]">
+        <h3 className="font-bold text-lg text-ink">
           {title}
         </h3>
 
@@ -22,11 +22,11 @@ function InfoItem({ icon: Icon, title, text }: any) {
 
 export default function About() {
   return (
-    <section id="about" className="py-24 px-6 bg-white">
+    <section id="about" className="py-24 px-6 bg-surface">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-14 items-center">
         
         <div>
-          <h2 className="text-4xl font-extrabold mb-6 text-[#1E1D59]">
+          <h2 className="text-4xl font-extrabold mb-6 text-ink">
             Building Stronger Conservancies Across Kenya
           </h2>
 
@@ -56,7 +56,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="rounded-3xl bg-[#F6F5FA] min-h-[420px] flex items-center justify-center shadow-sm">
+        <div className="rounded-3xl bg-tint min-h-[420px] flex items-center justify-center shadow-sm">
           <p className="text-gray-500">
             Image will go here later
           </p>

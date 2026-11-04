@@ -4,7 +4,7 @@ import type { QuestionStatus } from "@/components/quiz/types";
 
 const bubbleStyles: Record<QuestionStatus, string> = {
   unanswered: "bg-gray-200 text-gray-500 hover:bg-gray-300",
-  answered: "bg-[#1E1D59] text-white hover:bg-[#14123D]",
+  answered: "bg-primary text-white hover:bg-primary-hover",
   correct: "bg-green-600 text-white hover:bg-green-700",
   incorrect: "bg-red-600 text-white hover:bg-red-700",
 };
@@ -38,12 +38,12 @@ export default function QuestionNavigator({
   );
 
   return (
-    <aside className="rounded-3xl bg-white p-3.5 shadow-sm sm:p-5 lg:sticky lg:top-24">
+    <aside className="rounded-3xl bg-surface p-3.5 shadow-sm sm:p-5 lg:sticky lg:top-24">
       <div className="mb-2 flex items-baseline justify-between gap-3 sm:mb-3">
         <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-gray-500">
           Questions
         </p>
-        <p className="text-sm font-bold text-[#1E1D59]">
+        <p className="text-sm font-bold text-ink">
           {summary ?? `${answered} / ${statuses.length} answered`}
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function QuestionNavigator({
                   bubbleStyles[status]
                 } ${
                   isCurrent
-                    ? "scale-110 ring-2 ring-[#632854] ring-offset-2"
+                    ? "scale-110 ring-2 ring-accent ring-offset-2"
                     : ""
                 }`}
               >
@@ -93,7 +93,7 @@ export default function QuestionNavigator({
           </>
         ) : (
           <li className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-[#1E1D59]" />
+            <span className="h-3 w-3 rounded-full bg-primary" />
             Answered
           </li>
         )}

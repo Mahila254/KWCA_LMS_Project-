@@ -41,7 +41,7 @@ export default function AdminBackToAdminBar() {
   }
 
   return (
-    <div className="print-hidden bg-[#632854] print:hidden">
+    <div className="print-hidden bg-secondary print:hidden">
       <Link
         href="/admin"
         className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-6 py-2 text-xs font-bold text-white/90 transition hover:text-white sm:justify-start"

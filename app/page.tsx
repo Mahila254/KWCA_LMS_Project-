@@ -289,8 +289,9 @@ export default function Home() {
         </section>
 
         {/* KEY LEARNING TOPICS: the lead module gets a full-width picture card, the rest sit below it (two to a row, three on wide screens) */}
-        <section id="courses" className="bg-gray-50 px-6 py-16 md:py-20">
-          <div className="mx-auto max-w-7xl">
+        <section id="courses" className="bg-gray-50 px-6 py-16 md:px-10 md:py-20">
+          {/* Wider than the other sections, so big screens aren't mostly margin. */}
+          <div className="mx-auto max-w-[1720px]">
             <ScrollReveal className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
               <h2 className="text-4xl font-bold leading-[1.05] md:text-5xl lg:text-6xl">
                 Key Learning
@@ -320,7 +321,7 @@ export default function Home() {
                     {lead ? (
                       <Link
                         href="/courses"
-                        className="group relative flex h-full min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl bg-primary p-6 text-white shadow-sm hover:shadow-xl md:p-10"
+                        className="group relative flex h-full min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl bg-primary p-6 text-white shadow-sm hover:shadow-xl md:p-10 xl:min-h-[500px] xl:p-14"
                       >
                         <img
                           src={item.image}

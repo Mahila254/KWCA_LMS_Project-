@@ -76,9 +76,12 @@ export default async function CoursesPage() {
     0
   );
 
-  const totalQuestions = courses.reduce(
+  // Quizzes, not questions: a course has at most a practice quiz and a
+  // final quiz, each counted once however many questions it holds.
+  const totalQuizzes = courses.reduce(
     (total: number, course: CourseRecord) =>
-      total + course.quizQuestions.length,
+      total +
+      new Set(course.quizQuestions.map((question) => question.quizType)).size,
     0
   );
 
@@ -136,8 +139,8 @@ export default async function CoursesPage() {
 
               <HeroStat
                 icon={<ClipboardList size={28} />}
-                label="Quiz Questions"
-                value={totalQuestions.toString()}
+                label="Quizzes Available"
+                value={totalQuizzes.toString()}
               />
             </div>
           </ScrollReveal>

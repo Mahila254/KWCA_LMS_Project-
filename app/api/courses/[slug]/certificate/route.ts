@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/requireUser";
 import { ensureLearnerRecord } from "@/lib/learnerRecord";
+import { getCourseCertificateDesign } from "@/lib/courseCertificateDesign";
 
 type RouteProps = {
   params: Promise<{
@@ -40,6 +41,9 @@ export async function GET(request: NextRequest, { params }: RouteProps) {
       );
     }
 
+    // Each course has its own savanna scene behind the certificate.
+    const certificateDesign = await getCourseCertificateDesign(course);
+
     const user = await prisma.user.findUnique({
       where: {
         email: verifiedUser.email,
@@ -64,6 +68,7 @@ export async function GET(request: NextRequest, { params }: RouteProps) {
 
     return NextResponse.json({
       course,
+      certificateDesign,
       user,
       certificate,
     });
@@ -100,6 +105,9 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       );
     }
 
+    // Each course has its own savanna scene behind the certificate.
+    const certificateDesign = await getCourseCertificateDesign(course);
+
     const user = await ensureLearnerRecord(verifiedUser);
 
     const passedFinalQuiz = await prisma.quizResult.findFirst({
@@ -134,6 +142,7 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       return NextResponse.json({
         message: "Certificate already exists.",
         course,
+        certificateDesign,
         user,
         certificate: existingCertificate,
       });
@@ -151,6 +160,7 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       {
         message: "Certificate issued successfully.",
         course,
+        certificateDesign,
         user,
         certificate,
       },

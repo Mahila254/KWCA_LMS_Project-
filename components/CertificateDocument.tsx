@@ -5,17 +5,20 @@ import {
   Download,
   Printer,
   ArrowLeft,
-  CheckCircle,
   ShieldCheck,
   BadgeCheck,
   ExternalLink,
 } from "lucide-react";
+import CertificateArt from "@/components/CertificateArt";
+import type { CertificateDesign } from "@/lib/certificateDesigns";
 
 export type CertificateDocumentProps = {
   learnerName: string;
   courseTitle: string;
   certificateCode: string;
   completionDate: string;
+  /** The savanna scene behind the card; each course has its own. */
+  design: CertificateDesign;
   /** Where the back links (hero + actions bar) should point. */
   backHref: string;
   /** Label for the back links, e.g. "Back to Course" or "Back to Certificates". */
@@ -25,15 +28,21 @@ export type CertificateDocumentProps = {
 };
 
 // The certificate visual itself (print stylesheet, hero, action bar,
-// certificate box, and info cards). Kept as a standalone component so the
+// certificate, and info cards). Kept as a standalone component so the
 // learner-facing certificate page and the admin certificate viewer can both
 // render an identical certificate while pointing their "back" links and
 // surrounding navigation at different places.
+//
+// The certificate is drawn at A4 landscape proportions and sized in
+// container units (cqw), so it scales as one piece: on screen at any width,
+// and at exactly 297 x 210 mm when printed. Its colours are fixed rather
+// than theme colours, so it looks the same in dark mode and on paper.
 export default function CertificateDocument({
   learnerName,
   courseTitle,
   certificateCode,
   completionDate,
+  design,
   backHref,
   backLabel,
   showVerifyLink = true,
@@ -73,170 +82,32 @@ export default function CertificateDocument({
 
           main {
             display: block !important;
-            width: 297mm !important;
-            height: 210mm !important;
             min-height: 0 !important;
             margin: 0 !important;
             padding: 0 !important;
-            overflow: hidden !important;
-            background: white !important;
+            animation: none !important;
           }
 
-          .certificate-print-area {
-            display: block !important;
+          .certificate-sheet {
             position: fixed !important;
             inset: 0 !important;
             width: 297mm !important;
             height: 210mm !important;
-            max-width: none !important;
+            min-width: 0 !important;
             margin: 0 !important;
-            padding: 6mm !important;
-            overflow: hidden !important;
-            background: white !important;
-          }
-
-          .certificate-print-area > div {
-            width: 100% !important;
-            height: 100% !important;
-            padding: 0 !important;
-            margin: 0 !important;
+            border-radius: 0 !important;
             box-shadow: none !important;
           }
 
-          .certificate-print-box {
-            width: 100% !important;
-            height: 100% !important;
-            padding: 6mm !important;
-            border-width: 7px !important;
-            border-radius: 0 !important;
-          }
-
-          .certificate-inner-box {
-            width: 100% !important;
-            height: 100% !important;
-            padding: 8mm !important;
-          }
-
-          .certificate-corner {
-            height: 22px !important;
-            width: 22px !important;
-            border-width: 3px !important;
-          }
-
-          .certificate-watermark {
-            width: 115mm !important;
-            height: 115mm !important;
-          }
-
-          .certificate-icon {
-            width: 58px !important;
-            height: 58px !important;
-            margin-bottom: 8px !important;
-          }
-
-          .certificate-icon-logo {
-            height: 32px !important;
-            width: 32px !important;
-          }
-
-          .certificate-kicker {
-            font-size: 9px !important;
-            letter-spacing: 0.32em !important;
-          }
-
-          .certificate-divider {
-            margin-top: 6px !important;
-            gap: 8px !important;
-          }
-
-          .certificate-divider-line {
-            width: 22px !important;
-          }
-
-          .certificate-divider-dot {
-            height: 4px !important;
-            width: 4px !important;
-          }
-
-          .certificate-title {
-            margin-top: 10px !important;
-            font-size: 30px !important;
-            line-height: 1.05 !important;
-          }
-
-          .certificate-presented {
-            margin-top: 10px !important;
-            font-size: 12px !important;
-          }
-
-          .certificate-name {
-            margin-top: 8px !important;
-            padding-bottom: 6px !important;
-            font-size: 34px !important;
-            line-height: 1.05 !important;
-          }
-
-          .certificate-course-label {
-            margin-top: 10px !important;
-            font-size: 12px !important;
-          }
-
-          .certificate-course-title {
-            margin-top: 6px !important;
-            font-size: 21px !important;
-            line-height: 1.12 !important;
-          }
-
-          .certificate-status {
-            margin-top: 10px !important;
-            padding: 7px 12px !important;
-            font-size: 11px !important;
-          }
-
-          .certificate-details {
-            margin-top: 12px !important;
-            gap: 10px !important;
-          }
-
-          .certificate-details p {
-            font-size: 10px !important;
-          }
-
-          .certificate-seal {
-            margin-top: 10px !important;
-            gap: 3px !important;
-          }
-
-          .certificate-seal > div {
-            height: 42px !important;
-            width: 42px !important;
-          }
-
-          .certificate-seal p {
-            font-size: 7px !important;
-            letter-spacing: 0.18em !important;
-          }
-
-          .certificate-signatures {
-            margin-top: 14px !important;
-            gap: 18px !important;
-          }
-
-          .certificate-signatures div div {
-            width: 165px !important;
-          }
-
-          .certificate-signatures p {
-            font-size: 11px !important;
-          }
-
-          .certificate-note {
-            display: none !important;
+          .certificate-sheet,
+          .certificate-sheet * {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
           }
         }
       `}</style>
 
-      <main className="min-h-screen bg-gray-50 text-ink print:min-h-0 print:bg-surface">
+      <main className="min-h-screen bg-gray-50 text-ink print:min-h-0 print:bg-white">
         <section className="certificate-page-hero relative overflow-hidden px-6 py-14 print:hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -249,9 +120,6 @@ export default function CertificateDocument({
 
           <div className="absolute inset-0 bg-gradient-to-b from-tint/90 via-surface/85 to-gray-50" />
 
-          <div className="absolute left-10 top-20 h-40 w-40 rounded-full bg-deep/20 blur-3xl" />
-          <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-secondary/20 blur-3xl" />
-
           <div className="relative mx-auto max-w-6xl">
             <Link
               href={backHref}
@@ -263,11 +131,7 @@ export default function CertificateDocument({
 
             <div className="mt-8 max-w-4xl">
               <span className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-extrabold text-ink shadow-sm">
-                <img
-                  src="/logo.png"
-                  alt=""
-                  className="h-4 w-4 rounded-full object-contain"
-                />
+                <BadgeCheck size={16} className="text-accent" />
                 KWCA LMS Certificate
               </span>
 
@@ -284,7 +148,7 @@ export default function CertificateDocument({
         </section>
 
         <section className="certificate-actions mx-auto max-w-6xl px-6 py-10 print:hidden">
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <Link
               href={backHref}
               className="inline-flex items-center gap-2 rounded-xl border bg-surface px-6 py-3 font-bold hover:bg-gray-50"
@@ -325,124 +189,87 @@ export default function CertificateDocument({
           </div>
         </section>
 
-        <section className="certificate-print-area mx-auto max-w-6xl px-6 pb-12 print:px-0 print:py-0">
-          <div className="rounded-3xl bg-surface p-6 shadow-sm print:rounded-none print:p-0 print:shadow-none">
-            <div className="certificate-print-box relative overflow-hidden rounded-[2rem] border-[10px] border-primary bg-surface p-8 shadow-[inset_0_0_0_4px_rgba(176,141,87,0.5)] print:rounded-none">
-              <div className="absolute left-0 top-0 h-40 w-40 rounded-br-full bg-tint" />
-              <div className="absolute bottom-0 right-0 h-40 w-40 rounded-tl-full bg-lilac-soft" />
+        <section className="certificate-print-area mx-auto max-w-6xl px-6 pb-12 print:p-0">
+          {/* Phones scroll sideways rather than shrink the text to nothing. */}
+          <div className="overflow-x-auto pb-2 print:overflow-visible print:pb-0">
+            <article
+              aria-label={`Certificate of completion: ${courseTitle}, awarded to ${learnerName}`}
+              className="certificate-sheet @container relative mx-auto aspect-[297/210] min-w-[640px] overflow-hidden rounded-2xl bg-[#fbf3e4] shadow-xl"
+            >
+              <CertificateArt design={design} />
 
-              <div className="certificate-inner-box relative border-2 border-accent px-8 py-14 text-center">
-                <span className="certificate-corner absolute left-3 top-3 h-9 w-9 rounded-tl-2xl border-l-4 border-t-4 border-warm/70 md:left-5 md:top-5" />
-                <span className="certificate-corner absolute right-3 top-3 h-9 w-9 rounded-tr-2xl border-r-4 border-t-4 border-warm/70 md:right-5 md:top-5" />
-                <span className="certificate-corner absolute bottom-3 left-3 h-9 w-9 rounded-bl-2xl border-b-4 border-l-4 border-warm/70 md:bottom-5 md:left-5" />
-                <span className="certificate-corner absolute bottom-3 right-3 h-9 w-9 rounded-br-2xl border-b-4 border-r-4 border-warm/70 md:bottom-5 md:right-5" />
-
-                <img
-                  src="/logo.png"
-                  alt=""
+              <div className="absolute inset-x-[13%] inset-y-[8.5%] flex flex-col items-center justify-center rounded-[2.2cqw] bg-[#fffcf6] px-[6cqw] text-center text-[#2a1810] shadow-[0_0.6cqw_2.4cqw_rgba(31,21,16,0.28)]">
+                <span
                   aria-hidden="true"
-                  className="certificate-watermark pointer-events-none absolute inset-0 -z-10 m-auto h-72 w-72 object-contain opacity-[0.05] grayscale print:opacity-[0.07]"
+                  className="pointer-events-none absolute inset-[1cqw] rounded-[1.5cqw] border border-[#c9923f]/45"
                 />
 
-                <div className="certificate-icon relative mx-auto mb-8 flex h-28 w-28 items-center justify-center">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-deep via-secondary to-secondary-hover shadow-lg" />
-                  <div className="absolute inset-[3px] rounded-full border-2 border-dashed border-warm/70" />
-                  <div className="absolute inset-[9px] flex items-center justify-center overflow-hidden rounded-full bg-surface">
-                    <img
-                      src="/logo.png"
-                      alt="KWCA Logo"
-                      className="certificate-icon-logo h-16 w-16 object-contain"
-                    />
-                  </div>
-                </div>
-
-                <p className="certificate-kicker tracking-[0.45em] text-sm font-extrabold text-lilac-text">
-                  KWCA LEARNING HUB
+                <p className="text-[1.25cqw] font-extrabold uppercase tracking-[0.34em]">
+                  Certificate of Completion
                 </p>
 
-                <div className="certificate-divider mx-auto mt-4 flex items-center justify-center gap-3">
-                  <span className="certificate-divider-line h-px w-10 bg-warm" />
-                  <span className="certificate-divider-dot h-1.5 w-1.5 rotate-45 bg-warm" />
-                  <span className="certificate-divider-line h-px w-10 bg-warm" />
-                </div>
-
-                <h2 className="certificate-title mt-8 text-5xl font-extrabold text-ink">
-                  Certificate of Completion
+                <h2 className="mt-[1.4cqw] max-w-[58cqw] text-balance font-serif text-[4.6cqw] leading-[1.02]">
+                  {courseTitle}
                 </h2>
 
-                <p className="certificate-presented mt-8 text-lg text-gray-600">
-                  This certificate is proudly presented to
+                <p className="mt-[1.8cqw] text-[1.45cqw] tracking-wide text-[#4a3326]">
+                  This certificate of completion is awarded to
                 </p>
 
-                <h3 className="certificate-name mx-auto mt-6 max-w-4xl border-b-2 border-primary/20 pb-4 text-5xl font-extrabold text-ink">
+                <p className="mt-[1.6cqw] font-serif text-[3.7cqw] leading-none text-[#1f1510]">
                   {learnerName}
-                </h3>
-
-                <p className="certificate-course-label mx-auto mt-8 max-w-3xl text-lg leading-8 text-gray-600">
-                  For successfully completing the course
                 </p>
 
-                <h4 className="certificate-course-title mx-auto mt-4 max-w-4xl text-3xl font-extrabold text-ink">
-                  {courseTitle}
-                </h4>
+                <p className="mt-[1.6cqw] text-[1.5cqw] tracking-wide text-[#4a3326]">
+                  by the KWCA Conservancies Learning Hub
+                </p>
 
-                <div className="certificate-status mx-auto mt-8 flex max-w-xl items-center justify-center gap-3 rounded-2xl border border-warm/30 bg-tint px-6 py-4 text-ink">
-                  <CheckCircle size={24} />
-
-                  <p className="font-bold">
-                    Final quiz completed and passed successfully
-                  </p>
+                <div
+                  aria-hidden="true"
+                  className="mt-[1.4cqw] flex items-center gap-[0.5cqw]"
+                >
+                  {[0.7, 0.7, 2.4, 0.7, 0.7].map((width, i) => (
+                    <span
+                      key={i}
+                      className="h-[0.16cqw] bg-[#a7462a]"
+                      style={{ width: `${width}cqw` }}
+                    />
+                  ))}
                 </div>
 
-                <div className="certificate-details mx-auto mt-12 grid max-w-4xl gap-8 md:grid-cols-3">
-                  <CertificateDetail
-                    label="Date Issued"
-                    value={completionDate}
+                <p className="mt-[1.4cqw] text-[1.35cqw] text-[#4a3326]">
+                  Issued on this day,
+                </p>
+
+                <p className="mt-[0.5cqw] text-[1.2cqw] font-semibold">
+                  {completionDate}
+                </p>
+
+                <div className="mt-[2.2cqw] flex items-center gap-[2.6cqw]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo.png"
+                    alt="Kenya Wildlife Conservancies Foundation"
+                    className="h-[4.4cqw] w-auto"
                   />
-
-                  <CertificateDetail
-                    label="Certificate ID"
-                    value={certificateCode}
+                  <span
+                    aria-hidden="true"
+                    className="h-[4cqw] w-px bg-[#c9923f]/60"
                   />
-
-                  <CertificateDetail
-                    label="Issued By"
-                    value="KWCA Learning Hub"
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/kwca-logo.png"
+                    alt="Kenya Wildlife Conservancies Association"
+                    className="h-[5.2cqw] w-auto"
                   />
                 </div>
 
-                <div className="certificate-seal mx-auto mt-12 flex flex-col items-center gap-2">
-                  <div className="relative flex h-20 w-20 items-center justify-center">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-warm via-warm-light to-warm-deep shadow-md" />
-                    <div className="absolute inset-[4px] rounded-full border-2 border-dashed border-white/80" />
-                    <div className="absolute inset-[10px] flex items-center justify-center rounded-full bg-surface">
-                      <BadgeCheck size={26} className="text-ink" />
-                    </div>
-                  </div>
-
-                  <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-warm-text">
-                    Official KWCA Seal
-                  </p>
-                </div>
-
-                <div className="certificate-signatures mx-auto mt-16 grid max-w-4xl gap-12 md:grid-cols-2">
-                  <div>
-                    <div className="mx-auto h-px w-64 bg-warm" />
-                    <p className="mt-3 font-bold">Course Coordinator</p>
-                  </div>
-
-                  <div>
-                    <div className="mx-auto h-px w-64 bg-warm" />
-                    <p className="mt-3 font-bold">KWCA Representative</p>
-                  </div>
-                </div>
-
-                <div className="certificate-note mx-auto mt-12 max-w-3xl rounded-2xl bg-gray-50 p-5 text-sm leading-7 text-gray-600 print:bg-surface">
-                  This certificate can be verified using the Certificate ID
-                  above through the KWCA LMS certificate verification page.
-                </div>
+                <p className="absolute bottom-[2cqw] left-0 right-0 text-[0.85cqw] tracking-wide text-[#7a5a48]">
+                  Certificate ID {certificateCode} · Verify it with this ID on
+                  the KWCA Learning Hub website
+                </p>
               </div>
-            </div>
+            </article>
           </div>
         </section>
 
@@ -469,22 +296,6 @@ export default function CertificateDocument({
         </section>
       </main>
     </>
-  );
-}
-
-function CertificateDetail({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div>
-      <p className="text-sm font-bold text-gray-500">{label}</p>
-
-      <p className="mt-2 break-words font-extrabold">{value}</p>
-    </div>
   );
 }
 

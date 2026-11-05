@@ -8,6 +8,10 @@ import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 import { Loader2 } from "lucide-react";
 import CertificateDocument from "@/components/CertificateDocument";
+import {
+  CERTIFICATE_DESIGNS,
+  type CertificateDesign,
+} from "@/lib/certificateDesigns";
 
 type Course = {
   title: string;
@@ -32,6 +36,9 @@ export default function CertificatePage() {
   const courseSlug = params.slug;
 
   const [course, setCourse] = useState<Course | null>(null);
+  const [design, setDesign] = useState<CertificateDesign>(
+    CERTIFICATE_DESIGNS[0]
+  );
   const [user, setUser] = useState<User | null>(null);
   const [certificate, setCertificate] = useState<Certificate | null>(null);
   const [loading, setLoading] = useState(true);
@@ -60,6 +67,7 @@ export default function CertificatePage() {
 
       if (checkResponse.ok && checkData.certificate) {
         setCourse(checkData.course);
+        setDesign(checkData.certificateDesign ?? CERTIFICATE_DESIGNS[0]);
         setUser(checkData.user);
         setCertificate(checkData.certificate);
         return;
@@ -93,6 +101,7 @@ export default function CertificatePage() {
       }
 
       setCourse(issueData.course);
+      setDesign(issueData.certificateDesign ?? CERTIFICATE_DESIGNS[0]);
       setUser(issueData.user);
       setCertificate(issueData.certificate);
     } catch (error) {
@@ -167,6 +176,7 @@ export default function CertificatePage() {
         courseTitle={course?.title || "Course Title"}
         certificateCode={certificateCode}
         completionDate={completionDate}
+        design={design}
         backHref={`/courses/${courseSlug}`}
         backLabel="Back to Course"
       />

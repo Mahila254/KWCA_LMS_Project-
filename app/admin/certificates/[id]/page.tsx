@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { isAdminRequest } from "@/lib/isAdminRequest";
 import CertificateDocument from "@/components/CertificateDocument";
+import { getCourseCertificateDesign } from "@/lib/courseCertificateDesign";
 import { ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -48,6 +49,7 @@ export default async function AdminCertificateViewPage({
         select: {
           title: true,
           slug: true,
+          createdAt: true,
         },
       },
     },
@@ -56,6 +58,8 @@ export default async function AdminCertificateViewPage({
   if (!certificate) {
     notFound();
   }
+
+  const design = await getCourseCertificateDesign(certificate.course);
 
   const learnerName =
     certificate.user.name || certificate.user.email || "Learner Name";
@@ -92,6 +96,7 @@ export default async function AdminCertificateViewPage({
         courseTitle={certificate.course.title}
         certificateCode={certificate.certificateCode}
         completionDate={completionDate}
+        design={design}
         backHref="/admin/certificates"
         backLabel="Back to Certificates"
       />

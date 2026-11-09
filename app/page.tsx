@@ -97,14 +97,6 @@ export default function Home() {
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-deep/45 via-deep/10 to-transparent" />
 
           <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-end px-6 pb-10 pt-24 md:pb-14">
-            <span
-              className="mb-6 inline-flex w-fit animate-fade items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-white/90 backdrop-blur-md"
-              style={{ animationDelay: "100ms" }}
-            >
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-highlight" />
-              KWCF Learning Platform
-            </span>
-
             <div className="grid items-end gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
               <h1
                 className="text-5xl font-bold leading-[0.98] text-white sm:text-6xl md:text-7xl xl:text-8xl"

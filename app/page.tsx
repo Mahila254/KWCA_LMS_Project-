@@ -150,22 +150,31 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Stats ride along the bottom of the hero */}
-            <div
-              className="mt-10 grid animate-rise grid-cols-3 divide-x divide-white/15 rounded-3xl border border-white/15 bg-deep/35 py-5 text-white backdrop-blur-md md:mt-12"
+            {/* Stats ride along the bottom of the hero: no box, just large
+                serif numerals under a hairline, like an editorial caption. */}
+            <dl
+              className="mt-10 grid animate-rise grid-cols-3 gap-4 text-white sm:gap-8 md:mt-12"
               style={{ animationDelay: "650ms" }}
             >
-              {stats.map((stat) => (
-                <div key={stat.label} className="px-3 text-center sm:px-6">
-                  <p className="text-3xl font-bold tracking-tight md:text-5xl">
-                    {stat.value}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold text-white/70 sm:text-sm">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
+              {stats.map((stat) => {
+                const plus = stat.value.endsWith("+");
+
+                return (
+                  <div
+                    key={stat.label}
+                    className="flex flex-col-reverse items-center border-t border-white/40 pt-3 text-center md:pt-4"
+                  >
+                    <dt className="mt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/80 sm:text-xs">
+                      {stat.label}
+                    </dt>
+                    <dd className="font-serif text-4xl leading-none [text-shadow:0_1px_12px_rgb(0_0_0/0.25)] md:text-6xl">
+                      {plus ? stat.value.slice(0, -1) : stat.value}
+                      {plus && <span className="text-highlight">+</span>}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
           </div>
 
           <a

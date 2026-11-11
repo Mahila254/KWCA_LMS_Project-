@@ -1,15 +1,19 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   Bold,
   Eye,
   Heading2,
   ImagePlus,
+  Italic,
+  Link2,
   List,
   ListOrdered,
   Loader2,
   PenLine,
+  Underline,
+  X,
 } from "lucide-react";
 import FormattedText from "@/components/FormattedText";
 import { uploadAdminImage } from "@/lib/uploadImage";
@@ -65,6 +69,23 @@ export default function FormattedTextEditor({
     onChange?.(next);
   }
 
+  // Where to put the cursor (or selection) once the new text is on screen.
+  // Setting it any earlier is undone when React writes the new value.
+  const pendingSelection = useRef<[number, number] | null>(null);
+
+  function selectAfterUpdate(from: number, to = from) {
+    pendingSelection.current = [from, to];
+  }
+
+  useLayoutEffect(() => {
+    const textarea = textareaRef.current;
+    const selection = pendingSelection.current;
+    if (!textarea || !selection) return;
+    pendingSelection.current = null;
+    textarea.focus();
+    textarea.setSelectionRange(selection[0], selection[1]);
+  }, [value]);
+
   const [mode, setMode] = useState<"write" | "preview">("write");
   const [uploading, setUploading] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -84,11 +105,80 @@ export default function FormattedTextEditor({
 
     setValue(nextValue);
 
-    requestAnimationFrame(() => {
-      textarea.focus();
-      const cursor = selectionStart + inserted.length;
-      textarea.setSelectionRange(cursor, cursor);
+    selectAfterUpdate(selectionStart + inserted.length);
+  }
+
+  // Wrap the selection in markers (** for bold, * italic, ++ underline),
+  // keeping the words selected so another style can go on top. If the
+  // selection is already wrapped in those markers, take them off instead.
+  function toggleWrap(marker: string, placeholderText: string) {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const { selectionStart: start, selectionEnd: end } = textarea;
+    const before = value.slice(start - marker.length, start);
+    const after = value.slice(end, end + marker.length);
+
+    let nextValue: string;
+    let selectFrom: number;
+    let selectTo: number;
+
+    if (start !== end && before === marker && after === marker) {
+      nextValue =
+        value.slice(0, start - marker.length) +
+        value.slice(start, end) +
+        value.slice(end + marker.length);
+      selectFrom = start - marker.length;
+      selectTo = end - marker.length;
+    } else {
+      const inner = value.slice(start, end) || placeholderText;
+      nextValue = value.slice(0, start) + marker + inner + marker + value.slice(end);
+      selectFrom = start + marker.length;
+      selectTo = selectFrom + inner.length;
+    }
+
+    setValue(nextValue);
+
+    selectAfterUpdate(selectFrom, selectTo);
+  }
+
+  // The link box remembers which words were selected when it opened.
+  const [linkDraft, setLinkDraft] = useState<{
+    start: number;
+    end: number;
+    url: string;
+    error?: string;
+  } | null>(null);
+
+  function openLinkBox() {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    setLinkDraft({
+      start: textarea.selectionStart,
+      end: textarea.selectionEnd,
+      url: "",
     });
+  }
+
+  function applyLink() {
+    if (!linkDraft) return;
+
+    let url = linkDraft.url.trim();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(url)) url = `mailto:${url}`;
+    else if (url && !/^(https?:\/\/|mailto:)/i.test(url)) url = `https://${url}`;
+
+    if (!/^(https?:\/\/[^\s.]+\.[^\s]+|mailto:[^\s@]+@[^\s@]+\.[^\s@]+)$/i.test(url)) {
+      setLinkDraft({ ...linkDraft, error: "Enter a web address like kwcakenya.com, or an email address." });
+      return;
+    }
+
+    const { start, end } = linkDraft;
+    const words = value.slice(start, end) || url.replace(/^mailto:/i, "");
+    const inserted = `[${words}](${url})`;
+    setValue(value.slice(0, start) + inserted + value.slice(end));
+    setLinkDraft(null);
+
+    selectAfterUpdate(start + inserted.length);
   }
 
   // Add a prefix ("- ", "1. ", "## ") to every line the selection touches.
@@ -108,15 +198,28 @@ export default function FormattedTextEditor({
     const nextValue = value.slice(0, lineStart) + updated + value.slice(lineEnd);
     setValue(nextValue);
 
-    requestAnimationFrame(() => {
-      textarea.focus();
-      textarea.setSelectionRange(lineStart, lineStart + updated.length);
-    });
+    selectAfterUpdate(lineStart, lineStart + updated.length);
   }
 
   // Pressing Enter on a bullet/numbered line starts the next item; Enter
   // on an empty item ends the list.
   function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    // Ctrl+B / I / U / K (Cmd on a Mac), like a word processor.
+    if ((event.ctrlKey || event.metaKey) && !event.altKey) {
+      const shortcut = {
+        b: () => toggleWrap("**", "bold text"),
+        i: () => toggleWrap("*", "italic text"),
+        u: () => toggleWrap("++", "underlined text"),
+        k: openLinkBox,
+      }[event.key.toLowerCase()];
+
+      if (shortcut) {
+        event.preventDefault();
+        shortcut();
+      }
+      return;
+    }
+
     if (event.key !== "Enter" || event.shiftKey) return;
 
     const textarea = event.currentTarget;
@@ -132,7 +235,7 @@ export default function FormattedTextEditor({
       // Empty item: remove the marker instead of adding another one.
       const nextValue = value.slice(0, lineStart) + value.slice(textarea.selectionStart);
       setValue(nextValue);
-      requestAnimationFrame(() => textarea.setSelectionRange(lineStart, lineStart));
+      selectAfterUpdate(lineStart);
       return;
     }
 
@@ -212,14 +315,30 @@ export default function FormattedTextEditor({
               <Heading2 size={16} />
               <span className="hidden sm:inline">Heading</span>
             </button>
-            <button
-              type="button"
-              className={toolbarButton}
-              onClick={() => replaceSelection((selected) => `**${selected || "bold text"}**`)}
-              title="Bold"
-            >
+
+            <span className="mx-1 h-5 w-px bg-gray-200" />
+
+            <button type="button" className={toolbarButton} onClick={() => toggleWrap("**", "bold text")} title="Bold (Ctrl+B)">
               <Bold size={16} />
               <span className="hidden sm:inline">Bold</span>
+            </button>
+            <button type="button" className={toolbarButton} onClick={() => toggleWrap("*", "italic text")} title="Italic (Ctrl+I)">
+              <Italic size={16} />
+              <span className="hidden sm:inline">Italic</span>
+            </button>
+            <button type="button" className={toolbarButton} onClick={() => toggleWrap("++", "underlined text")} title="Underline (Ctrl+U)">
+              <Underline size={16} />
+              <span className="hidden sm:inline">Underline</span>
+            </button>
+            <button
+              type="button"
+              className={`${toolbarButton} ${linkDraft ? "bg-surface text-ink" : ""}`}
+              onClick={() => (linkDraft ? setLinkDraft(null) : openLinkBox())}
+              aria-expanded={linkDraft !== null}
+              title="Link selected words (Ctrl+K)"
+            >
+              <Link2 size={16} />
+              <span className="hidden sm:inline">Link</span>
             </button>
 
             <span className="mx-1 h-5 w-px bg-gray-200" />
@@ -246,6 +365,63 @@ export default function FormattedTextEditor({
                 event.target.value = "";
               }}
             />
+          </div>
+        )}
+
+        {mode === "write" && linkDraft && (
+          <div className="border-b bg-gray-50 px-3 py-2.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-semibold text-gray-600">
+                {linkDraft.start === linkDraft.end
+                  ? "Link to"
+                  : `Link "${value.slice(linkDraft.start, linkDraft.end).slice(0, 40)}${linkDraft.end - linkDraft.start > 40 ? "…" : ""}" to`}
+              </span>
+              {/* No name: this box isn't part of the form, and Enter adds
+                  the link rather than saving the lesson. */}
+              <input
+                type="text"
+                inputMode="url"
+                autoFocus
+                value={linkDraft.url}
+                onChange={(event) =>
+                  setLinkDraft({ ...linkDraft, url: event.target.value, error: undefined })
+                }
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    applyLink();
+                  } else if (event.key === "Escape") {
+                    setLinkDraft(null);
+                    textareaRef.current?.focus();
+                  }
+                }}
+                placeholder="https://kwcakenya.com or name@email.com"
+                aria-label="Link address"
+                aria-invalid={Boolean(linkDraft.error)}
+                className="min-w-0 flex-1 rounded-lg border bg-surface px-3 py-1.5 text-sm outline-none focus:border-primary"
+              />
+              <button
+                type="button"
+                onClick={applyLink}
+                className="rounded-full bg-primary px-4 py-1.5 text-sm font-bold text-white hover:bg-primary-hover"
+              >
+                Add link
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLinkDraft(null);
+                  textareaRef.current?.focus();
+                }}
+                aria-label="Cancel link"
+                className="rounded-full p-1.5 text-gray-500 hover:bg-surface hover:text-ink"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            {linkDraft.error && (
+              <p className="mt-1.5 text-sm font-semibold text-red-700">{linkDraft.error}</p>
+            )}
           </div>
         )}
 
@@ -305,8 +481,9 @@ export default function FormattedTextEditor({
           Start a line with <code className="rounded bg-gray-100 px-1">-</code> for a
           bullet, <code className="rounded bg-gray-100 px-1">1.</code> for a numbered
           list or <code className="rounded bg-gray-100 px-1">##</code> for a heading.
-          Paste or drag a screenshot straight into the box. Learners see it
-          exactly like the Preview.
+          Select words and use Bold, Italic, Underline or Link (Ctrl+B, I, U,
+          K). Paste or drag a screenshot straight into the box. Learners see
+          it exactly like the Preview.
         </p>
       )}
     </div>

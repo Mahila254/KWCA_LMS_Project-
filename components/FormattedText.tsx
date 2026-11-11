@@ -9,7 +9,10 @@ import { Fragment, type ReactNode } from "react";
  *   1. item  /  1) item            numbered list
  *   ## Heading  /  ### Heading     headings
  *   **bold**                       bold text
- *   [text](https://...)            link (bare https:// links work too)
+ *   *italic*                       italic text
+ *   ++underline++                  underlined text
+ *   [text](https://...)            link (bare https:// links work too;
+ *                                  mailto: for email)
  *   ![caption](https://...)        image / screenshot on its own line
  *
  * A blank line starts a new paragraph; a single line break stays a line
@@ -27,6 +30,7 @@ const legacyHeadings = [
   "practical example",
   "summary",
   "key takeaway",
+  "key takeaways",
   "reflection",
   "activity",
 ];
@@ -128,37 +132,48 @@ function parseBlocks(source: string): Block[] {
   return blocks;
 }
 
-// **bold**, [text](url) and bare https:// links.
+// [text](url), **bold**, ++underline++, *italic* and bare https:// links.
+// They can sit inside each other: [**bold link**](url), ++*both*++.
+// Links only go to web pages or email (https://, http://, mailto:).
 const inlinePattern =
-  /(\*\*([^*]+)\*\*)|(\[([^\]]+)\]\((https?:\/\/[^\s)]+)\))|(https?:\/\/[^\s<]+[^\s<.,;:!?)\]'"])/g;
+  /(\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^\s)]+)\))|(\*\*(.+?)\*\*)|(\+\+(.+?)\+\+)|((?<![*\w])\*(?![\s*])(.+?)(?<![\s*])\*(?![*\w]))|(https?:\/\/[^\s<]+[^\s<.,;:!?)\]'"])/g;
 
-function renderInline(text: string): ReactNode[] {
+function renderInline(text: string, keyPrefix = ""): ReactNode[] {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
 
   for (const match of text.matchAll(inlinePattern)) {
     const index = match.index ?? 0;
+    const key = `${keyPrefix}${index}`;
     if (index > lastIndex) parts.push(text.slice(lastIndex, index));
 
-    if (match[1]) {
-      parts.push(
-        <strong key={index} className="font-bold text-ink">
-          {match[2]}
-        </strong>
-      );
-    } else {
-      const href = match[5] ?? match[6];
+    if (match[1] || match[10]) {
+      const href = match[3] ?? match[10];
       parts.push(
         <a
-          key={index}
+          key={key}
           href={href}
           target="_blank"
           rel="noopener noreferrer"
           className="font-semibold text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent"
         >
-          {match[4] ?? href}
+          {match[2] ? renderInline(match[2], `${key}-`) : href}
         </a>
       );
+    } else if (match[4]) {
+      parts.push(
+        <strong key={key} className="font-bold text-ink">
+          {renderInline(match[5], `${key}-`)}
+        </strong>
+      );
+    } else if (match[6]) {
+      parts.push(
+        <u key={key} className="underline decoration-1 underline-offset-4">
+          {renderInline(match[7], `${key}-`)}
+        </u>
+      );
+    } else {
+      parts.push(<em key={key}>{renderInline(match[9], `${key}-`)}</em>);
     }
 
     lastIndex = index + match[0].length;
@@ -232,8 +247,10 @@ export function toPlainText(text: string) {
       .replace(imagePattern, "")
       .replace(/^#{1,3}\s+/, "")
       .replace(/^(?:[-*+•◦▪▫‣–●○■□➢➤✓✔]|\d{1,3}[.)])\s+/, "")
-      .replace(/\*\*([^*]+)\*\*/g, "$1")
-      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, "$1");
+      .replace(/\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^\s)]+)\)/g, "$1")
+      .replace(/\*\*(.+?)\*\*/g, "$1")
+      .replace(/\+\+(.+?)\+\+/g, "$1")
+      .replace(/(?<![*\w])\*(?![\s*])(.+?)(?<![\s*])\*(?![*\w])/g, "$1");
 
     if (!line) continue;
 

@@ -104,7 +104,7 @@ export function LessonNotes({
           <div className="mb-4 flex items-center gap-3">
             <ShieldCheck className="text-ink" size={24} />
 
-            <h3 className="text-xl font-bold">Key Takeaway</h3>
+            <h3 className="text-xl font-bold">Key Takeaways</h3>
           </div>
 
           <FormattedText text={notes} />

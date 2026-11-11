@@ -294,14 +294,14 @@ export default async function EditLessonPage({ params }: PageProps) {
 
               <FormattedTextEditor
                 name="content"
-                label="Lesson Content"
+                label="Lesson Notes"
                 rows={12}
                 defaultValue={lesson.content || ""}
               />
 
               <FormattedTextEditor
                 name="notes"
-                label="Lesson Notes"
+                label="Key Takeaways"
                 rows={6}
                 defaultValue={lesson.notes || ""}
               />

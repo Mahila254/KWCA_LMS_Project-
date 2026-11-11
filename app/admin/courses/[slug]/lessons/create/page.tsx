@@ -267,16 +267,16 @@ export default async function CreateLessonPage({ params }: PageProps) {
 
               <FormattedTextEditor
                 name="content"
-                label="Lesson Content"
+                label="Lesson Notes"
                 rows={12}
-                placeholder="Add lesson objective, key notes, important ideas, and practical examples."
+                placeholder="The main lesson text learners read under Lesson Notes: objective, key ideas and practical examples."
               />
 
               <FormattedTextEditor
                 name="notes"
-                label="Lesson Notes"
+                label="Key Takeaways"
                 rows={6}
-                placeholder="Add short takeaway notes or summary points."
+                placeholder="Short points learners should remember, shown in the Key Takeaways box."
               />
             </div>
 

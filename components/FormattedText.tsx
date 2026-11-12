@@ -267,12 +267,18 @@ function renderList(items: ListItem[], start: number, level: number): [ReactNode
  * bold stars and link syntax are removed, and list items are joined
  * with "; " so they still read as separate points. Pair with line-clamp.
  */
-export function toPlainText(text: string) {
+export function toPlainText(
+  text: string,
+  // Leave out headings, for a summary that starts with the actual text
+  // ("Definition. Under Kenya's...") rather than "Lesson 1: ...".
+  { skipHeadings = false }: { skipHeadings?: boolean } = {}
+) {
   let plain = "";
 
   for (const rawLine of text.replace(/\r\n?/g, "\n").split("\n")) {
     const rawTrimmed = rawLine.trim();
     if (tableDividerPattern.test(rawTrimmed)) continue;
+    if (skipHeadings && headingPattern.test(rawTrimmed)) continue;
     // A table row reads as its cells, comma separated.
     const trimmed = tableRowPattern.test(rawTrimmed)
       ? tableCells(rawTrimmed).filter(Boolean).join(", ")
@@ -299,6 +305,18 @@ export function toPlainText(text: string) {
   }
 
   return plain;
+}
+
+/**
+ * A short plain-text summary for lesson and course cards: no formatting
+ * marks or headings, cut at a word near `maxLength`. Only this much goes
+ * into the page, so a card never carries a whole (possibly premium) lesson.
+ */
+export function toSummary(text: string, maxLength = 220) {
+  const plain = toPlainText(text, { skipHeadings: true }) || toPlainText(text);
+  if (plain.length <= maxLength) return plain;
+  const cut = plain.slice(0, maxLength);
+  return `${cut.slice(0, cut.lastIndexOf(" ") > 0 ? cut.lastIndexOf(" ") : maxLength).replace(/[\s,;:.–-]+$/, "")}…`;
 }
 
 export default function FormattedText({

@@ -10,7 +10,7 @@ import CourseLearnerStats from "@/components/CourseLearnerStats";
 import CourseContinueLink from "@/components/CourseContinueLink";
 import PremiumLessonAccessButton from "@/components/PremiumLessonAccessButton";
 import ScrollReveal from "@/components/ScrollReveal";
-import FormattedText from "@/components/FormattedText";
+import FormattedText, { toSummary } from "@/components/FormattedText";
 import { parseObjectives } from "@/lib/objectives";
 import {
   ArrowLeft,
@@ -394,10 +394,16 @@ export default async function CourseDetailsPage({
               value={course.lessons.length.toString()}
             />
 
+            {/* What the course builds up to, rather than a question count. */}
             <CourseStat
-              icon={<ClipboardList size={28} />}
-              label="Quiz Questions"
-              value={course.quizQuestions.length.toString()}
+              icon={<GraduationCap size={28} />}
+              label="At the End"
+              value="Final Quiz"
+              note={
+                finalQuestions > 0
+                  ? "Pass it to earn your certificate."
+                  : "Being prepared. Pass it to earn your certificate."
+              }
             />
 
             {/* Totals across all learners are for admins only; a learner
@@ -577,7 +583,7 @@ export default async function CourseDetailsPage({
                     return (
                       <div
                         key={lesson.id}
-                        className="grid grid-cols-[auto_1fr] gap-4 rounded-2xl border p-5 transition hover:border-primary hover:bg-gray-50 md:grid-cols-[70px_1fr_auto] md:gap-5"
+                        className="grid grid-cols-[auto_1fr] gap-4 rounded-2xl border border-line p-5 transition hover:border-primary hover:bg-gray-50 md:grid-cols-[70px_1fr_auto] md:gap-5"
                       >
                         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-tint text-lg font-extrabold text-ink md:h-14 md:w-14 md:text-xl">
                           {index + 1}
@@ -614,12 +620,11 @@ export default async function CourseDetailsPage({
 
                           <h3 className="text-xl font-bold">{lesson.title}</h3>
 
-                          {/* line-clamp only hides text visually — the full
-                              content is still in the page — so premium
-                              lesson text must not be rendered here. */}
+                          {/* Premium lesson text must not be rendered here,
+                              and free lessons only send a short summary. */}
                           <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-600">
                             {isPreview || isAdminPreview
-                              ? lesson.content ||
+                              ? (lesson.content && toSummary(lesson.content)) ||
                                 "Lesson content will appear here once added by the admin."
                               : "Unlock this premium lesson to read the full notes, video and reading."}
                           </p>
@@ -669,10 +674,14 @@ function CourseStat({
   icon,
   label,
   value,
+  note,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  // A word value with a line under it, styled like the learner's own
+  // status cards (components/CourseLearnerStats) beside it.
+  note?: string;
 }) {
   return (
     <ScrollReveal>
@@ -682,7 +691,14 @@ function CourseStat({
           <p className="text-xs font-bold text-gray-500 sm:text-sm">{label}</p>
         </div>
 
-        <p className="text-4xl font-extrabold">{value}</p>
+        {note ? (
+          <>
+            <p className="text-xl font-extrabold leading-tight sm:text-2xl">{value}</p>
+            <p className="mt-2 text-xs leading-5 text-gray-500 sm:text-sm">{note}</p>
+          </>
+        ) : (
+          <p className="text-4xl font-extrabold">{value}</p>
+        )}
       </div>
     </ScrollReveal>
   );

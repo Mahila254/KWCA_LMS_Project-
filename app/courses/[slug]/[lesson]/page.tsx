@@ -29,7 +29,6 @@ import {
   CheckCircle,
   HelpCircle,
   ArrowRight,
-  ClipboardList,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -492,51 +491,33 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
             </div>
           </ScrollReveal>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <ScrollReveal>
-              <div className="h-full rounded-3xl bg-surface p-8 shadow-sm">
-                <div className="mb-4 flex items-center gap-3">
-                  <FileText className="text-ink" size={26} />
-
-                  <h2 className="text-2xl font-bold">Required Reading</h2>
+          {/* One full-width block: what to read, and the button to get it. */}
+          <ScrollReveal>
+            <div className="flex flex-col gap-6 rounded-3xl bg-surface p-8 shadow-sm md:flex-row md:items-center md:justify-between md:gap-10">
+              <div className="flex items-start gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-tint text-ink">
+                  <FileText size={26} />
                 </div>
 
-                <p className="leading-8 text-gray-600">
-                  Read the supporting material and reflect on how this lesson
-                  connects to conservancy governance and management.
-                </p>
+                <div>
+                  <h2 className="text-2xl font-bold">Required Reading</h2>
 
+                  <p className="mt-2 max-w-2xl leading-8 text-gray-600">
+                    Read the supporting material and reflect on how this
+                    lesson connects to conservancy governance and management.
+                  </p>
+                </div>
+              </div>
+
+              <div className="shrink-0 [&>*]:mt-0">
                 {isLocked ? (
                   <PremiumLessonReadingLink />
                 ) : (
                   <LessonReadingLink readingUrl={currentLesson.readingUrl} />
                 )}
               </div>
-            </ScrollReveal>
-
-            <ScrollReveal>
-              <div className="h-full rounded-3xl bg-surface p-8 shadow-sm">
-                <div className="mb-4 flex items-center gap-3">
-                  <ClipboardList className="text-accent" size={26} />
-
-                  <h2 className="text-2xl font-bold">Practice Activity</h2>
-                </div>
-
-                <p className="leading-8 text-gray-600">
-                  Reflect on this lesson and check your understanding before
-                  moving to the final graded quiz.
-                </p>
-
-                <Link
-                  href={`/courses/${slug}/quiz/practice`}
-                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 font-bold text-white hover:bg-primary-hover"
-                >
-                  Start Practice Quiz
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-            </ScrollReveal>
-          </div>
+            </div>
+          </ScrollReveal>
 
           <ScrollReveal>
             <div className="rounded-3xl bg-surface p-8 shadow-sm">

@@ -123,7 +123,7 @@ export function LessonReadingLink({
     return (
       <Link
         href={readingUrl}
-        className="mt-5 inline-flex items-center gap-2 rounded-full border px-5 py-3 font-bold hover:bg-gray-50"
+        className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
       >
         <Download size={18} />
         Download Reading

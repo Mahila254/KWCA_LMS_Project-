@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   Download,
@@ -8,9 +9,14 @@ import {
   ShieldCheck,
   BadgeCheck,
   ExternalLink,
+  Loader2,
 } from "lucide-react";
 import CertificateArt from "@/components/CertificateArt";
 import type { CertificateDesign } from "@/lib/certificateDesigns";
+import {
+  certificateFileName,
+  downloadCertificatePdf,
+} from "@/lib/downloadCertificatePdf";
 
 export type CertificateDocumentProps = {
   learnerName: string;
@@ -47,8 +53,32 @@ export default function CertificateDocument({
   backLabel,
   showVerifyLink = true,
 }: CertificateDocumentProps) {
+  const sheetRef = useRef<HTMLElement | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+
   function handlePrintCertificate() {
     window.print();
+  }
+
+  async function handleDownloadPdf() {
+    if (!sheetRef.current) return;
+    setDownloading(true);
+    setDownloadError(null);
+
+    try {
+      await downloadCertificatePdf(
+        sheetRef.current,
+        certificateFileName(courseTitle, learnerName)
+      );
+    } catch (error) {
+      console.error("Certificate PDF error:", error);
+      setDownloadError(
+        "The PDF couldn't be made in this browser. Use Print and choose \"Save as PDF\" instead."
+      );
+    } finally {
+      setDownloading(false);
+    }
   }
 
   return (
@@ -179,20 +209,32 @@ export default function CertificateDocument({
 
               <button
                 type="button"
-                onClick={handlePrintCertificate}
-                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover"
+                onClick={handleDownloadPdf}
+                disabled={downloading}
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-bold text-white hover:bg-primary-hover disabled:cursor-wait disabled:opacity-70"
               >
-                <Download size={18} />
-                Download PDF
+                {downloading ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : (
+                  <Download size={18} />
+                )}
+                {downloading ? "Preparing PDF..." : "Download PDF"}
               </button>
             </div>
           </div>
+
+          {downloadError && (
+            <p role="alert" className="mt-4 text-right text-sm font-semibold text-red-700">
+              {downloadError}
+            </p>
+          )}
         </section>
 
         <section className="certificate-print-area mx-auto max-w-6xl px-6 pb-12 print:p-0">
           {/* Phones scroll sideways rather than shrink the text to nothing. */}
           <div className="overflow-x-auto pb-2 print:overflow-visible print:pb-0">
             <article
+              ref={sheetRef}
               aria-label={`Certificate of completion: ${courseTitle}, awarded to ${learnerName}`}
               className="certificate-sheet @container relative mx-auto aspect-[297/210] min-w-[640px] overflow-hidden rounded-2xl bg-[#fbf3e4] shadow-xl"
             >

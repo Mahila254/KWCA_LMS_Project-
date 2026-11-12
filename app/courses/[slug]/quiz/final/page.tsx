@@ -750,12 +750,13 @@ export default function FinalQuizPage() {
   const selectedAnswer = answers[currentQuestionIndex] || "";
   const isLast = currentQuestionIndex === questions.length - 1;
 
+  // True/False questions leave C and D empty; only real choices show.
   const answerOptions = [
     { label: "A", text: currentQuestion.optionA },
     { label: "B", text: currentQuestion.optionB },
     { label: "C", text: currentQuestion.optionC },
     { label: "D", text: currentQuestion.optionD },
-  ];
+  ].filter((option) => option.text?.trim());
 
   const statuses: QuestionStatus[] = questions.map((_, index) =>
     answers[index] ? "answered" : "unanswered"

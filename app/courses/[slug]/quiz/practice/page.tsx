@@ -557,12 +557,15 @@ export default function PracticeQuizPage() {
   const showFeedback = Boolean(selectedAnswer);
   const isLast = currentQuestionIndex === questions.length - 1;
 
-  const answerOptions: { label: AnswerLetter; text: string }[] = [
-    { label: "A", text: currentQuestion.optionA },
-    { label: "B", text: currentQuestion.optionB },
-    { label: "C", text: currentQuestion.optionC },
-    { label: "D", text: currentQuestion.optionD },
-  ];
+  // True/False questions leave C and D empty; only real choices show.
+  const answerOptions: { label: AnswerLetter; text: string }[] = (
+    [
+      { label: "A", text: currentQuestion.optionA },
+      { label: "B", text: currentQuestion.optionB },
+      { label: "C", text: currentQuestion.optionC },
+      { label: "D", text: currentQuestion.optionD },
+    ] as { label: AnswerLetter; text: string }[]
+  ).filter((option) => option.text?.trim());
 
   const statuses: QuestionStatus[] = questions.map((question, index) => {
     if (!answers[index]) return "unanswered";

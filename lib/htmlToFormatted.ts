@@ -127,6 +127,13 @@ function listLines(list: HTMLElement, depth: number): string[] {
   const ordered = list.tagName === "OL";
   let number = Number(list.getAttribute("start")) || 1;
   const lines: string[] = [];
+  // a. b. c. lists (quiz choices, mostly) keep their letters.
+  const listType = `${list.getAttribute("type") ?? ""} ${list.getAttribute("style") ?? ""}`;
+  const letters = /\b[aA]\b|alpha|latin/.test(listType)
+    ? /upper|\bA\b/.test(listType)
+      ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      : "abcdefghijklmnopqrstuvwxyz"
+    : null;
 
   for (const child of Array.from(list.children)) {
     if (child.tagName === "UL" || child.tagName === "OL") {
@@ -148,7 +155,11 @@ function listLines(list: HTMLElement, depth: number): string[] {
       }
     }
 
-    const marker = ordered ? `${number++}.` : "-";
+    const marker = !ordered
+      ? "-"
+      : letters
+        ? `${letters[(number++ - 1) % letters.length]}.`
+        : `${number++}.`;
     lines.push(`${"  ".repeat(depth)}${marker} ${tidy(text)}`);
     lines.push(...nested);
   }

@@ -78,7 +78,7 @@ export default function QuizReview({
                 </h3>
 
                 <ul className="mt-5 space-y-3">
-                  {letters.map((letter) => {
+                  {letters.filter((letter) => item.options[letter]?.trim()).map((letter) => {
                     const picked = item.selectedAnswer === letter;
                     const isAnswer = item.correctAnswer === letter;
 

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
+import QuizPasteImport from "@/components/QuizPasteImport";
+import { TRUE_FALSE_CHOICES, quizChoicesProblem } from "@/lib/quizChoices";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -30,6 +32,11 @@ type QuizQuestion = {
   order: number;
 };
 
+// Saved with C and D empty (see lib/quizChoices).
+function isTrueFalse(item: QuizQuestion) {
+  return !item.optionC?.trim() && !item.optionD?.trim();
+}
+
 type Course = {
   title: string;
   slug: string;
@@ -45,6 +52,11 @@ export default function AdminQuizQuestionsPage() {
   const [quizQuestions, setQuizQuestions] = useState<QuizQuestion[]>([]);
 
   const [quizType, setQuizType] = useState<"PRACTICE" | "FINAL">("PRACTICE");
+  // True/False questions are saved as choices A "True" and B "False",
+  // with C and D empty.
+  const [questionKind, setQuestionKind] = useState<"CHOICE" | "TRUE_FALSE">(
+    "CHOICE"
+  );
   const [question, setQuestion] = useState("");
   const [optionA, setOptionA] = useState("");
   const [optionB, setOptionB] = useState("");
@@ -93,6 +105,7 @@ export default function AdminQuizQuestionsPage() {
 
   function clearForm() {
     setQuizType("PRACTICE");
+    setQuestionKind("CHOICE");
     setQuestion("");
     setOptionA("");
     setOptionB("");
@@ -107,6 +120,7 @@ export default function AdminQuizQuestionsPage() {
   function handleEditQuestion(item: QuizQuestion) {
     setEditingQuestionId(item.id);
     setQuizType(item.quizType);
+    setQuestionKind(isTrueFalse(item) ? "TRUE_FALSE" : "CHOICE");
     setQuestion(item.question);
     setOptionA(item.optionA);
     setOptionB(item.optionB);
@@ -128,13 +142,19 @@ export default function AdminQuizQuestionsPage() {
       return;
     }
 
-    if (
-      !optionA.trim() ||
-      !optionB.trim() ||
-      !optionC.trim() ||
-      !optionD.trim()
-    ) {
+    const choices =
+      questionKind === "TRUE_FALSE"
+        ? [...TRUE_FALSE_CHOICES, "", ""]
+        : [optionA, optionB, optionC, optionD];
+
+    if (questionKind === "CHOICE" && choices.some((choice) => !choice.trim())) {
       alert("Please fill in all four answer options.");
+      return;
+    }
+
+    const choicesProblem = quizChoicesProblem(choices, correctAnswer);
+    if (choicesProblem) {
+      alert(choicesProblem);
       return;
     }
 
@@ -155,10 +175,10 @@ export default function AdminQuizQuestionsPage() {
         body: JSON.stringify({
           quizType,
           question,
-          optionA,
-          optionB,
-          optionC,
-          optionD,
+          optionA: choices[0],
+          optionB: choices[1],
+          optionC: choices[2],
+          optionD: choices[3],
           correctAnswer,
           explanation,
           order,
@@ -303,6 +323,11 @@ export default function AdminQuizQuestionsPage() {
               </div>
             </div>
 
+            <QuizPasteImport
+              courseSlug={courseSlug}
+              onAdded={fetchQuizQuestions}
+            />
+
             <div className="overflow-hidden rounded-3xl bg-surface shadow-sm">
               <div className="border-b px-6 py-5">
                 <h2 className="text-2xl font-bold">All Quiz Questions</h2>
@@ -350,6 +375,12 @@ export default function AdminQuizQuestionsPage() {
                               : "Final Quiz"}
                           </span>
 
+                          {isTrueFalse(item) && (
+                            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-700">
+                              True / False
+                            </span>
+                          )}
+
                           <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
                             <CheckCircle size={13} />
                             Correct: {item.correctAnswer}
@@ -359,18 +390,14 @@ export default function AdminQuizQuestionsPage() {
                         <h3 className="text-xl font-bold">{item.question}</h3>
 
                         <div className="mt-4 grid gap-3 md:grid-cols-2">
-                          <p className="rounded-xl bg-gray-50 p-3 text-sm">
-                            <strong>A:</strong> {item.optionA}
-                          </p>
-                          <p className="rounded-xl bg-gray-50 p-3 text-sm">
-                            <strong>B:</strong> {item.optionB}
-                          </p>
-                          <p className="rounded-xl bg-gray-50 p-3 text-sm">
-                            <strong>C:</strong> {item.optionC}
-                          </p>
-                          <p className="rounded-xl bg-gray-50 p-3 text-sm">
-                            <strong>D:</strong> {item.optionD}
-                          </p>
+                          {(["A", "B", "C", "D"] as const)
+                            .map((letter) => [letter, item[`option${letter}`]] as const)
+                            .filter(([, text]) => text?.trim())
+                            .map(([letter, text]) => (
+                              <p key={letter} className="rounded-xl bg-gray-50 p-3 text-sm">
+                                <strong>{letter}:</strong> {text}
+                              </p>
+                            ))}
                         </div>
 
                         {item.explanation && (
@@ -440,6 +467,39 @@ export default function AdminQuizQuestionsPage() {
               </div>
 
               <div>
+                <label className="mb-2 block font-bold">Question Type</label>
+
+                <div className="grid grid-cols-2 gap-2 rounded-xl bg-gray-100 p-1 text-sm font-bold">
+                  {(
+                    [
+                      ["CHOICE", "Multiple choice"],
+                      ["TRUE_FALSE", "True or False"],
+                    ] as const
+                  ).map(([kind, label]) => (
+                    <button
+                      key={kind}
+                      type="button"
+                      onClick={() => {
+                        setQuestionKind(kind);
+                        // True/False answers are A or B only.
+                        if (kind === "TRUE_FALSE" && !["A", "B"].includes(correctAnswer)) {
+                          setCorrectAnswer("A");
+                        }
+                      }}
+                      aria-pressed={questionKind === kind}
+                      className={`rounded-lg px-3 py-2 ${
+                        questionKind === kind
+                          ? "bg-surface text-ink shadow-sm"
+                          : "text-gray-500 hover:text-ink"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
                 <label className="mb-2 block font-bold">Question Order</label>
 
                 <input
@@ -463,59 +523,86 @@ export default function AdminQuizQuestionsPage() {
                 />
               </div>
 
-              <div>
-                <label className="mb-2 block font-bold">Option A</label>
-                <input
-                  type="text"
-                  value={optionA}
-                  onChange={(event) => setOptionA(event.target.value)}
-                  className="w-full rounded-xl border px-4 py-3"
-                />
-              </div>
+              {questionKind === "CHOICE" && (
+                <>
+                  <div>
+                    <label className="mb-2 block font-bold">Option A</label>
+                    <input
+                      type="text"
+                      value={optionA}
+                      onChange={(event) => setOptionA(event.target.value)}
+                      className="w-full rounded-xl border px-4 py-3"
+                    />
+                  </div>
 
-              <div>
-                <label className="mb-2 block font-bold">Option B</label>
-                <input
-                  type="text"
-                  value={optionB}
-                  onChange={(event) => setOptionB(event.target.value)}
-                  className="w-full rounded-xl border px-4 py-3"
-                />
-              </div>
+                  <div>
+                    <label className="mb-2 block font-bold">Option B</label>
+                    <input
+                      type="text"
+                      value={optionB}
+                      onChange={(event) => setOptionB(event.target.value)}
+                      className="w-full rounded-xl border px-4 py-3"
+                    />
+                  </div>
 
-              <div>
-                <label className="mb-2 block font-bold">Option C</label>
-                <input
-                  type="text"
-                  value={optionC}
-                  onChange={(event) => setOptionC(event.target.value)}
-                  className="w-full rounded-xl border px-4 py-3"
-                />
-              </div>
+                  <div>
+                    <label className="mb-2 block font-bold">Option C</label>
+                    <input
+                      type="text"
+                      value={optionC}
+                      onChange={(event) => setOptionC(event.target.value)}
+                      className="w-full rounded-xl border px-4 py-3"
+                    />
+                  </div>
 
-              <div>
-                <label className="mb-2 block font-bold">Option D</label>
-                <input
-                  type="text"
-                  value={optionD}
-                  onChange={(event) => setOptionD(event.target.value)}
-                  className="w-full rounded-xl border px-4 py-3"
-                />
-              </div>
+                  <div>
+                    <label className="mb-2 block font-bold">Option D</label>
+                    <input
+                      type="text"
+                      value={optionD}
+                      onChange={(event) => setOptionD(event.target.value)}
+                      className="w-full rounded-xl border px-4 py-3"
+                    />
+                  </div>
+                </>
+              )}
 
               <div>
                 <label className="mb-2 block font-bold">Correct Answer</label>
 
-                <select
-                  value={correctAnswer}
-                  onChange={(event) => setCorrectAnswer(event.target.value)}
-                  className="w-full rounded-xl border px-4 py-3"
-                >
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                  <option value="D">D</option>
-                </select>
+                {questionKind === "TRUE_FALSE" ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    {TRUE_FALSE_CHOICES.map((choice, index) => {
+                      const letter = index === 0 ? "A" : "B";
+                      return (
+                        <button
+                          key={choice}
+                          type="button"
+                          onClick={() => setCorrectAnswer(letter)}
+                          aria-pressed={correctAnswer === letter}
+                          className={`rounded-xl border px-4 py-3 font-bold ${
+                            correctAnswer === letter
+                              ? "border-green-600 bg-green-50 text-green-700 ring-1 ring-green-600"
+                              : "hover:bg-gray-50"
+                          }`}
+                        >
+                          {choice}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <select
+                    value={correctAnswer}
+                    onChange={(event) => setCorrectAnswer(event.target.value)}
+                    className="w-full rounded-xl border px-4 py-3"
+                  >
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                  </select>
+                )}
               </div>
 
               <div>

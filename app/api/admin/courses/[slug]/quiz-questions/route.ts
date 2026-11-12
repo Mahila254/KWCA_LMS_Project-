@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/adminAuth";
+import { quizChoicesProblem } from "@/lib/quizChoices";
 
 export const dynamic = "force-dynamic";
 
@@ -99,18 +100,14 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       );
     }
 
-    if (!optionA || !optionB || !optionC || !optionD) {
-      return NextResponse.json(
-        { error: "All four answer options are required." },
-        { status: 400 }
-      );
-    }
+    // Four choices, or two (True/False) with C and D left empty.
+    const choicesProblem = quizChoicesProblem(
+      [optionA, optionB, optionC, optionD],
+      correctAnswer
+    );
 
-    if (!correctAnswer) {
-      return NextResponse.json(
-        { error: "Correct answer is required." },
-        { status: 400 }
-      );
+    if (choicesProblem) {
+      return NextResponse.json({ error: choicesProblem }, { status: 400 });
     }
 
     const course = await prisma.course.findUnique({
@@ -139,11 +136,11 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
         courseId: course.id,
         quizType: quizType === "FINAL" ? "FINAL" : "PRACTICE",
         question,
-        optionA,
-        optionB,
-        optionC,
-        optionD,
-        correctAnswer,
+        optionA: optionA!.trim(),
+        optionB: optionB!.trim(),
+        optionC: optionC?.trim() ?? "",
+        optionD: optionD?.trim() ?? "",
+        correctAnswer: correctAnswer!.trim().toUpperCase(),
         explanation: explanation || "",
         order: questionOrder,
       },

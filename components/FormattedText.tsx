@@ -14,6 +14,8 @@ import { Fragment, type ReactNode } from "react";
  *   [text](https://...)            link (bare https:// links work too;
  *                                  mailto: for email)
  *   ![caption](https://...)        image / screenshot on its own line
+ *   | a | b |  then  |---|---|      table (the divider makes row 1 the
+ *                                  header); pasted tables arrive like this
  *
  * A blank line starts a new paragraph; a single line break stays a line
  * break (or, with variant="intro", runs on as one flowing paragraph). Bullets pasted from Word or Google Docs (•, ◦, ▪, –) also work.
@@ -43,7 +45,17 @@ type Block =
   | { kind: "heading"; level: 2 | 3; text: string }
   | { kind: "paragraph"; lines: string[] }
   | { kind: "list"; items: ListItem[] }
-  | { kind: "image"; url: string; caption: string };
+  | { kind: "image"; url: string; caption: string }
+  | { kind: "table"; rows: string[][]; header: boolean };
+
+// | a | b | lines make a table; a |---|---| line under the first row
+// makes that row the header (the format Claude and most editors copy).
+const tableRowPattern = /^\|.*\|$/;
+const tableDividerPattern = /^\|(\s*:?-{2,}:?\s*\|)+$/;
+
+function tableCells(line: string) {
+  return line.slice(1, -1).split("|").map((cell) => cell.trim());
+}
 
 const bulletPattern = /^(\s*)(?:[-*+•◦▪▫‣–●○■□➢➤✓✔]|•)\s+(.*)$/;
 const numberPattern = /^(\s*)(\d{1,3})[.)]\s+(.*)$/;
@@ -59,12 +71,15 @@ function parseBlocks(source: string): Block[] {
   const blocks: Block[] = [];
   let paragraph: string[] | null = null;
   let list: ListItem[] | null = null;
+  let table: { rows: string[][]; header: boolean } | null = null;
 
   const closeOpenBlocks = () => {
     if (paragraph) blocks.push({ kind: "paragraph", lines: paragraph });
     if (list) blocks.push({ kind: "list", items: list });
+    if (table) blocks.push({ kind: "table", ...table });
     paragraph = null;
     list = null;
+    table = null;
   };
 
   for (const rawLine of source.replace(/\r\n?/g, "\n").split("\n")) {
@@ -75,6 +90,21 @@ function parseBlocks(source: string): Block[] {
       closeOpenBlocks();
       continue;
     }
+
+    if (tableRowPattern.test(trimmed)) {
+      if (!table) {
+        closeOpenBlocks();
+        table = { rows: [], header: false };
+      }
+      if (tableDividerPattern.test(trimmed)) {
+        if (table.rows.length === 1) table.header = true;
+      } else {
+        table.rows.push(tableCells(trimmed));
+      }
+      continue;
+    }
+
+    if (table) closeOpenBlocks();
 
     const image = trimmed.match(imagePattern);
     if (image) {
@@ -241,7 +271,12 @@ export function toPlainText(text: string) {
   let plain = "";
 
   for (const rawLine of text.replace(/\r\n?/g, "\n").split("\n")) {
-    const trimmed = rawLine.trim();
+    const rawTrimmed = rawLine.trim();
+    if (tableDividerPattern.test(rawTrimmed)) continue;
+    // A table row reads as its cells, comma separated.
+    const trimmed = tableRowPattern.test(rawTrimmed)
+      ? tableCells(rawTrimmed).filter(Boolean).join(", ")
+      : rawTrimmed;
     const isListItem = bulletPattern.test(trimmed) || numberPattern.test(trimmed);
     const line = trimmed
       .replace(imagePattern, "")
@@ -342,6 +377,47 @@ export default function FormattedText({
                   )[0]
                 }
               </Fragment>
+            );
+          }
+
+          case "table": {
+            const [first, ...rest] = block.rows;
+            const head = block.header ? first : null;
+            const body = block.header ? rest : block.rows;
+            const columns = Math.max(...block.rows.map((row) => row.length));
+            const cells = (row: string[]) =>
+              Array.from({ length: columns }, (_, i) => row[i] ?? "");
+
+            return (
+              <div
+                key={index}
+                className="overflow-x-auto rounded-2xl border border-gray-200"
+              >
+                <table className="w-full border-collapse text-left text-base leading-7">
+                  {head && (
+                    <thead className="bg-tint text-ink">
+                      <tr>
+                        {cells(head).map((cell, i) => (
+                          <th key={i} scope="col" className="px-4 py-3 font-bold">
+                            {renderInline(cell)}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                  )}
+                  <tbody>
+                    {body.map((row, rowIndex) => (
+                      <tr key={rowIndex} className="border-t border-gray-200 align-top">
+                        {cells(row).map((cell, i) => (
+                          <td key={i} className="px-4 py-3">
+                            {renderInline(cell)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             );
           }
 

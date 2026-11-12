@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import FormattedText from "@/components/FormattedText";
+import { htmlToFormattedText } from "@/lib/htmlToFormatted";
 import { uploadAdminImage } from "@/lib/uploadImage";
 
 type FormattedTextEditorProps = {
@@ -440,6 +441,16 @@ export default function FormattedTextEditor({
             if (files.some((file) => file.type.startsWith("image/"))) {
               event.preventDefault();
               uploadImages(files);
+              return;
+            }
+
+            // Text copied from Claude, Word, Google Docs or a web page keeps
+            // its bold, lists, links and tables. (Ctrl+Shift+V pastes plain.)
+            const html = event.clipboardData.getData("text/html");
+            const converted = html ? htmlToFormattedText(html) : "";
+            if (converted) {
+              event.preventDefault();
+              replaceSelection(() => converted);
             }
           }}
           onDragOver={(event) => {
@@ -482,8 +493,9 @@ export default function FormattedTextEditor({
           bullet, <code className="rounded bg-gray-100 px-1">1.</code> for a numbered
           list or <code className="rounded bg-gray-100 px-1">##</code> for a heading.
           Select words and use Bold, Italic, Underline or Link (Ctrl+B, I, U,
-          K). Paste or drag a screenshot straight into the box. Learners see
-          it exactly like the Preview.
+          K). Text pasted from Claude, Word or Google Docs keeps its bold,
+          lists, links and tables. Paste or drag a screenshot straight into
+          the box. Learners see it exactly like the Preview.
         </p>
       )}
     </div>

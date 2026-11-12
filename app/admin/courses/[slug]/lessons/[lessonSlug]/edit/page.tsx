@@ -2,6 +2,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import FormattedTextEditor from "@/components/FormattedTextEditor";
 import VideoQuestionsInput from "@/components/VideoQuestionsInput";
+import VideoUrlInput from "@/components/VideoUrlInput";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import {
@@ -9,6 +10,7 @@ import {
   replaceLessonVideoQuestions,
 } from "@/lib/lessonVideoQuestions";
 import { parseVideoQuestions } from "@/lib/videoQuestions";
+import { normalizeVideoUrl } from "@/lib/videoSource";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { ArrowLeft, BookOpen, Save } from "lucide-react";
@@ -81,7 +83,8 @@ async function updateLesson(formData: FormData) {
       slug: lessonSlug,
       order,
       accessType,
-      videoUrl: videoUrl || null,
+      // Any YouTube link is saved as its embed address.
+      videoUrl: normalizeVideoUrl(videoUrl),
       readingUrl: readingUrl || null,
       content: content || null,
       notes: notes || null,
@@ -258,22 +261,7 @@ export default async function EditLessonPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div>
-                <label className="mb-2 block font-bold">Lesson Video URL</label>
-
-                <input
-                  name="videoUrl"
-                  type="url"
-                  defaultValue={lesson.videoUrl || ""}
-                  placeholder="Example: https://www.youtube.com/embed/ogaR6G9Cm7M"
-                  className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-primary"
-                />
-
-                <p className="mt-2 text-sm text-gray-500">
-                  Recommended YouTube format:
-                  https://www.youtube.com/embed/VIDEO_ID
-                </p>
-              </div>
+              <VideoUrlInput name="videoUrl" defaultValue={lesson.videoUrl || ""} />
 
               <VideoQuestionsInput
                 name="videoQuestions"

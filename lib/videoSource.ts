@@ -49,3 +49,21 @@ export function getVideoSource(videoUrl: string | null): VideoSource | null {
 
   return { kind: "embed", src: url };
 }
+
+/** The embed address the platform plays a YouTube video from. */
+export function youtubeEmbedUrl(videoId: string, start = 0) {
+  return `https://www.youtube.com/embed/${videoId}${start > 0 ? `?start=${start}` : ""}`;
+}
+
+/**
+ * What to save for a lesson video. Any YouTube link (share link, watch
+ * page, Shorts, live, with or without https://) becomes the embed address,
+ * keeping a start time if the link had one. Other links are kept as typed.
+ */
+export function normalizeVideoUrl(videoUrl: string | null) {
+  const source = getVideoSource(videoUrl);
+  if (!source) return null;
+  return source.kind === "youtube"
+    ? youtubeEmbedUrl(source.videoId, source.start)
+    : source.src;
+}

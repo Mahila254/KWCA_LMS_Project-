@@ -5,7 +5,7 @@ import LegalPage, { type LegalSection } from "@/components/LegalPage";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "How the KWCA Learning Hub collects, uses, protects and keeps your personal data.",
+    "How the KWCF Learning Hub collects, uses, protects and keeps your personal data.",
 };
 
 const sections: LegalSection[] = [
@@ -16,12 +16,12 @@ const sections: LegalSection[] = [
       <>
         <p>
           The Conservancies Learning Hub (&ldquo;the platform&rdquo;) is run by
-          the <strong>Kenya Wildlife Conservancies Association (KWCA)</strong>,
+          the <strong>Kenya Wildlife Conservancies Foundation (KWCF)</strong>,
           Seminary Road, off Magadi Road, Karen, Nairobi (P.O. Box 1038 –
           00517, Uhuru Gardens, Nairobi, Kenya).
         </p>
         <p>
-          KWCA is the <strong>data controller</strong> for the personal data
+          KWCF is the <strong>data controller</strong> for the personal data
           described here. This means we decide why and how your data is used,
           and we are responsible for protecting it under the{" "}
           <strong>Data Protection Act, 2019</strong> of Kenya and its
@@ -46,7 +46,7 @@ const sections: LegalSection[] = [
             <strong>Account details:</strong> your full name, email address,
             gender (you can choose &ldquo;prefer not to say&rdquo;) and a
             password. Your password is handled by our sign-in provider and is
-            stored in scrambled (hashed) form. KWCA staff can never see it.
+            stored in scrambled (hashed) form. KWCF staff can never see it.
           </li>
           <li>
             <strong>Your consent record:</strong> whether you agreed to our data
@@ -112,7 +112,7 @@ const sections: LegalSection[] = [
           <li>answer your questions and handle complaints;</li>
           <li>improve our courses using your feedback and quiz results;</li>
           <li>
-            prepare <strong>anonymous, combined statistics</strong> for KWCA,
+            prepare <strong>anonymous, combined statistics</strong> for KWCF,
             its partners and funders. Examples include the number of learners,
             completion rates and the gender balance of learners. These reports
             never name you.
@@ -165,7 +165,7 @@ const sections: LegalSection[] = [
       <>
         <ul>
           <li>
-            <strong>KWCA platform administrators</strong> can see learner
+            <strong>KWCF platform administrators</strong> can see learner
             accounts, enrollments, progress, quiz results, certificates,
             payments and feedback. They use this only to run the platform and
             support learners.
@@ -288,10 +288,10 @@ const sections: LegalSection[] = [
       <>
         <ul>
           <li>All traffic to the platform is encrypted (HTTPS).</li>
-          <li>Passwords are hashed and are never visible to KWCA staff.</li>
+          <li>Passwords are hashed and are never visible to KWCF staff.</li>
           <li>
             The admin area is protected by a separate sign-in. Only authorised
-            KWCA staff are given access.
+            KWCF staff are given access.
           </li>
           <li>
             Final quiz answers and other sensitive records are never sent to
@@ -358,7 +358,7 @@ export default function PrivacyPage() {
       accent="Policy"
       intro={
         <p>
-          This policy explains what personal data the KWCA Learning Hub
+          This policy explains what personal data the KWCF Learning Hub
           collects, why we collect it, who can see it, how long we keep it and
           the rights you have over it.
         </p>

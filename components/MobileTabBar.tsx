@@ -68,7 +68,7 @@ export default function MobileTabBar() {
         hidden ? "pointer-events-none translate-y-[140%] opacity-0" : ""
       }`}
     >
-      <ul className="mx-auto flex max-w-md items-center justify-between rounded-full border border-white/10 bg-deep/90 p-1.5 shadow-[0_16px_40px_-12px_rgba(30,29,89,0.6)] backdrop-blur-xl backdrop-saturate-150">
+      <ul className="mx-auto flex max-w-md items-center justify-between rounded-full border border-white/10 bg-deep/90 p-1.5 shadow-[0_16px_40px_-12px_rgb(var(--shadow-tint)/0.6)] backdrop-blur-xl backdrop-saturate-150">
         {tabs.map((tab) => {
           const active = isActive(pathname, tab.href);
 

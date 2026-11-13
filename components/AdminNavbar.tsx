@@ -46,13 +46,13 @@ export default function AdminNavbar() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 bg-deep/95 text-white shadow-[0_10px_30px_-14px_rgba(30,29,89,0.6)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 bg-deep/95 text-white shadow-[0_10px_30px_-14px_rgb(var(--shadow-tint)/0.6)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 pt-3 sm:px-6">
         <Link href="/admin" className="flex items-center gap-3">
           <div className="rounded-xl bg-white p-1.5">
             <img
               src="/logo.png?v=2"
-              alt="KWCA Logo"
+              alt="KWCF Logo"
               className="h-9 w-auto object-contain"
             />
           </div>

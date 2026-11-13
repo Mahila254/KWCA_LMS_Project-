@@ -93,12 +93,12 @@ export default function VerifyCertificatePage() {
               </p>
 
               <h1 className="mt-3 text-5xl font-bold">
-                Verify a KWCA LMS <em className="accent text-accent">Certificate</em>
+                Verify a KWCF LMS <em className="accent text-accent">Certificate</em>
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">
                 Enter a certificate code to confirm whether the certificate was
-                issued by the KWCA Learning Management System.
+                issued by the KWCF Learning Management System.
               </p>
             </div>
           </div>
@@ -131,7 +131,7 @@ export default function VerifyCertificatePage() {
                   type="text"
                   value={code}
                   onChange={(event) => setCode(event.target.value)}
-                  placeholder="Example: KWCA-ABC123"
+                  placeholder="Example: KWCF-COURSE-2026-7H2KQ9XM"
                   className="w-full rounded-xl border px-4 py-3 outline-none focus:border-primary"
                 />
               </div>
@@ -191,7 +191,7 @@ export default function VerifyCertificatePage() {
                     </h2>
 
                     <p className="mt-3 max-w-2xl leading-7 text-gray-600">
-                      This certificate was found in the KWCA LMS database and is
+                      This certificate was found in the KWCF LMS database and is
                       linked to the learner and course shown below.
                     </p>
                   </div>

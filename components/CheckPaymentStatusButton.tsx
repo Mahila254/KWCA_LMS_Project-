@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authFetch } from "@/lib/authFetch";
 import { CheckCircle, RefreshCw } from "lucide-react";
+import { notify } from "@/lib/notify";
 
 type CheckPaymentStatusButtonProps = {
   paymentId: string;
@@ -26,19 +27,19 @@ export default function CheckPaymentStatusButton({
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong while checking payment.");
+        notify(data.error || "Something went wrong while checking payment.");
         return;
       }
 
       if (data.payment.status !== "PAID") {
-        alert(
+        notify(
           `Your payment is still ${data.payment.status}. Please wait for admin confirmation.`
         );
         router.refresh();
         return;
       }
 
-      alert("Payment confirmed. Premium access is now unlocked.");
+      notify("Payment confirmed. Premium access is now unlocked.");
 
       if (courseSlug) {
         router.push(`/courses/${courseSlug}`);
@@ -49,7 +50,7 @@ export default function CheckPaymentStatusButton({
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while checking payment.");
+      notify("Something went wrong while checking payment.");
     } finally {
       setChecking(false);
     }

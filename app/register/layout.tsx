@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Create your account",
   description:
-    "Create a free learner account to start the KWCA conservancy courses, track your progress and earn certificates.",
+    "Create a free learner account to start the KWCF conservancy courses, track your progress and earn certificates.",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

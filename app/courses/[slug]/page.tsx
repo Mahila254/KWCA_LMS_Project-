@@ -147,7 +147,8 @@ export default async function CourseDetailsPage({
     },
   });
 
-  if (!course) {
+  // Draft courses are only visible to an admin previewing them.
+  if (!course || (course.status !== "PUBLISHED" && !isAdminPreview)) {
     return (
       <>
         {isAdminPreview ? <AdminNavbar /> : <Navbar />}

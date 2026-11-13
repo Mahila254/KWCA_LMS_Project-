@@ -6,7 +6,7 @@ export const contentType = shareCardContentType;
 
 export default function Image() {
   return renderShareCard({
-    eyebrow: "Kenya Wildlife Conservancies Association",
+    eyebrow: "Kenya Wildlife Conservancies Foundation",
     title: "Years of conservancy wisdom.",
     accent: "Now one click away.",
     footnote: "Free to start · Learn on any phone",

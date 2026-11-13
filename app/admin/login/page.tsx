@@ -85,14 +85,14 @@ export default function AdminLoginPage() {
                 <ShieldCheck size={34} />
               </div>
 
-              <p className="font-bold text-on-deep-muted">KWCA LMS Admin</p>
+              <p className="font-bold text-on-deep-muted">KWCF LMS Admin</p>
 
               <h1 className="mt-4 text-5xl font-extrabold leading-tight">
                 Secure Admin Login
               </h1>
 
               <p className="mt-5 max-w-xl text-lg leading-8 text-white/70">
-                This area is reserved for approved KWCA LMS administrators.
+                This area is reserved for approved KWCF LMS administrators.
                 Only users with the ADMIN role can access the control centre.
               </p>
             </div>

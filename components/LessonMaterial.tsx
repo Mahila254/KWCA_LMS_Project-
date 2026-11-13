@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Download, PlayCircle, ShieldCheck } from "lucide-react";
 import FormattedText from "@/components/FormattedText";
 import InteractiveVideo from "@/components/InteractiveVideo";
+import { VideoDataGate } from "@/components/DataSaver";
 import { getVideoSource } from "@/lib/videoSource";
 import type { VideoQuestion } from "@/lib/videoQuestions";
 
@@ -42,11 +43,13 @@ export function LessonVideo({
     (source?.kind === "youtube" && videoQuestions.length > 0)
   ) {
     return (
-      <InteractiveVideo
-        title={title}
-        source={source}
-        questions={videoQuestions}
-      />
+      <VideoDataGate>
+        <InteractiveVideo
+          title={title}
+          source={source}
+          questions={videoQuestions}
+        />
+      </VideoDataGate>
     );
   }
 
@@ -60,13 +63,15 @@ export function LessonVideo({
   return (
     <div className="flex aspect-video items-center justify-center overflow-hidden rounded-3xl bg-primary text-white">
       {embedUrl ? (
-        <iframe
+        <VideoDataGate>
+          <iframe
           src={embedUrl}
           title={title}
           className="h-full w-full rounded-3xl"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
-        />
+          />
+        </VideoDataGate>
       ) : (
         <div className="px-6 text-center">
           <PlayCircle className="mx-auto mb-4" size={72} />

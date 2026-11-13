@@ -110,7 +110,8 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
     },
   });
 
-  if (!course) {
+  // Draft courses are only visible to an admin previewing them.
+  if (!course || (course.status !== "PUBLISHED" && !isAdminPreview)) {
     return (
       <>
         {isAdminPreview ? <AdminNavbar /> : <Navbar />}
@@ -323,7 +324,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
 
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <p className="text-sm font-bold text-white/75">
-                    KWCA LMS Lesson
+                    KWCF LMS Lesson
                   </p>
 
                   <h2 className="mt-2 text-3xl font-extrabold">

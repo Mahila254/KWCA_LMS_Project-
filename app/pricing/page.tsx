@@ -59,7 +59,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
               <p className="font-bold text-ink">Premium Access</p>
 
               <h1 className="mt-3 text-5xl font-bold">
-                Unlock KWCA LMS <em className="accent text-accent">Learning</em>
+                Unlock KWCF LMS <em className="accent text-accent">Learning</em>
               </h1>
 
               <p className="mt-4 text-xl leading-8 text-gray-600">
@@ -153,7 +153,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
               <h2 className="mt-3 text-3xl font-bold">Monthly Access</h2>
 
               <p className="mt-4 leading-7 text-gray-600">
-                Best for active learners who want access to several KWCA LMS
+                Best for active learners who want access to several KWCF LMS
                 courses.
               </p>
 
@@ -215,7 +215,7 @@ export default async function PricingPage({ searchParams }: PageProps) {
                 <div>
                   <h2 className="text-3xl font-bold">Payment Methods</h2>
                   <p className="mt-1 text-gray-600">
-                    Planned payment options for the KWCA LMS.
+                    Planned payment options for the KWCF LMS.
                   </p>
                 </div>
               </div>
@@ -249,17 +249,15 @@ export default async function PricingPage({ searchParams }: PageProps) {
               <h2 className="text-3xl font-bold">Premium Access Notice</h2>
 
               <p className="mt-4 leading-8 text-white/70">
-                This page creates pending payment records in the LMS database.
-                The next upgrade is connecting these records to a real payment
-                gateway such as Paystack or M-PESA.
+                Payments are confirmed by our team for now. Paying directly
+                online, by card or M-PESA, is planned.
               </p>
 
               <div className="mt-8 rounded-2xl bg-white/10 p-5">
-                <p className="font-bold">Current MVP Flow</p>
+                <p className="font-bold">How it works for now</p>
                 <p className="mt-2 text-white/70">
-                  Learner selects a plan, the LMS creates a PENDING payment
-                  record, and the admin can mark it as PAID to unlock premium
-                  access.
+                  Choose a plan and your payment is recorded as pending. Once
+                  our team confirms it, your premium lessons unlock.
                 </p>
               </div>
             </div>

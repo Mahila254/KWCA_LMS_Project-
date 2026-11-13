@@ -16,10 +16,7 @@ export default function AdminGuard({
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    if (isLoginPage) {
-      setChecking(false);
-      return;
-    }
+    if (isLoginPage) return;
 
     let cancelled = false;
 

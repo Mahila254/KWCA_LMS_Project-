@@ -3,7 +3,7 @@ import { renderShareCard, shareCardContentType, shareCardSize } from "@/lib/shar
 
 // Shown when a course (or any lesson, quiz or certificate inside it) is
 // shared: the course's own name on the platform's card.
-export const alt = "A course on the KWCA Conservancies Learning Hub";
+export const alt = "A course on the KWCF Conservancies Learning Hub";
 export const size = shareCardSize;
 export const contentType = shareCardContentType;
 
@@ -17,7 +17,7 @@ export default async function Image({
 
   if (!course) {
     return renderShareCard({
-      eyebrow: "Kenya Wildlife Conservancies Association",
+      eyebrow: "Kenya Wildlife Conservancies Foundation",
       title: "Years of conservancy wisdom.",
       accent: "Now one click away.",
       footnote: "Free to start · Learn on any phone",

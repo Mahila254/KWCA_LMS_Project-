@@ -18,6 +18,7 @@ import {
   XCircle,
   Save,
 } from "lucide-react";
+import { confirmAction, notify } from "@/lib/notify";
 
 type QuizQuestion = {
   id: string;
@@ -82,7 +83,7 @@ export default function AdminQuizQuestionsPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong.");
+        notify(data.error || "Something went wrong.");
         router.push("/admin/courses");
         return;
       }
@@ -91,7 +92,7 @@ export default function AdminQuizQuestionsPage() {
       setQuizQuestions(data.quizQuestions || []);
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while loading quiz questions.");
+      notify("Something went wrong while loading quiz questions.");
     } finally {
       setLoading(false);
     }
@@ -99,6 +100,9 @@ export default function AdminQuizQuestionsPage() {
 
   useEffect(() => {
     if (courseSlug) {
+      // Loads this page's data when it opens; the state updates happen
+      // after the request returns, not during the effect itself.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchQuizQuestions();
     }
   }, [courseSlug]);
@@ -138,7 +142,7 @@ export default function AdminQuizQuestionsPage() {
 
   async function handleSaveQuestion() {
     if (!question.trim()) {
-      alert("Please enter the quiz question.");
+      notify("Please enter the quiz question.");
       return;
     }
 
@@ -148,13 +152,13 @@ export default function AdminQuizQuestionsPage() {
         : [optionA, optionB, optionC, optionD];
 
     if (questionKind === "CHOICE" && choices.some((choice) => !choice.trim())) {
-      alert("Please fill in all four answer options.");
+      notify("Please fill in all four answer options.");
       return;
     }
 
     const choicesProblem = quizChoicesProblem(choices, correctAnswer);
     if (choicesProblem) {
-      alert(choicesProblem);
+      notify(choicesProblem);
       return;
     }
 
@@ -188,11 +192,11 @@ export default function AdminQuizQuestionsPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong.");
+        notify(data.error || "Something went wrong.");
         return;
       }
 
-      alert(
+      notify(
         editingQuestionId
           ? "✅ Quiz question updated successfully!"
           : "✅ Quiz question created successfully!"
@@ -202,15 +206,16 @@ export default function AdminQuizQuestionsPage() {
       await fetchQuizQuestions();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while saving the quiz question.");
+      notify("Something went wrong while saving the quiz question.");
     } finally {
       setSaving(false);
     }
   }
 
   async function handleDeleteQuestion(item: QuizQuestion) {
-    const confirmDelete = confirm(
-      `Are you sure you want to delete this quiz question?\n\n"${item.question}"`
+    const confirmDelete = await confirmAction(
+      `Are you sure you want to delete this quiz question?\n\n"${item.question}"`,
+      { confirmLabel: "Delete" }
     );
 
     if (!confirmDelete) return;
@@ -226,11 +231,11 @@ export default function AdminQuizQuestionsPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong.");
+        notify(data.error || "Something went wrong.");
         return;
       }
 
-      alert("Quiz question deleted successfully.");
+      notify("Quiz question deleted successfully.");
 
       if (editingQuestionId === item.id) {
         clearForm();
@@ -239,7 +244,7 @@ export default function AdminQuizQuestionsPage() {
       await fetchQuizQuestions();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while deleting the quiz question.");
+      notify("Something went wrong while deleting the quiz question.");
     }
   }
 
@@ -452,9 +457,9 @@ export default function AdminQuizQuestionsPage() {
 
             <div className="mt-6 space-y-5">
               <div>
-                <label className="mb-2 block font-bold">Quiz Type</label>
+                <label htmlFor="field-quiz-type" className="mb-2 block font-bold">Quiz Type</label>
 
-                <select
+                <select id="field-quiz-type"
                   value={quizType}
                   onChange={(event) =>
                     setQuizType(event.target.value as "PRACTICE" | "FINAL")
@@ -500,9 +505,9 @@ export default function AdminQuizQuestionsPage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Question Order</label>
+                <label htmlFor="field-question-order" className="mb-2 block font-bold">Question Order</label>
 
-                <input
+                <input id="field-question-order"
                   type="number"
                   value={order}
                   onChange={(event) => setOrder(event.target.value)}
@@ -512,9 +517,9 @@ export default function AdminQuizQuestionsPage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Question</label>
+                <label htmlFor="field-question" className="mb-2 block font-bold">Question</label>
 
-                <textarea
+                <textarea id="field-question"
                   rows={4}
                   value={question}
                   onChange={(event) => setQuestion(event.target.value)}
@@ -526,8 +531,8 @@ export default function AdminQuizQuestionsPage() {
               {questionKind === "CHOICE" && (
                 <>
                   <div>
-                    <label className="mb-2 block font-bold">Option A</label>
-                    <input
+                    <label htmlFor="field-option-a" className="mb-2 block font-bold">Option A</label>
+                    <input id="field-option-a"
                       type="text"
                       value={optionA}
                       onChange={(event) => setOptionA(event.target.value)}
@@ -536,8 +541,8 @@ export default function AdminQuizQuestionsPage() {
                   </div>
 
                   <div>
-                    <label className="mb-2 block font-bold">Option B</label>
-                    <input
+                    <label htmlFor="field-option-b" className="mb-2 block font-bold">Option B</label>
+                    <input id="field-option-b"
                       type="text"
                       value={optionB}
                       onChange={(event) => setOptionB(event.target.value)}
@@ -546,8 +551,8 @@ export default function AdminQuizQuestionsPage() {
                   </div>
 
                   <div>
-                    <label className="mb-2 block font-bold">Option C</label>
-                    <input
+                    <label htmlFor="field-option-c" className="mb-2 block font-bold">Option C</label>
+                    <input id="field-option-c"
                       type="text"
                       value={optionC}
                       onChange={(event) => setOptionC(event.target.value)}
@@ -556,8 +561,8 @@ export default function AdminQuizQuestionsPage() {
                   </div>
 
                   <div>
-                    <label className="mb-2 block font-bold">Option D</label>
-                    <input
+                    <label htmlFor="field-option-d" className="mb-2 block font-bold">Option D</label>
+                    <input id="field-option-d"
                       type="text"
                       value={optionD}
                       onChange={(event) => setOptionD(event.target.value)}
@@ -568,7 +573,7 @@ export default function AdminQuizQuestionsPage() {
               )}
 
               <div>
-                <label className="mb-2 block font-bold">Correct Answer</label>
+                <label htmlFor="field-correct-answer" className="mb-2 block font-bold">Correct Answer</label>
 
                 {questionKind === "TRUE_FALSE" ? (
                   <div className="grid grid-cols-2 gap-3">
@@ -592,7 +597,7 @@ export default function AdminQuizQuestionsPage() {
                     })}
                   </div>
                 ) : (
-                  <select
+                  <select id="field-correct-answer"
                     value={correctAnswer}
                     onChange={(event) => setCorrectAnswer(event.target.value)}
                     className="w-full rounded-xl border px-4 py-3"
@@ -606,9 +611,9 @@ export default function AdminQuizQuestionsPage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Explanation</label>
+                <label htmlFor="field-explanation" className="mb-2 block font-bold">Explanation</label>
 
-                <textarea
+                <textarea id="field-explanation"
                   rows={4}
                   value={explanation}
                   onChange={(event) => setExplanation(event.target.value)}

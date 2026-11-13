@@ -47,7 +47,7 @@ export default function AdminBackToAdminBar() {
         className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-6 py-2 text-xs font-bold text-white/90 transition hover:text-white sm:justify-start"
       >
         <ShieldCheck size={14} />
-        You're viewing the public site as an admin
+        You&apos;re viewing the public site as an admin
         <span className="inline-flex items-center gap-1 underline">
           <ArrowLeft size={12} />
           Back to Admin Dashboard

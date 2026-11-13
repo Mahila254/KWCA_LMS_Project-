@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 import { Lock, PlayCircle } from "lucide-react";
+import { notify } from "@/lib/notify";
 
 type PremiumLessonAccessButtonProps = {
   courseId: string;
@@ -30,7 +31,7 @@ export default function PremiumLessonAccessButton({
       } = await supabase.auth.getUser();
 
       if (error || !user) {
-        alert("Please login before accessing premium lessons.");
+        notify("Please login before accessing premium lessons.");
         router.push("/login");
         return;
       }
@@ -45,12 +46,12 @@ export default function PremiumLessonAccessButton({
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong while checking access.");
+        notify(data.error || "Something went wrong while checking access.");
         return;
       }
 
       if (!data.hasAccess) {
-        alert(
+        notify(
           "This is premium content. Please complete payment or subscription to unlock it."
         );
 
@@ -61,7 +62,7 @@ export default function PremiumLessonAccessButton({
       router.push(`/courses/${courseSlug}/${lessonSlug}`);
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while checking premium access.");
+      notify("Something went wrong while checking premium access.");
     } finally {
       setChecking(false);
     }

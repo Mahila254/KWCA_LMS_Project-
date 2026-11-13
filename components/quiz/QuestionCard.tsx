@@ -58,7 +58,22 @@ export default function QuestionCard({
   const isCorrect = revealed && selected === correctAnswer;
 
   return (
-    <div className="rounded-3xl bg-surface p-4 shadow-sm sm:p-7">
+    <div className="relative overflow-hidden rounded-3xl bg-surface p-4 shadow-sm sm:p-7">
+      {/* How far through the quiz this question is; glides as they move. */}
+      <div
+        className="absolute inset-x-0 top-0 h-1 bg-gray-100"
+        role="progressbar"
+        aria-label="Quiz progress"
+        aria-valuemin={1}
+        aria-valuemax={total}
+        aria-valuenow={index + 1}
+      >
+        <div
+          className="h-full rounded-r-full bg-accent transition-[width] duration-500 ease-soft"
+          style={{ width: `${((index + 1) / total) * 100}%` }}
+        />
+      </div>
+
       <div className="grid gap-2 sm:grid-cols-[6.5rem_1fr] sm:gap-6">
         <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-500 sm:block sm:border-r sm:border-gray-200 sm:pt-1">
           <span className="flex items-center gap-1.5">

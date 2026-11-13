@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
+import { notify } from "@/lib/notify";
 
 export default function AdminLogoutButton() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function AdminLogoutButton() {
       });
 
       if (!response.ok) {
-        alert("Something went wrong while logging out.");
+        notify("Something went wrong while logging out.");
         return;
       }
 
@@ -25,7 +26,7 @@ export default function AdminLogoutButton() {
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while logging out.");
+      notify("Something went wrong while logging out.");
     } finally {
       setLoggingOut(false);
     }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle, Clock, XCircle } from "lucide-react";
+import { notify } from "@/lib/notify";
 
 type PaymentStatus = "PENDING" | "PAID" | "FAILED";
 
@@ -38,14 +39,14 @@ export default function UpdatePaymentStatusButton({
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong while updating payment.");
+        notify(data.error || "Something went wrong while updating payment.");
         return;
       }
 
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while updating payment.");
+      notify("Something went wrong while updating payment.");
     } finally {
       setUpdating(false);
     }

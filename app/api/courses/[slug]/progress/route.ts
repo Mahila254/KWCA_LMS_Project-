@@ -157,6 +157,8 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       message: "Progress updated successfully.",
       user,
       enrollment,
+      // So the lesson page can mark a milestone the moment it's crossed.
+      previousProgress: existingEnrollment?.progress ?? 0,
     });
   } catch (error) {
     console.error("Progress update error:", error);

@@ -27,7 +27,7 @@ export async function POST(request: NextRequest, { params }: RouteProps) {
       },
     });
 
-    if (!course) {
+    if (!course || course.status !== "PUBLISHED") {
       return NextResponse.json(
         { error: "Course not found." },
         { status: 404 }

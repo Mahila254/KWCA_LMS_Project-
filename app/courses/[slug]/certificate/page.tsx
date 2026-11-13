@@ -12,6 +12,7 @@ import {
   CERTIFICATE_DESIGNS,
   type CertificateDesign,
 } from "@/lib/certificateDesigns";
+import { notify } from "@/lib/notify";
 
 type Course = {
   title: string;
@@ -54,7 +55,7 @@ export default function CertificatePage() {
       } = await supabase.auth.getUser();
 
       if (error || !supabaseUser) {
-        alert("Please login before generating your certificate.");
+        notify("Please login before generating your certificate.");
         router.push("/login");
         return;
       }
@@ -85,7 +86,7 @@ export default function CertificatePage() {
       const issueData = await issueResponse.json();
 
       if (issueResponse.status === 403) {
-        alert(
+        notify(
           issueData.error ||
             "You need to pass the final quiz before a certificate can be issued."
         );
@@ -94,7 +95,7 @@ export default function CertificatePage() {
       }
 
       if (!issueResponse.ok) {
-        alert(
+        notify(
           issueData.error || "Something went wrong while issuing certificate."
         );
         return;
@@ -106,7 +107,7 @@ export default function CertificatePage() {
       setCertificate(issueData.certificate);
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while loading the certificate.");
+      notify("Something went wrong while loading the certificate.");
     } finally {
       setLoading(false);
       setIssuing(false);
@@ -115,6 +116,9 @@ export default function CertificatePage() {
 
   useEffect(() => {
     if (courseSlug) {
+      // Loads this page's data when it opens; the state updates happen
+      // after the request returns, not during the effect itself.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       loadOrIssueCertificate();
     }
   }, [courseSlug]);
@@ -133,7 +137,7 @@ export default function CertificatePage() {
         year: "numeric",
       });
 
-  const certificateCode = certificate?.certificateCode || "KWCA-CERTIFICATE";
+  const certificateCode = certificate?.certificateCode || "KWCF-CERTIFICATE";
 
   if (loading) {
     return (
@@ -153,7 +157,7 @@ export default function CertificatePage() {
             </h1>
 
             <p className="mt-3 text-gray-600">
-              Please wait while we prepare your official KWCA LMS certificate.
+              Please wait while we prepare your official KWCF LMS certificate.
             </p>
           </div>
         </main>

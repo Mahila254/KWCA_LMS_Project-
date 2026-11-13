@@ -28,6 +28,7 @@ import {
   Eye,
   Trophy,
 } from "lucide-react";
+import { confirmAction, notify } from "@/lib/notify";
 
 type QuizQuestion = {
   id: string;
@@ -119,7 +120,7 @@ export default function PracticeQuizPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          alert(data.error || "Something went wrong while loading quiz.");
+          notify(data.error || "Something went wrong while loading quiz.");
           return;
         }
 
@@ -133,7 +134,7 @@ export default function PracticeQuizPage() {
         setQuestions(practiceQuestions);
       } catch (error) {
         console.error(error);
-        alert("Something went wrong while loading the practice quiz.");
+        notify("Something went wrong while loading the practice quiz.");
       } finally {
         setLoading(false);
       }
@@ -196,7 +197,7 @@ export default function PracticeQuizPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "This attempt can't be reviewed.");
+        notify(data.error || "This attempt can't be reviewed.");
         return;
       }
 
@@ -209,7 +210,7 @@ export default function PracticeQuizPage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while opening this review.");
+      notify("Something went wrong while opening this review.");
     } finally {
       setReviewingId(null);
     }
@@ -224,11 +225,11 @@ export default function PracticeQuizPage() {
 
     if (
       unanswered > 0 &&
-      !window.confirm(
+      !(await confirmAction(
         `You have ${unanswered} unanswered question${
           unanswered === 1 ? "" : "s"
         }. Finish anyway?`
-      )
+      , { confirmLabel: "Finish quiz" }))
     ) {
       return;
     }

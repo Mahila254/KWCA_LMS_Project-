@@ -185,9 +185,9 @@ export default async function CreateLessonPage({ params }: PageProps) {
 
             <div className="grid gap-6">
               <div>
-                <label className="mb-2 block font-bold">Lesson Title</label>
+                <label htmlFor="field-title" className="mb-2 block font-bold">Lesson Title</label>
 
-                <input
+                <input id="field-title"
                   name="title"
                   type="text"
                   required
@@ -197,9 +197,9 @@ export default async function CreateLessonPage({ params }: PageProps) {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Lesson Slug</label>
+                <label htmlFor="field-slug" className="mb-2 block font-bold">Lesson Slug</label>
 
-                <input
+                <input id="field-slug"
                   name="slug"
                   type="text"
                   placeholder="Example: lesson-1 or what-is-a-conservancy"
@@ -214,9 +214,9 @@ export default async function CreateLessonPage({ params }: PageProps) {
 
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block font-bold">Lesson Order</label>
+                  <label htmlFor="field-order" className="mb-2 block font-bold">Lesson Order</label>
 
-                  <input
+                  <input id="field-order"
                     name="order"
                     type="number"
                     min="1"
@@ -226,9 +226,9 @@ export default async function CreateLessonPage({ params }: PageProps) {
                 </div>
 
                 <div>
-                  <label className="mb-2 block font-bold">Lesson Access</label>
+                  <label htmlFor="field-access-type" className="mb-2 block font-bold">Lesson Access</label>
 
-                  <select
+                  <select id="field-access-type"
                     name="accessType"
                     defaultValue="PREVIEW"
                     className="w-full rounded-xl border px-5 py-4 text-lg outline-none focus:border-primary"
@@ -244,9 +244,9 @@ export default async function CreateLessonPage({ params }: PageProps) {
               <VideoQuestionsInput name="videoQuestions" />
 
               <div>
-                <label className="mb-2 block font-bold">Reading URL</label>
+                <label htmlFor="field-reading-url" className="mb-2 block font-bold">Reading URL</label>
 
-                <input
+                <input id="field-reading-url"
                   name="readingUrl"
                   type="url"
                   placeholder="Optional reading or downloadable file link"

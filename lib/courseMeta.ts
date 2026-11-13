@@ -30,7 +30,7 @@ export type CourseMeta = NonNullable<Awaited<ReturnType<typeof getCourseMeta>>>;
 export function courseDescription(course: CourseMeta) {
   return course.description
     ? toDescription(toPlainText(course.description))
-    : `A ${course.category ? `${course.category.toLowerCase()} ` : ""}course from the KWCA Learning Hub.`;
+    : `A ${course.category ? `${course.category.toLowerCase()} ` : ""}course from the KWCF Learning Hub.`;
 }
 
 /** Title, description and preview text for a page inside a course. */

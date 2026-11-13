@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { PASSWORD_RESET_EMAILS_ENABLED } from "@/lib/features";
 import { LogIn, Mail, Lock, CheckCircle } from "lucide-react";
+import { notify } from "@/lib/notify";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,12 +20,12 @@ export default function LoginPage() {
 
   async function handleLogin() {
     if (!email.trim()) {
-      alert("Please enter your email address.");
+      notify("Please enter your email address.");
       return;
     }
 
     if (!password.trim()) {
-      alert("Please enter your password.");
+      notify("Please enter your password.");
       return;
     }
 
@@ -37,16 +38,16 @@ export default function LoginPage() {
       });
 
       if (error) {
-        alert(error.message);
+        notify(error.message);
         return;
       }
 
-      alert("✅ Logged in successfully!");
+      notify("✅ Logged in successfully!");
       router.push("/profile");
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while logging in.");
+      notify("Something went wrong while logging in.");
     } finally {
       setLoading(false);
     }
@@ -62,7 +63,7 @@ export default function LoginPage() {
             <p className="font-bold text-ink">Learner Login</p>
 
             <h1 className="mt-4 text-5xl font-extrabold">
-              Login to Your KWCA LMS <em className="accent text-accent">Account</em>
+              Login to Your KWCF LMS <em className="accent text-accent">Account</em>
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
@@ -86,13 +87,15 @@ export default function LoginPage() {
 
             <div className="mt-8 space-y-5">
               <div>
-                <label className="mb-2 block font-bold">Email Address</label>
+                <label htmlFor="login-email" className="mb-2 block font-bold">Email Address</label>
 
                 <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Mail size={19} className="text-gray-400" />
 
                   <input
+                    id="login-email"
                     type="email"
+                    autoComplete="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder="Enter your email"
@@ -102,13 +105,15 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Password</label>
+                <label htmlFor="login-password" className="mb-2 block font-bold">Password</label>
 
                 <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Lock size={19} className="text-gray-400" />
 
                   <input
+                    id="login-password"
                     type="password"
+                    autoComplete="current-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     placeholder="Enter your password"

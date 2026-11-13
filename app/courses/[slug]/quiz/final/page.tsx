@@ -26,6 +26,9 @@ import {
   Trophy,
   XCircle,
 } from "lucide-react";
+import { confirmAction, notify } from "@/lib/notify";
+import Celebration from "@/components/Celebration";
+import CountUp from "@/components/CountUp";
 
 // Note: no correctAnswer field here — the final quiz is graded server-side,
 // so the browser never receives the answers before submitting.
@@ -112,7 +115,7 @@ export default function FinalQuizPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          alert(data.error || "Something went wrong while loading final quiz.");
+          notify(data.error || "Something went wrong while loading final quiz.");
           return;
         }
 
@@ -125,7 +128,7 @@ export default function FinalQuizPage() {
         setQuestions(finalQuestions);
       } catch (error) {
         console.error(error);
-        alert("Something went wrong while loading the final quiz.");
+        notify("Something went wrong while loading the final quiz.");
       } finally {
         setLoading(false);
       }
@@ -242,7 +245,7 @@ export default function FinalQuizPage() {
       } = await supabase.auth.getUser();
 
       if (error || !user) {
-        alert("Please login before submitting your final quiz result.");
+        notify("Please login before submitting your final quiz result.");
         return;
       }
 
@@ -262,7 +265,7 @@ export default function FinalQuizPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong while saving quiz result.");
+        notify(data.error || "Something went wrong while saving quiz result.");
         return;
       }
 
@@ -276,7 +279,7 @@ export default function FinalQuizPage() {
       setAttemptsVersion((version) => version + 1);
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while saving your quiz result.");
+      notify("Something went wrong while saving your quiz result.");
     } finally {
       setSavingResult(false);
     }
@@ -284,7 +287,7 @@ export default function FinalQuizPage() {
 
   async function submitCourseFeedback() {
     if (feedbackRating < 1) {
-      alert("Please select a star rating before submitting.");
+      notify("Please select a star rating before submitting.");
       return;
     }
 
@@ -302,14 +305,14 @@ export default function FinalQuizPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong while saving your feedback.");
+        notify(data.error || "Something went wrong while saving your feedback.");
         return;
       }
 
       setFeedbackSubmitted(true);
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while saving your feedback.");
+      notify("Something went wrong while saving your feedback.");
     } finally {
       setSubmittingFeedback(false);
     }
@@ -327,7 +330,7 @@ export default function FinalQuizPage() {
           }. They will be marked wrong. Submit anyway?`
         : "Submit your final quiz? You can't change your answers afterwards.";
 
-    if (!window.confirm(message)) return;
+    if (!(await confirmAction(message, { confirmLabel: "Submit quiz" }))) return;
 
     await submitFinalQuiz(answers);
   }
@@ -532,7 +535,9 @@ export default function FinalQuizPage() {
                   passed ? "bg-primary" : "bg-secondary-hover"
                 }`}
               >
-                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
+                {passed && <Celebration />}
+
+                <div className="mx-auto mb-6 flex h-20 w-20 animate-rise items-center justify-center rounded-full bg-white/10">
                   {passed ? <Trophy size={42} /> : <XCircle size={42} />}
                 </div>
 
@@ -549,7 +554,7 @@ export default function FinalQuizPage() {
                     passed ? "text-on-deep-muted" : "text-red-200"
                   }`}
                 >
-                  {finalPercentage}%
+                  <CountUp value={finalPercentage} suffix="%" />
                 </p>
 
                 <p className="mt-4 text-lg text-white/75">
@@ -624,7 +629,7 @@ export default function FinalQuizPage() {
                             Thanks for your feedback!
                           </h3>
                           <p className="mt-2 leading-7 text-gray-600">
-                            It helps KWCA improve this course for future
+                            It helps KWCF improve this course for future
                             learners.
                           </p>
                         </div>

@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
 import { CreditCard } from "lucide-react";
 import type { PlanType } from "@/lib/pricing";
+import { notify } from "@/lib/notify";
 
 type CreatePaymentButtonProps = {
   paymentType: PlanType;
@@ -31,7 +32,7 @@ export default function CreatePaymentButton({
       } = await supabase.auth.getUser();
 
       if (error || !user) {
-        alert("Please login before choosing a payment plan.");
+        notify("Please login before choosing a payment plan.");
         router.push("/login");
         return;
       }
@@ -47,7 +48,7 @@ export default function CreatePaymentButton({
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong while creating payment.");
+        notify(data.error || "Something went wrong while creating payment.");
         return;
       }
 
@@ -55,7 +56,7 @@ export default function CreatePaymentButton({
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while creating payment.");
+      notify("Something went wrong while creating payment.");
     } finally {
       setCreatingPayment(false);
     }

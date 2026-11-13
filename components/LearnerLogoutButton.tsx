@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { LogOut, Loader2 } from "lucide-react";
+import { notify } from "@/lib/notify";
 
 export default function LearnerLogoutButton() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function LearnerLogoutButton() {
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while logging out.");
+      notify("Something went wrong while logging out.");
     } finally {
       setLoggingOut(false);
     }

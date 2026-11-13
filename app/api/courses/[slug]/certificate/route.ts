@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -11,11 +12,19 @@ type RouteProps = {
   }>;
 };
 
+// The last part is 8 random characters from a secure source (about a
+// trillion possibilities), so a code can't be guessed from another one.
+// No 0/O or 1/I/L, which are easy to misread when typing a code in.
+const CODE_ALPHABET = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+
 function generateCertificateCode(courseSlug: string) {
   const courseCode = courseSlug.toUpperCase().replace(/-/g, "").slice(0, 10);
-  const randomCode = Math.floor(10000 + Math.random() * 90000);
+  const randomCode = Array.from(
+    randomBytes(8),
+    (byte) => CODE_ALPHABET[byte % CODE_ALPHABET.length]
+  ).join("");
 
-  return `KWCA-${courseCode}-${new Date().getFullYear()}-${randomCode}`;
+  return `KWCF-${courseCode}-${new Date().getFullYear()}-${randomCode}`;
 }
 
 export async function GET(request: NextRequest, { params }: RouteProps) {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { authFetch } from "@/lib/authFetch";
+import { notify } from "@/lib/notify";
 
 type NextLessonButtonProps = {
   courseSlug: string;
@@ -50,6 +51,18 @@ export default function NextLessonButton({
 
         if (response.ok) {
           setState("saved");
+
+          // A word of encouragement the first time a milestone is crossed.
+          const data = await response.json().catch(() => null);
+          const before = data?.previousProgress ?? 0;
+          const now = data?.enrollment?.progress ?? 0;
+
+          if (before < 100 && now >= 100) {
+            notify("You've finished every lesson in this course. Well done!", "success");
+          } else if (before < 50 && now >= 50) {
+            notify("Halfway there! You've finished half of this course.", "success");
+          }
+
           // Long enough to read "Lesson complete", short enough not to
           // feel like waiting.
           await new Promise((resolve) => setTimeout(resolve, 450));

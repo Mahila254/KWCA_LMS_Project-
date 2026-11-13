@@ -1,5 +1,6 @@
 import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
+import ReportCharts from "@/components/ReportCharts";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import type { ReactNode } from "react";
@@ -390,7 +391,7 @@ export default async function AdminReportsPage() {
             <div className="mt-8">
               <p className="font-bold text-ink">Platform Reports</p>
 
-              <h1 className="mt-3 text-5xl font-bold">KWCA LMS Reports</h1>
+              <h1 className="mt-3 text-5xl font-bold">KWCF LMS Reports</h1>
 
               <p className="mt-4 max-w-3xl text-xl text-gray-600">
                 Monitor platform activity, learner progress, quiz performance,
@@ -431,6 +432,14 @@ export default async function AdminReportsPage() {
               tone="green"
             />
           </div>
+
+          <ReportCharts
+            learners={learners}
+            enrollments={enrollments}
+            certificates={certificates}
+            quizResults={quizResults}
+            courses={courses}
+          />
 
           <div className="mb-8 rounded-3xl bg-surface p-8 shadow-sm">
             <h2 className="text-3xl font-bold">Learners by Gender</h2>
@@ -595,7 +604,7 @@ export default async function AdminReportsPage() {
             <p className="mt-3 max-w-4xl leading-7 text-white/70">
               This page provides a live database summary of learner activity,
               course content, quiz performance, enrollments, certificates, and
-              payment activity. It gives KWCA administrators a quick picture of
+              payment activity. It gives KWCF administrators a quick picture of
               how the learning platform is being used.
             </p>
           </div>

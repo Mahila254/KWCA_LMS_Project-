@@ -24,7 +24,7 @@ export default function AdminDashboardPage() {
             <p className="font-bold text-ink">Admin Dashboard</p>
 
             <h1 className="mt-4 text-5xl font-bold">
-              KWCA LMS Management
+              KWCF LMS Management
             </h1>
 
             <p className="mt-4 max-w-3xl text-xl text-gray-600">
@@ -156,7 +156,7 @@ export default function AdminDashboardPage() {
               </h2>
 
               <p className="mt-3 leading-7 text-gray-600">
-                Create, edit, publish, and manage all KWCA LMS courses,
+                Create, edit, publish, and manage all KWCF LMS courses,
                 lessons, quizzes, and learning content.
               </p>
 
@@ -328,7 +328,7 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <h2 className="text-3xl font-bold">
-                  KWCA LMS Admin Control Centre
+                  KWCF LMS Admin Control Centre
                 </h2>
 
                 <p className="mt-3 max-w-3xl leading-7 text-white/70">

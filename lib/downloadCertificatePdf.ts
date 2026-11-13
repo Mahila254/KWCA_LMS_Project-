@@ -16,7 +16,7 @@ export function certificateFileName(courseTitle: string, learnerName: string) {
       .replace(/^-+|-+$/g, "")
       .slice(0, 50);
 
-  return `KWCA-certificate-${slug(courseTitle) || "course"}-${slug(learnerName) || "learner"}.pdf`;
+  return `KWCF-certificate-${slug(courseTitle) || "course"}-${slug(learnerName) || "learner"}.pdf`;
 }
 
 export async function downloadCertificatePdf(element: HTMLElement, fileName: string) {
@@ -42,6 +42,6 @@ export async function downloadCertificatePdf(element: HTMLElement, fileName: str
 
   const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
   pdf.addImage(image, "JPEG", 0, 0, 297, 210);
-  pdf.setProperties({ title: fileName.replace(/\.pdf$/, ""), creator: "KWCA Learning Hub" });
+  pdf.setProperties({ title: fileName.replace(/\.pdf$/, ""), creator: "KWCF Learning Hub" });
   pdf.save(fileName);
 }

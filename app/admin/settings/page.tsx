@@ -181,7 +181,7 @@ export default function AdminSettingsPage() {
                         </h3>
 
                         <p className="mt-1 text-gray-600">
-                          Allows KWCA or partner organizations to sponsor course
+                          Allows KWCF or partner organizations to sponsor course
                           access for groups.
                         </p>
                       </div>
@@ -328,7 +328,7 @@ export default function AdminSettingsPage() {
 
                   <p className="mt-2 text-gray-600">
                     Anyone can verify whether a certificate code exists in the
-                    KWCA LMS database.
+                    KWCF LMS database.
                   </p>
 
                   <Link
@@ -349,7 +349,7 @@ export default function AdminSettingsPage() {
                   <h2 className="text-3xl font-bold">Development Roadmap</h2>
 
                   <p className="mt-1 text-gray-600">
-                    Recommended next features for the KWCA LMS.
+                    Recommended next features for the KWCF LMS.
                   </p>
                 </div>
               </div>
@@ -392,7 +392,7 @@ export default function AdminSettingsPage() {
             <h2 className="text-3xl font-bold">Settings Summary</h2>
 
             <p className="mt-3 max-w-4xl leading-7 text-white/70">
-              This page gives KWCA a clear view of the platform configuration.
+              This page gives KWCF a clear view of the platform configuration.
               It also prepares the system for the next major upgrade: real
               payment-based premium access, certificate verification, and
               stronger admin protection.

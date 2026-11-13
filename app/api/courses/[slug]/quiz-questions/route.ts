@@ -13,9 +13,9 @@ type RouteProps = {
 // intentionally separate from /api/admin/courses/[slug]/quiz-questions,
 // which requires an admin session and also allows editing/deleting.
 //
-// For the FINAL quiz, correctAnswer/explanation are stripped from the
-// response — the final quiz is graded server-side (see the POST handler
-// in quiz-results/route.ts), so the browser never needs to know the
+// FINAL questions never include correctAnswer/explanation, whatever
+// ?type= is asked for — the final quiz is graded server-side (see the POST
+// handler in quiz-results/route.ts), so the browser never needs to know the
 // answers before submitting. Practice questions still include them, since
 // the practice quiz is an ungraded learning tool that shows feedback
 // immediately and doesn't gate anything.
@@ -31,7 +31,8 @@ export async function GET(request: Request, { params }: RouteProps) {
       },
     });
 
-    if (!course) {
+    // Draft courses aren't public yet (admins use the admin quiz routes).
+    if (!course || course.status !== "PUBLISHED") {
       return NextResponse.json(
         { error: "Course not found." },
         { status: 404 }
@@ -50,10 +51,10 @@ export async function GET(request: Request, { params }: RouteProps) {
       },
     });
 
-    const isGraded = quizType === "FINAL";
-
+    // Decided per question, not from the ?type= in the address: asking for
+    // every question (no type) used to return the final quiz's answers too.
     const safeQuestions = quizQuestions.map((question) => {
-      if (!isGraded) {
+      if (question.quizType !== "FINAL") {
         return question;
       }
 

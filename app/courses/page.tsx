@@ -111,7 +111,7 @@ export default async function CoursesPage() {
 
           <ScrollReveal className="relative mx-auto max-w-7xl">
             <div className="max-w-4xl">
-              <p className="font-bold text-ink">KWCA Learning Courses</p>
+              <p className="font-bold text-ink">KWCF Learning Courses</p>
 
               <h1 className="mt-4 text-5xl font-extrabold leading-tight md:text-7xl">
                 Explore <em className="accent text-accent">Conservation Learning</em> Courses
@@ -181,7 +181,7 @@ export default async function CoursesPage() {
 
                 <p className="mx-auto mt-3 max-w-2xl text-gray-600">
                   Published courses will appear here once they are added by the
-                  KWCA LMS admin team.
+                  KWCF LMS admin team.
                 </p>
               </div>
             </ScrollReveal>
@@ -226,7 +226,7 @@ export default async function CoursesPage() {
                   </h2>
 
                   <p className="mt-4 max-w-3xl leading-8 text-white/75">
-                    The KWCA LMS brings together practical lessons, quizzes,
+                    The KWCF LMS brings together practical lessons, quizzes,
                     readings, and certificates to help conservation teams
                     strengthen governance, management, and sustainability.
                   </p>
@@ -415,6 +415,8 @@ function CourseCard({ course }: { course: CourseRecord }) {
       <div className="relative h-44 overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
+          loading="lazy"
+          decoding="async"
           src={courseImage(course)}
           alt={course.title}
           className="h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"

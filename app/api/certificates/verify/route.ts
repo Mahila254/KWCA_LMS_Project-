@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  certificateLookupBlockedMinutes,
+  clientIp,
+  recordWrongCertificateCode,
+} from "@/lib/loginThrottle";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +17,23 @@ export async function GET(request: Request) {
       return NextResponse.json(
         { error: "Certificate code is required." },
         { status: 400 }
+      );
+    }
+
+    // Too many wrong codes from one address: stop it guessing its way
+    // through certificates.
+    const ip = clientIp(request);
+    const blockedMinutes = await certificateLookupBlockedMinutes(ip);
+
+    if (blockedMinutes > 0) {
+      return NextResponse.json(
+        {
+          valid: false,
+          error: `Too many wrong codes. Please wait ${blockedMinutes} minute${
+            blockedMinutes === 1 ? "" : "s"
+          } and try again.`,
+        },
+        { status: 429, headers: { "Retry-After": String(blockedMinutes * 60) } }
       );
     }
 
@@ -28,6 +50,8 @@ export async function GET(request: Request) {
     });
 
     if (!certificate) {
+      await recordWrongCertificateCode(ip);
+
       return NextResponse.json(
         {
           valid: false,

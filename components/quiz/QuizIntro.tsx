@@ -65,7 +65,7 @@ export default function QuizIntro({
         <button
           type="button"
           onClick={onStart}
-          className="group inline-flex items-center gap-2 rounded-full bg-primary py-4 pl-6 pr-7 font-bold text-white shadow-[0_12px_26px_-12px_rgba(30,29,89,0.8)] hover:-translate-y-0.5 hover:bg-primary-hover"
+          className="group inline-flex items-center gap-2 rounded-full bg-primary py-4 pl-6 pr-7 font-bold text-white shadow-[0_12px_26px_-12px_rgb(var(--shadow-tint)/0.8)] hover:-translate-y-0.5 hover:bg-primary-hover"
         >
           <Play
             size={18}

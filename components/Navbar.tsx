@@ -11,6 +11,7 @@ import AdminBackToAdminBar from "@/components/AdminBackToAdminBar";
 import MobileMenu from "@/components/MobileMenu";
 import MobileTabBar from "@/components/MobileTabBar";
 import ThemeToggle from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/Language";
 
 const links = [
   { href: "/#about", label: "About" },
@@ -56,7 +57,7 @@ export default function Navbar() {
       <header
         className={`sticky top-0 z-50 border-b transition-[background-color,box-shadow,border-color] duration-500 ${
           scrolled
-            ? "border-white/10 bg-deep/85 shadow-[0_10px_30px_-12px_rgba(30,29,89,0.45)] backdrop-blur-xl backdrop-saturate-150"
+            ? "border-white/10 bg-deep/85 shadow-[0_10px_30px_-12px_rgb(var(--shadow-tint)/0.45)] backdrop-blur-xl backdrop-saturate-150"
             : "border-transparent bg-primary"
         }`}
       >
@@ -108,6 +109,8 @@ export default function Navbar() {
                 <span className="relative">{link.label}</span>
               </Link>
             ))}
+
+            <LanguageToggle />
 
             <ThemeToggle />
 
@@ -170,7 +173,7 @@ export default function Navbar() {
 
                 <Link
                   href="/register"
-                  className="group ml-2 inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-secondary py-2.5 pl-5 pr-4 text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(99,40,84,0.8)] hover:bg-secondary-hover hover:shadow-[0_12px_24px_-8px_rgba(99,40,84,0.9)]"
+                  className="group ml-2 inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-secondary py-2.5 pl-5 pr-4 text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgb(var(--shadow-tint)/0.8)] hover:bg-secondary-hover hover:shadow-[0_12px_24px_-8px_rgb(var(--shadow-tint)/0.9)]"
                 >
                   Enroll Now
                   <ArrowRight
@@ -183,6 +186,8 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-1 md:hidden">
+            <LanguageToggle />
+
             <ThemeToggle />
 
             <MobileMenu

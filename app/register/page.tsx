@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { UserPlus, Mail, Lock, User, Users, ShieldCheck } from "lucide-react";
+import { notify } from "@/lib/notify";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -21,27 +22,27 @@ export default function RegisterPage() {
 
   async function handleRegister() {
     if (!name.trim()) {
-      alert("Please enter your full name.");
+      notify("Please enter your full name.");
       return;
     }
 
     if (!email.trim()) {
-      alert("Please enter your email address.");
+      notify("Please enter your email address.");
       return;
     }
 
     if (password.length < 6) {
-      alert("Password must be at least 6 characters.");
+      notify("Password must be at least 6 characters.");
       return;
     }
 
     if (!gender) {
-      alert("Please select your gender.");
+      notify("Please select your gender.");
       return;
     }
 
     if (!consent) {
-      alert(
+      notify(
         "Please agree to the data consent statement before creating your account."
       );
       return;
@@ -64,7 +65,7 @@ export default function RegisterPage() {
       });
 
       if (error) {
-        alert(error.message);
+        notify(error.message);
         return;
       }
 
@@ -77,7 +78,7 @@ export default function RegisterPage() {
       if (data.session) {
         // Email confirmation is off for this project, so signUp already
         // returned an active session — the learner is logged in now.
-        alert("✅ Account created successfully. Welcome!");
+        notify("✅ Account created successfully. Welcome!");
         router.push("/profile");
         router.refresh();
         return;
@@ -85,13 +86,13 @@ export default function RegisterPage() {
 
       // Email confirmation is required before a session exists — send
       // them to login instead of leaving them stuck on this form.
-      alert(
+      notify(
         "✅ Account created successfully. Please check your email to confirm your account, then login."
       );
       router.push("/login");
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while creating your account.");
+      notify("Something went wrong while creating your account.");
     } finally {
       setLoading(false);
     }
@@ -107,7 +108,7 @@ export default function RegisterPage() {
             <p className="font-bold text-ink">Learner Registration</p>
 
             <h1 className="mt-4 text-5xl font-extrabold">
-              Create Your KWCA LMS <em className="accent text-accent">Account</em>
+              Create Your KWCF LMS <em className="accent text-accent">Account</em>
             </h1>
 
             <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
@@ -131,13 +132,15 @@ export default function RegisterPage() {
 
             <div className="mt-8 space-y-5">
               <div>
-                <label className="mb-2 block font-bold">Full Name</label>
+                <label htmlFor="register-name" className="mb-2 block font-bold">Full Name</label>
 
                 <div className="flex items-center rounded-xl border bg-surface px-4">
                   <User size={19} className="text-gray-400" />
 
                   <input
+                    id="register-name"
                     type="text"
+                    autoComplete="name"
                     value={name}
                     onChange={(event) => setName(event.target.value)}
                     placeholder="Enter your full name"
@@ -147,13 +150,15 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Email Address</label>
+                <label htmlFor="register-email" className="mb-2 block font-bold">Email Address</label>
 
                 <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Mail size={19} className="text-gray-400" />
 
                   <input
+                    id="register-email"
                     type="email"
+                    autoComplete="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder="Enter your email"
@@ -163,12 +168,13 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Gender</label>
+                <label htmlFor="register-gender" className="mb-2 block font-bold">Gender</label>
 
                 <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Users size={19} className="text-gray-400" />
 
                   <select
+                    id="register-gender"
                     value={gender}
                     onChange={(event) => setGender(event.target.value)}
                     required
@@ -185,13 +191,15 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Password</label>
+                <label htmlFor="register-password" className="mb-2 block font-bold">Password</label>
 
                 <div className="flex items-center rounded-xl border bg-surface px-4">
                   <Lock size={19} className="text-gray-400" />
 
                   <input
+                    id="register-password"
                     type="password"
+                    autoComplete="new-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     placeholder="Create a password"
@@ -219,7 +227,7 @@ export default function RegisterPage() {
                     <ShieldCheck size={16} />
                     Data consent
                   </span>
-                  I consent to KWCA LMS collecting and processing my
+                  I consent to KWCF LMS collecting and processing my
                   registration details and course activity (progress, quiz
                   results, and certificates) for the purpose of delivering
                   this course and reporting on platform usage, as set out in
@@ -291,7 +299,7 @@ export default function RegisterPage() {
               <div>
                 <h3 className="text-xl font-bold">Your data, protected</h3>
                 <p className="mt-2 leading-7 text-white/70">
-                  Creating an account means you consent to KWCA LMS collecting
+                  Creating an account means you consent to KWCF LMS collecting
                   and processing your registration details and course
                   activity, as described during signup.
                 </p>

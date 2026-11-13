@@ -1,42 +1,71 @@
 @import "tailwindcss";
 
 /*
- * Colour theme, taken from the lilac-breasted roller.
- * Light is "Cobalt & Lilac"; dark (the device's dark mode) is "Evening
- * Wing". Pages use these names (text-ink, bg-primary, bg-tint...), never
- * hex codes, so a colour changes here and nowhere else.
+ * Colour theme, taken from the lilac-breasted roller and paired the way
+ * Sanzo Wada's "A Dictionary of Color Combinations" pairs colours.
+ *
+ * The bird's colours were measured from a photo, then matched to the
+ * book. Four of them form a ring in which every neighbouring pair is a
+ * combination from the book, so any two that meet on a page belong
+ * together and no single colour has to lead:
+ *
+ *   slate  --  teal  --  tawny  --  lilac  --  (back to) slate
+ *
+ *   belly teal      buttons, links, headings       --primary
+ *   tawny back      eyebrows, icons, small accents --accent, --warm
+ *   lilac breast    main calls to action, badges   --secondary, --lilac-*
+ *   pale lilac      highlight words on dark bands  --highlight
+ *   bill and wing   text, top bar and footer       --ink, --deep
+ *   pale crown      soft panels and icon bubbles   --tint
+ *
+ * Roughly the bird's own shares: about half teal, a quarter tawny, a
+ * fifth lilac, the rest slate. Each text colour is darkened only as far
+ * as it takes to read clearly on its background.
+ *
+ * Light is "Roller Blend"; dark is "Evening Wing". Pages use these names
+ * (text-ink, bg-primary, bg-tint...), never hex codes, so a colour changes
+ * here and nowhere else.
  */
 :root,
 .theme-light {
-  --ink: #17224d; /* headings and body text */
-  --muted: #55617a;
-  --canvas: #f5f8fc; /* page background */
+  --ink: #1b2a33; /* headings and body text */
+  --muted: #536470;
+  --canvas: #f5f8f7; /* page background */
   --surface: #ffffff; /* cards, inputs, white sections */
-  --tint: #eaf0fa; /* icon bubbles, soft panels */
-  --tint-strong: #dfe8f7;
-  --line: #dce3ef;
+  --tint: #e4f1ef; /* icon bubbles, soft panels */
+  --tint-strong: #d3e8e5;
+  --line: #dbe5e6;
 
-  --primary: #24409b; /* buttons, links, cobalt bands */
-  --primary-hover: #1a2f75;
-  --deep: #17224d; /* dark bands, photo overlays */
-  --on-deep-muted: #c9d3ea; /* soft text on dark bands */
-  --highlight: #d8bce8; /* accent words on dark bands */
+  --primary: #007085; /* buttons, links, teal bands */
+  --primary-hover: #005b6d;
+  --deep: #1b3644; /* top bar, footer, photo overlays */
+  --on-deep-muted: #dcebee; /* soft text on dark bands */
+  --highlight: #e6adcf; /* accent words on dark bands */
 
-  --accent: #17739a; /* eyebrows, icons, small links */
-  --bright: #1c9dc8;
-  --bright-soft: #7fd3ee;
+  --accent: #a35200; /* eyebrows, icons, small links */
+  --bright: #29bdad;
+  --bright-soft: #9fe3da;
 
-  --secondary: #17739a; /* main calls to action, number circles */
-  --secondary-hover: #125c7b;
-  --lilac-text: #6b4485; /* lilac is only ever a hint: tints, badges */
-  --lilac-tint: #f2ebf6;
-  --lilac-soft: #f8f4fa;
-  --lilac-line: #e3d3ec;
+  --secondary: #7e3075; /* main calls to action, number circles */
+  --secondary-hover: #672660;
+  --lilac-text: #7e3075; /* badges and labels on the lilac tints */
+  --lilac-tint: #f6ebf3;
+  --lilac-soft: #faf4f8;
+  --lilac-line: #ead3e3;
 
   --warm: #c49a74; /* certificates */
   --warm-deep: #8e6640;
   --warm-light: #e8cfb2;
   --warm-text: #7a5530;
+
+  /* Shadows are tinted with the deep colour rather than plain black. */
+  --shadow-tint: 27 54 68;
+
+  /* Chart series, in this fixed order. Checked for colour-blind safety
+     against the card background (the dataviz validator), light and dark. */
+  --chart-1: #008aa1;
+  --chart-2: #c2620a;
+  --chart-3: #7e3075;
 
   --background: var(--surface);
   --foreground: var(--ink);
@@ -58,24 +87,30 @@
   --primary: #0e7490;
   --primary-hover: #0b5f78;
   --deep: #0c1d24;
-  --on-deep-muted: #cfe7ee;
-  --highlight: #e3b98c;
+  --on-deep-muted: #e0f0f5;
+  --highlight: #e6adcf;
 
-  --accent: #8fd3ee;
-  --bright: #3db4dd;
-  --bright-soft: #8fd3ee;
+  --accent: #f2a25f;
+  --bright: #35c4b5;
+  --bright-soft: #9fe3da;
 
-  --secondary: #94653a;
-  --secondary-hover: #7e5530;
-  --lilac-text: #e3cfee;
-  --lilac-tint: #3a2e48;
-  --lilac-soft: #2c2c40;
-  --lilac-line: #5a4670;
+  --secondary: #8f4a88;
+  --secondary-hover: #7a3d74;
+  --lilac-text: #f0d3e6;
+  --lilac-tint: #42293f;
+  --lilac-soft: #2f2a3a;
+  --lilac-line: #6a4566;
 
   --warm: #e3b98c;
   --warm-deep: #b98458;
   --warm-light: #f2d6b5;
   --warm-text: #f2d6b5;
+
+  --shadow-tint: 0 0 0;
+
+  --chart-1: #1fa3b5;
+  --chart-2: #c97a30;
+  --chart-3: #b070ab;
 
   /* Tailwind's greys and status colours, turned for a dark page. */
   --color-gray-50: #132a33;
@@ -99,7 +134,10 @@
   --color-green-800: #a8ebc6;
   --color-blue-100: #1d3a55;
   --color-blue-700: #9cc8f0;
+  --color-yellow-100: #3d3215;
   --color-yellow-700: #f2d27a;
+  --color-green-200: #24573d;
+  --color-blue-50: #16304a;
 
   color-scheme: dark;
 }
@@ -135,6 +173,9 @@
   --color-warm-deep: var(--warm-deep);
   --color-warm-light: var(--warm-light);
   --color-warm-text: var(--warm-text);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -250,6 +291,11 @@ html {
     border-radius: 0.5rem;
   }
 
+  /* The skip link moves focus to <main>; it doesn't need a ring. */
+  main:focus {
+    outline: none;
+  }
+
   ::selection {
     background: var(--lilac-tint);
     color: var(--ink);
@@ -261,6 +307,27 @@ html {
   main {
     animation: var(--animate-page-enter);
   }
+}
+
+/* Confetti (components/Celebration.tsx): each piece falls the height of
+   the screen, drifting sideways and spinning by its own amounts. */
+@keyframes confetti-fall {
+  from {
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(var(--confetti-drift, 0px), 105vh, 0)
+      rotate(var(--confetti-spin, 540deg));
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  animation: confetti-fall 3s cubic-bezier(0.25, 0.6, 0.4, 1) both;
 }
 
 /* Headline accent words: <em className="accent">Learning Hub</em> */
@@ -446,4 +513,17 @@ html {
 .formatted-on-dark a {
   color: var(--highlight);
   text-decoration-color: color-mix(in srgb, var(--highlight) 40%, transparent);
+}
+
+/* Low-data mode (lib/dataSaver.ts): the large decorative background
+   photos are swapped for a plain colour, so they are never downloaded. */
+:root[data-saver="on"] [style*="background-image"][style*="url("] {
+  background-image: none !important;
+  background-color: var(--tint);
+  animation: none !important;
+}
+
+/* The homepage hero has white text on it, so it needs the dark colour. */
+:root[data-saver="on"] .animate-ken-burns[style*="background-image"] {
+  background-color: var(--deep);
 }

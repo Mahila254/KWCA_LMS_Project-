@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Mail, Phone, MapPin } from "lucide-react";
+import { DataSaverToggle } from "@/components/DataSaver";
 
 const platformLinks = [
   { href: "/#about", label: "About Us" },
@@ -156,6 +157,8 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Kenya Wildlife Conservancies
             Association. All rights reserved.
           </p>
+
+          <DataSaverToggle />
 
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-white">

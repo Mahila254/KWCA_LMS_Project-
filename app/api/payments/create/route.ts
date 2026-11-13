@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
         currency: "KES",
         status: "PENDING",
         provider: "MANUAL_MVP",
-        providerRef: `KWCA-MVP-${Date.now()}`,
+        providerRef: `KWCF-PAY-${Date.now()}`,
       },
     });
 

@@ -162,7 +162,7 @@ export default function CertificateDocument({
             <div className="mt-8 max-w-4xl">
               <span className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-extrabold text-ink shadow-sm">
                 <BadgeCheck size={16} className="text-accent" />
-                KWCA LMS Certificate
+                KWCF LMS Certificate
               </span>
 
               <h1 className="mt-5 text-5xl font-extrabold leading-tight md:text-6xl">
@@ -263,7 +263,7 @@ export default function CertificateDocument({
                 </p>
 
                 <p className="mt-[1.6cqw] text-[1.5cqw] tracking-wide text-[#4a3326]">
-                  by the KWCA Conservancies Learning Hub
+                  by the KWCF Conservancies Learning Hub
                 </p>
 
                 <div
@@ -308,7 +308,7 @@ export default function CertificateDocument({
 
                 <p className="absolute bottom-[2cqw] left-0 right-0 text-[0.85cqw] tracking-wide text-[#7a5a48]">
                   Certificate ID {certificateCode} · Verify it with this ID on
-                  the KWCA Learning Hub website
+                  the KWCF Learning Hub website
                 </p>
               </div>
             </article>

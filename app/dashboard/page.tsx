@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ContinueLearning from "@/components/ContinueLearning";
+import LearnerDashboard from "@/components/LearnerDashboard";
 
 export const metadata: Metadata = {
   title: "My Learning",
@@ -13,203 +13,27 @@ export default function DashboardPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-gray-50">
-
-        {/* Hero */}
-
-        <section className="bg-canvas py-16">
+      <main className="min-h-screen bg-gray-50 text-ink">
+        <section className="bg-canvas py-14 md:py-16">
           <div className="mx-auto max-w-7xl px-6">
+            <p className="font-semibold text-accent">My Learning</p>
 
-            <p className="font-semibold text-ink">
-              Learner Dashboard
-            </p>
-
-            <h1 className="mt-3 text-6xl font-bold text-ink">
+            <h1 className="mt-3 text-5xl font-bold md:text-6xl">
               Welcome <em className="accent text-accent">back</em>
             </h1>
 
-            <p className="mt-4 text-xl text-gray-600">
-              Track your courses, continue lessons, and monitor your learning progress.
+            <p className="mt-4 max-w-2xl text-xl text-gray-600">
+              Your courses, your progress and your certificates, all in one
+              place.
             </p>
-
           </div>
         </section>
 
-
-        <section className="mx-auto max-w-7xl px-6 py-10">
-
-          {/* Dashboard Cards */}
-
-          <div className="grid gap-5 md:grid-cols-4">
-
-            {/* User Profile */}
-
-            <div className="rounded-3xl bg-surface p-8 shadow-sm">
-
-              <div className="flex items-center gap-4">
-
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-white">
-                  T
-                </div>
-
-                <div>
-                  <h2 className="text-2xl font-bold">
-                    Timothy Masibo
-                  </h2>
-
-                  <p className="text-gray-500">
-                    Student
-                  </p>
-                </div>
-
-              </div>
-
-              <button className="mt-8 w-full rounded-xl border py-3 hover:bg-gray-100">
-                Logout
-              </button>
-
-            </div>
-
-
-            {/* Courses */}
-
-            <div className="rounded-3xl bg-surface p-8 shadow-sm">
-
-              <p className="text-gray-500">
-                Courses Enrolled
-              </p>
-
-              <h2 className="mt-5 text-5xl font-bold">
-                1
-              </h2>
-
-            </div>
-
-
-            {/* Lessons */}
-
-            <div className="rounded-3xl bg-surface p-8 shadow-sm">
-
-              <p className="text-gray-500">
-                Lessons Completed
-              </p>
-
-              <h2 className="mt-5 text-5xl font-bold">
-                4
-              </h2>
-
-            </div>
-
-
-            {/* Progress */}
-
-            <div className="rounded-3xl bg-surface p-8 shadow-sm">
-
-              <p className="text-gray-500">
-                Overall Progress
-              </p>
-
-              <h2 className="mt-5 text-5xl font-bold">
-                100%
-              </h2>
-
-            </div>
-
-          </div>
-
-
-          {/* Continue Learning */}
-
-          <div className="mt-8">
-            <ContinueLearning />
-          </div>
-
-
-          {/* Courses */}
-
-          <h2 className="mt-12 text-5xl font-bold">
-            My Courses
-          </h2>
-
-
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-
-            {/* Course 1 */}
-
-            <div className="rounded-3xl bg-surface p-8 shadow-sm">
-
-              <p className="font-bold text-ink">
-                Module 1
-              </p>
-
-              <h3 className="mt-4 text-2xl font-bold">
-                What is a conservancy?
-              </h3>
-
-              <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-full rounded-full bg-primary"></div>
-              </div>
-
-              <p className="mt-4 text-gray-500">
-                100% complete
-              </p>
-
-            </div>
-
-
-            {/* Course 2 */}
-
-            <div className="rounded-3xl bg-surface p-8 shadow-sm">
-
-              <p className="font-bold text-ink">
-                Module 2
-              </p>
-
-              <h3 className="mt-4 text-2xl font-bold">
-                How to establish a strong Conservancy
-              </h3>
-
-              <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[25%] rounded-full bg-primary"></div>
-              </div>
-
-              <p className="mt-4 text-gray-500">
-                25% complete
-              </p>
-
-            </div>
-
-
-            {/* Course 3 */}
-
-            <div className="rounded-3xl bg-surface p-8 shadow-sm">
-
-              <p className="font-bold text-ink">
-                Module 3
-              </p>
-
-              <h3 className="mt-4 text-2xl font-bold">
-                Managing a Conservancy effectively
-              </h3>
-
-              <div className="mt-8 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[10%] rounded-full bg-primary"></div>
-              </div>
-
-              <p className="mt-4 text-gray-500">
-                10% complete
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
+        {/* The learner's real data, loaded in the browser with their login. */}
+        <LearnerDashboard />
       </main>
 
       <Footer />
-
     </>
   );
 }

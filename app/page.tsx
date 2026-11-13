@@ -127,7 +127,7 @@ export default function Home() {
                 <div className="flex flex-wrap items-center gap-3">
                   <Link
                     href="/courses"
-                    className="group inline-flex items-center gap-2 rounded-full bg-secondary py-4 pl-7 pr-5 text-base font-bold text-white shadow-[0_14px_30px_-10px_rgba(99,40,84,0.9)] hover:-translate-y-0.5 hover:bg-secondary-hover"
+                    className="group inline-flex items-center gap-2 rounded-full bg-secondary py-4 pl-7 pr-5 text-base font-bold text-white shadow-[0_14px_30px_-10px_rgb(var(--shadow-tint)/0.9)] hover:-translate-y-0.5 hover:bg-secondary-hover"
                   >
                     Start Learning
                     <ArrowRight
@@ -273,6 +273,8 @@ export default function Home() {
             <ScrollReveal className="relative" delay={120}>
               <div className="group overflow-hidden rounded-[2rem] shadow-sm">
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src="/images/hero-conservancy.jpg"
                   alt="Conservancy landscape"
                   className="h-[380px] w-full object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105 md:h-[500px]"
@@ -325,6 +327,8 @@ export default function Home() {
                         className="group relative flex h-full min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl bg-primary p-6 text-white shadow-sm hover:shadow-xl md:p-10 xl:min-h-[500px] xl:p-14"
                       >
                         <img
+                          loading="lazy"
+                          decoding="async"
                           src={item.image}
                           alt={item.title}
                           className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
@@ -361,6 +365,8 @@ export default function Home() {
                       >
                         <div className="relative h-44 overflow-hidden">
                           <img
+                            loading="lazy"
+                            decoding="async"
                             src={item.image}
                             alt={item.title}
                             className="h-full w-full object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
@@ -466,6 +472,8 @@ export default function Home() {
 
               <div className="overflow-hidden rounded-3xl shadow-sm">
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src="/images/learning-dashboard.jpg"
                   alt="Kenya conservation landscape"
                   className="h-[300px] w-full object-cover"

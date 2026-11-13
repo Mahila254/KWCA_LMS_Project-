@@ -101,3 +101,43 @@ export async function clearLoginFailures(email: string, ip: string) {
     where: { key: { in: [keys.pair, keys.email] } },
   });
 }
+
+// The public "verify a certificate" page uses the same counters, so nobody
+// can run through certificate codes to collect learners' names. Only wrong
+// codes count, so checking real certificates is never slowed down.
+const CERTIFICATE_LOOKUP_LIMIT = 20;
+
+function certificateLookupKey(ip: string) {
+  return `certificate:${hash(ip)}`;
+}
+
+/** Minutes left if this address has guessed too many wrong codes, else 0. */
+export async function certificateLookupBlockedMinutes(ip: string) {
+  const row = await prisma.adminLoginAttempt.findUnique({
+    where: { key: certificateLookupKey(ip) },
+  });
+  if (!row || row.failures < CERTIFICATE_LOOKUP_LIMIT) return 0;
+
+  const remaining = row.windowStart.getTime() + WINDOW_MS - Date.now();
+  return remaining > 0 ? Math.ceil(remaining / 60000) : 0;
+}
+
+export async function recordWrongCertificateCode(ip: string) {
+  const key = certificateLookupKey(ip);
+
+  await prisma.$executeRaw`
+    INSERT INTO "AdminLoginAttempt" ("key", "failures", "windowStart")
+    VALUES (${key}, 1, CURRENT_TIMESTAMP)
+    ON CONFLICT ("key") DO UPDATE SET
+      "failures" = CASE
+        WHEN "AdminLoginAttempt"."windowStart" < CURRENT_TIMESTAMP - make_interval(mins => ${WINDOW_MINUTES}::int)
+        THEN 1
+        ELSE "AdminLoginAttempt"."failures" + 1
+      END,
+      "windowStart" = CASE
+        WHEN "AdminLoginAttempt"."windowStart" < CURRENT_TIMESTAMP - make_interval(mins => ${WINDOW_MINUTES}::int)
+        THEN CURRENT_TIMESTAMP
+        ELSE "AdminLoginAttempt"."windowStart"
+      END
+  `;
+}

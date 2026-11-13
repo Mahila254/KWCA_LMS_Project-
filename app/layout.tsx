@@ -3,7 +3,12 @@ import { Hanken_Grotesk, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { themeScript } from "@/lib/theme";
+import { dataSaverScript } from "@/lib/dataSaver";
+import { languageScript } from "@/lib/language";
+import { Translator } from "@/components/Language";
 import InlineScript from "@/components/InlineScript";
+import Notifications from "@/components/Notifications";
+import SkipLink from "@/components/SkipLink";
 
 // Hanken Grotesk is the everyday face (body, headings, buttons).
 // Instrument Serif is only for the italic accent words in big headlines.
@@ -25,7 +30,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   // Pages set a short title ("Courses"); the template adds the site name.
   title: {
-    default: "KWCA Conservancies Learning Hub",
+    default: "KWCF Conservancies Learning Hub",
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -45,7 +50,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#17224D" },
+    { media: "(prefers-color-scheme: light)", color: "#1B3644" },
     { media: "(prefers-color-scheme: dark)", color: "#0C1D24" },
   ],
   viewportFit: "cover",
@@ -57,8 +62,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // suppressHydrationWarning: the theme script sets data-theme on <html>
-    // before React loads, so the server's <html> never matches it.
+    // suppressHydrationWarning: the scripts in <head> set data-theme (and
+    // data-saver, data-lang) on <html> before React loads, so the server's
+    // <html> never matches it.
     <html
       lang="en"
       className={`${sans.variable} ${serif.variable}`}
@@ -66,8 +72,15 @@ export default function RootLayout({
     >
       <head>
         <InlineScript html={themeScript} />
+        <InlineScript html={dataSaverScript} />
+        <InlineScript html={languageScript} />
       </head>
-      <body>{children}</body>
+      <body>
+        <SkipLink />
+        {children}
+        <Notifications />
+        <Translator />
+      </body>
     </html>
   );
 }

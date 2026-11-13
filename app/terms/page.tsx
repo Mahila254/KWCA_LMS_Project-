@@ -5,7 +5,7 @@ import LegalPage, { type LegalSection } from "@/components/LegalPage";
 export const metadata: Metadata = {
   title: "Terms and Conditions",
   description:
-    "The rules for using the KWCA Learning Hub: accounts, courses, payments, certificates and acceptable use.",
+    "The rules for using the KWCF Learning Hub: accounts, courses, payments, certificates and acceptable use.",
 };
 
 const sections: LegalSection[] = [
@@ -17,8 +17,8 @@ const sections: LegalSection[] = [
         <p>
           These terms set the rules for using the Conservancies Learning Hub
           (&ldquo;the platform&rdquo;), run by the{" "}
-          <strong>Kenya Wildlife Conservancies Association (KWCA)</strong>.
-          &ldquo;We&rdquo; and &ldquo;us&rdquo; mean KWCA. &ldquo;You&rdquo;
+          <strong>Kenya Wildlife Conservancies Foundation (KWCF)</strong>.
+          &ldquo;We&rdquo; and &ldquo;us&rdquo; mean KWCF. &ldquo;You&rdquo;
           means anyone who visits or uses the platform.
         </p>
         <p>
@@ -109,7 +109,7 @@ const sections: LegalSection[] = [
             a change never affects a period you have already paid for.
           </li>
           <li>
-            Premium access starts once KWCA confirms your payment. A
+            Premium access starts once KWCF confirms your payment. A
             pay-per-course payment unlocks that course. A monthly or annual
             subscription unlocks premium content for that period.
           </li>
@@ -155,7 +155,7 @@ const sections: LegalSection[] = [
             giving false information, or by breaking these terms.
           </li>
           <li>
-            A certificate confirms that you completed a KWCA course. It is not a
+            A certificate confirms that you completed a KWCF course. It is not a
             government licence or an academic degree.
           </li>
         </ul>
@@ -192,8 +192,8 @@ const sections: LegalSection[] = [
     content: (
       <>
         <p>
-          Course content, including text, images, videos, quizzes and the KWCA
-          name and logo, belongs to KWCA or to the partners who allow us to use
+          Course content, including text, images, videos, quizzes and the KWCF
+          name and logo, belongs to KWCF or to the partners who allow us to use
           it. You may use it for your own learning. Lesson notes you are
           offered as downloads are for your personal use and for training within
           your conservancy.
@@ -224,7 +224,7 @@ const sections: LegalSection[] = [
     content: (
       <>
         <p>
-          As far as Kenyan law allows, KWCA is not responsible for indirect
+          As far as Kenyan law allows, KWCF is not responsible for indirect
           losses that come from using the platform or its content. If we are
           responsible for a loss, our total liability is limited to the amount
           you paid us in the 12 months before the claim. Nothing in these terms
@@ -286,7 +286,7 @@ export default function TermsPage() {
       accent="Conditions"
       intro={
         <p>
-          The rules for learning on the KWCA Learning Hub. They cover your
+          The rules for learning on the KWCF Learning Hub. They cover your
           account, courses, payments, quizzes and certificates, and what we
           each agree to.
         </p>

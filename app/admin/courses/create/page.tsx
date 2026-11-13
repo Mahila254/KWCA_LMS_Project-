@@ -7,6 +7,7 @@ import Link from "next/link";
 import CourseImageUpload from "@/components/CourseImageUpload";
 import FormattedTextEditor from "@/components/FormattedTextEditor";
 import ObjectivesInput from "@/components/ObjectivesInput";
+import { notify } from "@/lib/notify";
 
 export default function CreateCoursePage() {
   const [title, setTitle] = useState("");
@@ -22,7 +23,7 @@ export default function CreateCoursePage() {
 
   async function handleCreateCourse() {
     if (!title.trim()) {
-      alert("Please enter a course title.");
+      notify("Please enter a course title.");
       return;
     }
 
@@ -50,15 +51,15 @@ export default function CreateCoursePage() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong.");
+        notify(data.error || "Something went wrong.");
         return;
       }
 
-      alert("✅ Course created successfully!");
+      notify("✅ Course created successfully!");
       window.location.href = "/admin/courses";
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while creating the course.");
+      notify("Something went wrong while creating the course.");
     } finally {
       setSaving(false);
     }
@@ -78,7 +79,7 @@ export default function CreateCoursePage() {
             <h1 className="mt-6 text-5xl font-bold">Add New Course</h1>
 
             <p className="mt-4 text-xl text-gray-600">
-              Create a new course for the KWCA Learning Hub.
+              Create a new course for the KWCF Learning Hub.
             </p>
           </div>
         </section>
@@ -86,9 +87,9 @@ export default function CreateCoursePage() {
         <section className="mx-auto max-w-5xl px-6 py-12">
           <form className="space-y-6 rounded-3xl bg-surface p-8 shadow-sm">
             <div>
-              <label className="mb-2 block font-bold">Course Title</label>
+              <label htmlFor="field-course-title" className="mb-2 block font-bold">Course Title</label>
 
-              <input
+              <input id="field-course-title"
                 type="text"
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
@@ -98,9 +99,9 @@ export default function CreateCoursePage() {
             </div>
 
             <div>
-              <label className="mb-2 block font-bold">Course Category</label>
+              <label htmlFor="field-course-category" className="mb-2 block font-bold">Course Category</label>
 
-              <select
+              <select id="field-course-category"
                 value={category}
                 onChange={(event) => setCategory(event.target.value)}
                 className="w-full rounded-xl border px-4 py-3"
@@ -128,9 +129,9 @@ export default function CreateCoursePage() {
             <CourseImageUpload value={imageUrl} onChange={setImageUrl} />
 
             <div>
-              <label className="mb-2 block font-bold">Course Type</label>
+              <label htmlFor="field-course-type" className="mb-2 block font-bold">Course Type</label>
 
-              <select
+              <select id="field-course-type"
                 value={courseType}
                 onChange={(event) => setCourseType(event.target.value)}
                 className="w-full rounded-xl border px-4 py-3"
@@ -143,11 +144,11 @@ export default function CreateCoursePage() {
 
             <div className="grid gap-6 md:grid-cols-2">
               <div>
-                <label className="mb-2 block font-bold">
+                <label htmlFor="field-number-of-lessons" className="mb-2 block font-bold">
                   Number of Lessons
                 </label>
 
-                <input
+                <input id="field-number-of-lessons"
                   type="number"
                   value={numberOfLessons}
                   onChange={(event) => setNumberOfLessons(event.target.value)}
@@ -157,9 +158,9 @@ export default function CreateCoursePage() {
               </div>
 
               <div>
-                <label className="mb-2 block font-bold">Course Status</label>
+                <label htmlFor="field-course-status" className="mb-2 block font-bold">Course Status</label>
 
-                <select
+                <select id="field-course-status"
                   value={status}
                   onChange={(event) => setStatus(event.target.value)}
                   className="w-full rounded-xl border px-4 py-3"
@@ -171,11 +172,11 @@ export default function CreateCoursePage() {
             </div>
 
             <div>
-              <label className="mb-2 block font-bold">
+              <label htmlFor="field-introduction-video-url" className="mb-2 block font-bold">
                 Introduction Video URL
               </label>
 
-              <input
+              <input id="field-introduction-video-url"
                 type="text"
                 value={introVideoUrl}
                 onChange={(event) => setIntroVideoUrl(event.target.value)}

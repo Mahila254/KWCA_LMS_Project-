@@ -191,13 +191,13 @@ export default async function PaymentConfirmationPage({
 
                     <div>
                       <h3 className="text-xl font-bold">
-                        Manual payment confirmation MVP
+                        How your payment is confirmed
                       </h3>
 
                       <p className="mt-2 leading-7 text-gray-600">
-                        For now, the admin can confirm payment from the Admin
-                        Payments page. Once marked as PAID, click the button
-                        below to refresh the payment status and continue.
+                        Our team confirms each payment by hand. Once yours is
+                        confirmed, click the button below to refresh your
+                        payment status and continue.
                       </p>
                     </div>
                   </div>

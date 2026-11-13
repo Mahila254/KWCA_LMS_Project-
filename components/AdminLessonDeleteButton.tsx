@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
+import { confirmAction, notify } from "@/lib/notify";
 
 type AdminLessonDeleteButtonProps = {
   courseSlug: string;
@@ -19,8 +20,9 @@ export default function AdminLessonDeleteButton({
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
-    const confirmDelete = confirm(
-      `Are you sure you want to delete "${title}"? This action cannot be undone.`
+    const confirmDelete = await confirmAction(
+      `Are you sure you want to delete "${title}"? This action cannot be undone.`,
+      { confirmLabel: "Delete" }
     );
 
     if (!confirmDelete) return;
@@ -38,15 +40,15 @@ export default function AdminLessonDeleteButton({
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error || "Something went wrong while deleting the lesson.");
+        notify(data.error || "Something went wrong while deleting the lesson.");
         return;
       }
 
-      alert("Lesson deleted successfully.");
+      notify("Lesson deleted successfully.");
       router.refresh();
     } catch (error) {
       console.error(error);
-      alert("Something went wrong while deleting the lesson.");
+      notify("Something went wrong while deleting the lesson.");
     } finally {
       setDeleting(false);
     }

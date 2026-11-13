@@ -13,8 +13,8 @@ export const shareCardSize = { width: 1200, height: 630 };
 // WhatsApp quietly drops preview pictures much over 300 KB.
 export const shareCardContentType = "image/jpeg";
 
-const NAVY = "#17224D";
-const PINK = "#D8BCE8";
+const NAVY = "#1B3644";
+const PINK = "#E6ADCF";
 
 /** A file from /public as a data URL, falling back to fetching it. */
 async function publicFile(path: string, type: string) {

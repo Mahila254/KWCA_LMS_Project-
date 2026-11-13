@@ -100,7 +100,7 @@ export default async function AdminCoursesPage() {
                 </h1>
 
                 <p className="mt-4 max-w-3xl text-xl text-gray-600">
-                  Create, edit, publish, and manage KWCA LMS courses.
+                  Create, edit, publish, and manage KWCF LMS courses.
                 </p>
               </div>
 
@@ -134,7 +134,7 @@ export default async function AdminCoursesPage() {
                 <h3 className="text-3xl font-bold">No courses yet</h3>
 
                 <p className="mt-3 text-gray-600">
-                  Add your first KWCA LMS course to begin building the platform.
+                  Add your first KWCF LMS course to begin building the platform.
                 </p>
 
                 <Link

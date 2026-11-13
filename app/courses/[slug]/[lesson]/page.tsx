@@ -5,6 +5,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { coursePicture } from "@/lib/coursePictures";
 import { isAdminRequest } from "@/lib/isAdminRequest";
 import NextLessonButton from "@/components/NextLessonButton";
 import AutoEnroll from "@/components/AutoEnroll";
@@ -196,10 +197,7 @@ export default async function LessonPage({ params, searchParams }: PageProps) {
     ? []
     : await getLessonVideoQuestions(currentLesson.id);
 
-  const imageSource =
-    course.imageUrl && course.imageUrl.trim() !== ""
-      ? course.imageUrl
-      : "/images/course-placeholder.jpg";
+  const imageSource = coursePicture(course);
 
   const lessonHref = (lessonSlug: string) =>
     isAdminPreview

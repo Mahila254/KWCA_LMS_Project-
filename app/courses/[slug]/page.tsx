@@ -5,6 +5,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { coursePicture } from "@/lib/coursePictures";
 import { isAdminRequest } from "@/lib/isAdminRequest";
 import CourseLearnerStats from "@/components/CourseLearnerStats";
 import CourseContinueLink from "@/components/CourseContinueLink";
@@ -173,10 +174,7 @@ export default async function CourseDetailsPage({
     );
   }
 
-  const imageSource =
-    course.imageUrl && course.imageUrl.trim() !== ""
-      ? course.imageUrl
-      : "/images/course-placeholder.jpg";
+  const imageSource = coursePicture(course);
 
   const previewLessons = course.lessons.filter(
     (lesson: LessonRecord) => lesson.accessType === "PREVIEW"

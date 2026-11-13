@@ -5,6 +5,7 @@ import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import { toPlainText } from "@/components/FormattedText";
 import { prisma } from "@/lib/prisma";
+import { coursePicture } from "@/lib/coursePictures";
 import {
   ArrowRight,
   Award,
@@ -273,10 +274,10 @@ function HeroStat({
   );
 }
 
+// The admin's picture, else the design's picture for that course, else
+// the placeholder (lib/coursePictures.ts).
 function courseImage(course: CourseRecord) {
-  return course.imageUrl && course.imageUrl.trim() !== ""
-    ? course.imageUrl
-    : "/images/course-placeholder.jpg";
+  return coursePicture(course);
 }
 
 function courseSummary(course: CourseRecord) {

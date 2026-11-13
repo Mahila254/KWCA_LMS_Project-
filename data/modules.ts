@@ -17,7 +17,7 @@ export const modules = [
     category: "Foundations",
     description:
       "Understand the fundamentals of conservancy structure, governance, legal frameworks, and the vital role conservancies play in Kenya's ecosystems.",
-    image: "/images/hero-conservancy.jpg",
+    image: "/images/courses/what-is-a-conservancy.jpg",
   },
   {
     slug: "establish-strong-conservancy",
@@ -27,7 +27,7 @@ export const modules = [
     category: "Governance",
     description:
       "Learn the legal, community, and ecological steps required to set up a thriving, well-governed conservancy from the ground up.",
-    image: "/images/conservancy-training.jpg",
+    image: "/images/courses/establish-strong-conservancy.jpg",
   },
   {
     slug: "manage-conservancy-effectively",
@@ -37,7 +37,7 @@ export const modules = [
     category: "Management",
     description:
       "Master day-to-day operations, staffing, resource allocation, and strategic planning to keep your conservancy running at its best.",
-    image: "/images/hero-background.jpg",
+    image: "/images/courses/manage-conservancy-effectively.jpg",
   },
   {
     slug: "sustainable-revenue",
@@ -47,7 +47,7 @@ export const modules = [
     category: "Finance",
     description:
       "Explore tourism, grants, and community enterprise models that generate lasting income while protecting wildlife and natural resources.",
-    image: "/images/learning-dashboard.jpg",
+    image: "/images/courses/sustainable-revenue.jpg",
   },
   {
     slug: "annual-general-meeting",
@@ -57,7 +57,7 @@ export const modules = [
     category: "Governance",
     description:
       "Run inclusive, transparent, and effective AGMs that strengthen member trust, accountability, and democratic conservancy governance.",
-    image: "/images/course-placeholder.jpg",
+    image: "/images/courses/annual-general-meeting.jpg",
   },
   {
     slug: "carbon-project",
@@ -67,7 +67,7 @@ export const modules = [
     category: "Climate",
     description:
       "Develop verifiable, internationally recognised carbon credit projects that generate income and contribute to climate solutions.",
-    image: "/images/hero-conservancy.jpg",
+    image: "/images/courses/carbon-project.jpg",
   },
   {
     slug: "conservancy-management-plan",
@@ -77,7 +77,7 @@ export const modules = [
     category: "Planning",
     description:
       "Craft clear, actionable management plans that guide your conservancy's ecology, finances, and community relations for years ahead.",
-    image: "/images/conservancy-training.jpg",
+    image: "/images/courses/conservancy-management-plan.jpg",
   },
   {
     slug: "women-youth-conservation",
@@ -87,7 +87,7 @@ export const modules = [
     category: "Inclusion",
     description:
       "Build strategies to place women and youth at the centre of leadership, ensuring representation and lasting intergenerational impact.",
-    image: "/images/hero-background.jpg",
+    image: "/images/courses/annual-general-meeting.jpg",
   },
   {
     slug: "greenlisting-conservancies",
@@ -97,6 +97,6 @@ export const modules = [
     category: "Standards",
     description:
       "Navigate the criteria and processes required to achieve international Greenlisting recognition and long-term credibility.",
-    image: "/images/learning-dashboard.jpg",
+    image: "/images/courses/greenlisting-conservancies.jpg",
   },
 ];
